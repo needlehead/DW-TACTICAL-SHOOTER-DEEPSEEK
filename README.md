@@ -119,8 +119,7 @@ ViewmodelLayer) casts a few rays from around the hands toward the level's Direct
 ## Voice and breathing
 
 `PlayerVoice` (on the Player) plays a random `damage_sounds` clip when hit (with `damage_cooldown`), a `death_sounds`
-clip on death, and a breathing loop whose volume follows exertion (rises while sprinting, eases off after) with a floor
-when hurt (`hurt_breath` at CAUTION / DANGER). The loop is generic, shared by all heroines: rebuild it with
+clip on death, and a breathing loop that only plays while sprinting (swells in, fades out over ~2 s after). The loop is generic, shared by all heroines: rebuild it with
 `python tools/make_breath_loop.py "my sounds/generic/source/<breath>.mp3" "my sounds/generic/breath_loop.ogg"`.
 
 ## Handling sounds
