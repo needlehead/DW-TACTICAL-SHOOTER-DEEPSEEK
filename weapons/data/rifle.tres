@@ -69,3 +69,7 @@ fire_sound = ExtResource("snd_fire")
 fire_volume_db = 2.0
 sprite_offset = Vector2(0.050000004, 0.08999999)
 muzzle_uv = Vector2(0.55, 0.434)
+laser = true
+laser_color = Color(0.15, 1, 0.25, 1)
+laser_uv = Vector2(0.545, 0.455)
+flashlight = true

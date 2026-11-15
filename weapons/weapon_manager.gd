@@ -116,6 +116,12 @@ func _process(delta: float) -> void:
 			current.cycle_mode()
 		if Input.is_action_just_pressed("alt_sight"):
 			current.toggle_canted()
+		if Input.is_action_just_pressed("toggle_laser") and current.data.laser:
+			current.laser_on = not current.laser_on
+			Game.toast("LASER " + ("ON" if current.laser_on else "OFF"))
+		if Input.is_action_just_pressed("toggle_flashlight") and current.data.flashlight:
+			current.light_on = not current.light_on
+			Game.toast("LIGHT " + ("ON" if current.light_on else "OFF"))
 		if Input.is_action_just_pressed("reload") and state == State.READY:
 			current.start_reload()
 		if Input.is_action_just_pressed("grenade"):

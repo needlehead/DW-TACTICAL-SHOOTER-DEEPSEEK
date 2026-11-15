@@ -94,6 +94,12 @@ const AUTO := 4
 @export var muzzle_uv := Vector2(0.5, 0.5)  ## muzzle position on the idle/shoot frame (0-1); smoke spawns here
 @export var suppressed := false  ## muzzle smoke instead of flash light
 
+@export_group("Attachments")
+@export var laser := false  ## laser sight: a dot where the shots go, a beam you see in the dark (toggle L)
+@export var laser_color := Color(1.0, 0.08, 0.05)
+@export var laser_uv := Vector2(0.5, 0.5)  ## laser emitter on the idle/shoot frame (0-1); the beam starts here
+@export var flashlight := false  ## weapon light (toggle T)
+
 @export_group("Viewmodel")
 @export var vm_size := Vector3(0.06, 0.09, 0.7)
 @export var color := Color(0.25, 0.28, 0.24)

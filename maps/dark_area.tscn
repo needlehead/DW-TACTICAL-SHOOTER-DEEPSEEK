@@ -1,0 +1,105 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://maps/dark_zone.gd" id="1_zone"]
+[ext_resource type="PackedScene" path="res://ai/dummy.tscn" id="2_dummy"]
+
+[sub_resource type="StandardMaterial3D" id="mat_concrete"]
+albedo_color = Color(0.36, 0.36, 0.37, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_crate"]
+albedo_color = Color(0.45, 0.38, 0.28, 1)
+
+[sub_resource type="BoxShape3D" id="zone_shape"]
+size = Vector3(10, 3, 12)
+
+[node name="DarkArea" type="Node3D"]
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="WallNorth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -6.15)
+use_collision = true
+size = Vector3(10.6, 3, 0.3)
+material = SubResource("mat_concrete")
+
+[node name="WallSouth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 6.15)
+use_collision = true
+size = Vector3(10.6, 3, 0.3)
+material = SubResource("mat_concrete")
+
+[node name="WallEast" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.15, 1.5, 0)
+use_collision = true
+size = Vector3(0.3, 3, 12.6)
+material = SubResource("mat_concrete")
+
+[node name="WallWest" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15, 1.5, 0.95)
+use_collision = true
+size = Vector3(0.3, 3, 10.7)
+material = SubResource("mat_concrete")
+
+[node name="DoorHeader" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.15, 2.75, -5.2)
+use_collision = true
+size = Vector3(0.3, 0.5, 1.6)
+material = SubResource("mat_concrete")
+
+[node name="LightBaffle" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3, 1.5, -4)
+use_collision = true
+size = Vector3(0.2, 3, 4)
+material = SubResource("mat_concrete")
+
+[node name="Roof" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0)
+use_collision = true
+size = Vector3(10.9, 0.4, 12.9)
+material = SubResource("mat_concrete")
+
+[node name="Crate1" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.5, 1)
+use_collision = true
+size = Vector3(1, 1, 1)
+material = SubResource("mat_crate")
+
+[node name="Crate2" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.6, 4)
+use_collision = true
+size = Vector3(1.2, 1.2, 0.8)
+material = SubResource("mat_crate")
+
+[node name="Pillar" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.5, -3)
+use_collision = true
+size = Vector3(0.5, 3, 0.5)
+material = SubResource("mat_concrete")
+
+[node name="DarkZone" type="Area3D" parent="."]
+script = ExtResource("1_zone")
+
+[node name="Shape" type="CollisionShape3D" parent="DarkZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("zone_shape")
+
+[node name="Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 3.8, -5.2)
+billboard = 1
+text = "LOW LIGHT"
+font_size = 64
+
+[node name="Dummy0" parent="." instance=ExtResource("2_dummy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 4)
+patrol_points = PackedVector3Array()
+body_color = Color(0.8, 0.45, 0.3, 1)
+
+[node name="Dummy1" parent="." instance=ExtResource("2_dummy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -4.5)
+patrol_points = PackedVector3Array()
+body_color = Color(0.8, 0.45, 0.3, 1)
+
+[node name="Dummy2" parent="." instance=ExtResource("2_dummy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4.8)
+patrol_points = PackedVector3Array()
+body_color = Color(0.8, 0.45, 0.3, 1)

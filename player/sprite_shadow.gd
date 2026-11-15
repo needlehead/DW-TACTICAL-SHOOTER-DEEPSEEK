@@ -7,6 +7,8 @@ extends CanvasModulate
 @export var lit_color := Color(1, 1, 1)
 @export var shadow_color := Color(0.5, 0.53, 0.62)  ## sky-lit shade: darker and a bit cool
 @export var fade_speed := 6.0  ## 1/s; walking into shadow fades instead of snapping
+## Inside a DarkZone the hands take the zone's colour instead; a weapon flashlight's spill lifts them to at least this.
+@export var flashlight_fill := Color(0.4, 0.4, 0.43)
 ## Sample points in camera space (right, up, back): gun hands, grip, chest. More points = softer edges.
 @export var samples := PackedVector3Array([Vector3(0.15, -0.2, -0.45), Vector3(0.05, -0.3, -0.25), Vector3(0.0, -0.45, 0.0)])
 
@@ -25,7 +27,14 @@ func _process(delta: float) -> void:
 		for s in samples:
 			points.append(cam * s)
 		lit = lit_fraction(player.get_world_3d().direct_space_state, points, _sun.global_basis.z, [player.get_rid()])
-	color = color.lerp(shadow_color.lerp(lit_color, lit), 1.0 - exp(-fade_speed * delta))
+	var target := shadow_color.lerp(lit_color, lit)
+	for zone: DarkZone in get_tree().get_nodes_in_group(&"dark_zone"):
+		if zone.has_player():
+			target = zone.hand_color
+	var w := player.weapons.current if player.weapons else null
+	if w and w.data.flashlight and w.light_on and player.alive:
+		target = Color(maxf(target.r, flashlight_fill.r), maxf(target.g, flashlight_fill.g), maxf(target.b, flashlight_fill.b))
+	color = color.lerp(target, 1.0 - exp(-fade_speed * delta))
 
 
 ## Multiplier that cancels the current tint, for self-lit overlays (see unshaded.gdshader).

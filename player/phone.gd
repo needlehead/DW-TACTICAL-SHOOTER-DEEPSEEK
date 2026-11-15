@@ -46,6 +46,9 @@ func _ready() -> void:
 	add_child(_vp)
 	_poly.texture = _vp.get_texture()
 	_poly.uv = PackedVector2Array([Vector2.ZERO, Vector2(screen_size.x, 0), Vector2(screen_size), Vector2(0, screen_size.y)])
+	var mat := ShaderMaterial.new()
+	mat.shader = preload("res://player/unshaded.gdshader")  # the screen is backlit: it never darkens in shade or the dark
+	_poly.material = mat
 	add_child(_poly)
 	if outfit_sprite:
 		_outfit = AtlasTexture.new()
@@ -71,6 +74,7 @@ func _process(_delta: float) -> void:
 	for uv in screen_quad:
 		pts.append(uv * size)
 	_poly.polygon = pts
+	(_poly.material as ShaderMaterial).set_shader_parameter("undo_tint", (owner.get_node("ViewmodelLayer/SpriteShadow") as SpriteShadow).undo_tint())
 	_screen.queue_redraw()
 
 

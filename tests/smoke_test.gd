@@ -120,6 +120,17 @@ func _runtime_checks() -> void:
 	w.data.hip_spread = hip
 	player.weapons._play_foley(player.weapons.aim_sound)
 	_check(player.weapons.switch_phase == 0.0 and player.weapons.state == WeaponManager.State.READY, "aim sound doesn't lower the gun")
+	var lights := player.get_node("ViewmodelLayer/WeaponLights") as WeaponLights
+	_check(lights.dot_visible, "laser dot lands where the gun points")
+	var zone := level.get_node("DarkArea/DarkZone") as DarkZone
+	var saved_pos := player.global_position
+	player.global_position = zone.global_position + Vector3(-2.0, 0.05, 2.0)
+	for i in 4:
+		await get_tree().physics_frame
+	_check(zone.has_player(), "dark zone notices the player")
+	player.global_position = saved_pos
+	for i in 4:
+		await get_tree().physics_frame
 	var screen := player.get_viewport().get_visible_rect().size
 	var saved_aim := player.viewmodel_aim
 	player.viewmodel_aim = screen * 0.5 + Vector2(200, 0)

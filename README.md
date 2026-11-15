@@ -122,6 +122,11 @@ ViewmodelLayer) casts a few rays from around the hands toward the level's Direct
 the bodycam's colour fringing; below `low_health` the edges pulse with a heartbeat. The direction arcs and voice
 grunts still play. Unsuppressed shots also light the gun sprite (`flash_light` on SpriteViewmodel).
 
+## Laser, flashlight and low light
+- WeaponData "Attachments": `laser` (dot + beam, toggle **L**), `laser_color`, `laser_uv` (emitter on the hip frame), `flashlight` (toggle **T**). MP7: red laser. Radian: green laser + light.
+- The dot sits where the shots go (same ray as hip fire). The 2D beam only draws on hip frames and only in the dark: its strength follows how much SpriteShadow is darkening the hands.
+- Low-light test room: `maps/dark_area.tscn`, east of the spawn (sign "LOW LIGHT"). A light-lock entrance keeps the sun out; its `DarkZone` fades the sky ambient down while you are inside and darkens the 2D hands. The flashlight lifts the hands back up a bit. The phone screen is backlit and never darkens.
+
 ## Voice and breathing
 
 `PlayerVoice` (on the Player) plays a random `damage_sounds` clip when hit (with `damage_cooldown`), a `death_sounds`
