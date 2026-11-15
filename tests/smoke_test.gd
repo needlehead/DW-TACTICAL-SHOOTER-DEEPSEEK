@@ -117,6 +117,12 @@ func _runtime_checks() -> void:
 	for i in 4:
 		w._shoot()
 	w.data.hip_spread = hip
+	var probe := player.get_node("ReverbProbe") as ReverbProbe
+	var space := player.get_world_3d().direct_space_state
+	var sky := probe.estimate(space, Vector3(0, 300, 0), [] as Array[RID])
+	_check(sky.enclosure == 0.0 and is_equal_approx(sky.wet, probe.wet_range.x), "reverb: open sky is driest")
+	var here := probe.estimate(space, player.camera.global_position, [player.get_rid()] as Array[RID])
+	_check(here.wet >= sky.wet and AudioServer.get_bus_index(&"Guns") >= 0, "reverb: Guns bus exists, walls add reverb")
 	_check(w.mag_estimate() == "Nearly full", "phone mag estimate at 25/30")
 	player.weapons.phone_blend = 0.75
 	_check(not player.weapons.can_fire() and player.weapons.phone_gun_lower() == 1.0 and player.weapons.phone_raise() == 0.5,

@@ -56,7 +56,7 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 | `empty_reload_sprites` | Optional frames for reloads from empty (slide/bolt locked). |
 | `reload_fps` | Playback rate for the reload frames; the last frame holds until the reload ends. 0 = stretch them evenly over the reload time. |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
-| `fire_sound` / `fire_sound_rpm` | Looping full-auto recording; plays while firing and stops between shots. `fire_sound_rpm` is the recording's rate, so the pitch is matched to `rpm`. |
+| `fire_sound` | One shot, played per round (overlapping) with `fire_pitch_jitter`; goes through the gun reverb. |
 | `mode_switch_time` | Length of the selector-flick animation (B); twist and dip amounts are on the SpriteViewmodel node. |
 | `aim_sprites` | Optional hip-to-ADS transition, driven by aim progress; last frame is held while aimed. Overrides `ads_sprite`. Must have transparent backgrounds. |
 | `sight_window` | Sight glass on the last aim frame (UV rect); aiming slides the frame so its centre lands on the aim point. |
@@ -82,6 +82,13 @@ Killed while prone: `dead_prone_sprite`, and the view tilts by `dead_prone_roll`
 
 `Portrait` (HUDLayer, bottom-left) shows `full` / `hurt` / `low` / `dead` by health; thresholds `hurt_below` (0.66) and
 `low_below` (0.33) are fractions of max health. Frames can be full-screen renders: each is cropped to its visible pixels.
+
+## Gun reverb
+
+Gun sounds (player and dummies) play on the `Guns` bus (`default_bus_layout.tres`), which has a reverb. `ReverbProbe`
+(on the Player) casts rays around the listener a few times a second and steers it from the space you're in: tight rooms
+get a short, wet ring; open ground gets a drier sound with a delayed echo off distant walls. No zones to place, so it works
+in any map. Tuning (wet range, ray length, what counts as a near wall, update rate) is on the `ReverbProbe` node.
 
 ## Phone (diegetic UI)
 

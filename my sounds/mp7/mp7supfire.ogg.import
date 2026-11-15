@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://drvtsivpg18qo"
+path="res://.godot/imported/mp7supfire.ogg-33c0448bc8eb798a978d0e9914001201.oggvorbisstr"
+
+[deps]
+
+source_file="res://my sounds/mp7/mp7supfire.ogg"
+dest_files=["res://.godot/imported/mp7supfire.ogg-33c0448bc8eb798a978d0e9914001201.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

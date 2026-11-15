@@ -72,11 +72,6 @@ func cancel_reload() -> void:
 func tick(delta: float, held: bool, pressed: bool, allowed: bool) -> void:
 	since_shot += delta
 	since_mode_switch += delta
-	if _fire_audio and _fire_audio.playing and since_shot >= 0.9 * 60.0 / data.rpm:
-		# Stop between shots unless the next one is coming; the loop would otherwise play a phantom shot.
-		var next_coming := allowed and not is_reloading() and chambered and (_burst_left > 0 or (mode == WeaponData.AUTO and held))
-		if not next_coming:
-			_fire_audio.stop()
 	bloom = move_toward(bloom, 0.0, data.spread_recover * delta)
 	_cooldown -= delta
 	if is_reloading():
@@ -156,12 +151,12 @@ func _play_fire_sound() -> void:
 		return
 	if _fire_audio == null:
 		_fire_audio = AudioStreamPlayer3D.new()
+		_fire_audio.bus = &"Guns"
+		_fire_audio.max_polyphony = 8  # each shot's tail rings under the next
 		add_child(_fire_audio)
-	if _fire_audio.playing:
-		return  # full-auto: the loop is already in step with the shots
 	_fire_audio.stream = data.fire_sound
 	_fire_audio.volume_db = data.fire_volume_db
-	_fire_audio.pitch_scale = data.rpm / data.fire_sound_rpm if data.fire_sound_rpm > 0.0 else 1.0
+	_fire_audio.pitch_scale = 1.0 + randf_range(-1.0, 1.0) * data.fire_pitch_jitter
 	_fire_audio.play()
 
 

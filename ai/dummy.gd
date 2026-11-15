@@ -129,11 +129,11 @@ func _shoot(player: Player) -> void:
 	if weapon.fire_sound:
 		if _audio == null:
 			_audio = AudioStreamPlayer3D.new()
+			_audio.bus = &"Guns"
 			add_child(_audio)
 			_audio.stream = weapon.fire_sound
 			_audio.volume_db = weapon.fire_volume_db
 		_audio.play()
-		get_tree().create_timer(0.9 * 60.0 / weapon.rpm).timeout.connect(_audio.stop)  # one shot out of the loop
 	flash.visible = true
 	await get_tree().create_timer(0.05).timeout
 	flash.visible = false
