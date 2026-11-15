@@ -118,6 +118,8 @@ func _runtime_checks() -> void:
 	for i in 4:
 		w._shoot()
 	w.data.hip_spread = hip
+	player.weapons._play_foley(player.weapons.aim_sound)
+	_check(player.weapons.switch_phase == 0.0 and player.weapons.state == WeaponManager.State.READY, "aim sound doesn't lower the gun")
 	var amb := get_node("/root/Ambience")
 	var all: Array[String] = ["a", "b", "c"]
 	var pass1: Array[String] = amb.shuffled(all, "a")

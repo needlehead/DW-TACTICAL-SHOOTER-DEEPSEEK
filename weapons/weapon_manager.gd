@@ -141,6 +141,8 @@ func _activate(index: int) -> void:
 	current = weapons[index]
 	current.visible = true
 	state = State.EQUIP
+	switch_phase = 1.0
+	weapon_changed.emit(current)
 	_play_foley(equip_sound)
 
 
@@ -150,5 +152,3 @@ func _play_foley(s: AudioStream) -> void:
 	_foley.stream = s
 	_foley.volume_db = handling_volume_db
 	_foley.play()
-	switch_phase = 1.0
-	weapon_changed.emit(current)
