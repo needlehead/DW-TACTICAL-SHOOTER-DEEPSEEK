@@ -6,9 +6,10 @@ extends Control
 ##            (or canted_sight_window while the canted sight is selected: Canted button)
 ##            (drag the corner handle or mouse wheel to resize, arrows nudge, Shift = bigger steps).
 ##   Muzzle - the idle frame fills the screen; click the barrel end to set muzzle_uv (suppressor smoke origin).
+##   Tablet - raises the phone; drag to move it, mouse wheel to bring it closer / further (phone_layout.tres).
 ## Save writes the weapon's .tres; Revert restores what it had when the editor opened.
 
-enum Mode { HIP, SIGHT, MUZZLE }
+enum Mode { HIP, SIGHT, MUZZLE, TABLET }
 
 const STEP := 0.001  ## arrow-key nudge (fraction of screen); Shift x10
 const HANDLE := 14.0  ## corner handle size in pixels
@@ -33,8 +34,8 @@ func _ready() -> void:
 	panel.add_child(col)
 	var bar := HBoxContainer.new()
 	col.add_child(bar)
-	for m: int in [Mode.HIP, Mode.SIGHT, Mode.MUZZLE]:
-		var b := _button(bar, ["Hip", "Sight", "Muzzle"][m], set_mode.bind(m))
+	for m: int in [Mode.HIP, Mode.SIGHT, Mode.MUZZLE, Mode.TABLET]:
+		var b := _button(bar, ["Hip", "Sight", "Muzzle", "Tablet"][m], set_mode.bind(m))
 		b.toggle_mode = true
 		_mode_buttons.append(b)
 	_button(bar, "Next weapon", _next_weapon)
@@ -64,8 +65,14 @@ func _unhandled_input(event: InputEvent) -> void:
 func toggle() -> void:
 	visible = not visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if visible else Input.MOUSE_MODE_CAPTURED
+	player.weapons.phone_forced = visible and mode == Mode.TABLET
 	if visible:
 		_remember(data())
+		_remember_layout()
+
+
+func layout() -> PhoneLayout:
+	return (player.get_node("ViewmodelLayer/Phone") as Node).get("layout")
 
 
 func data() -> WeaponData:
@@ -88,6 +95,8 @@ func _set_window(r: Rect2) -> void:
 
 func set_mode(m: int) -> void:
 	mode = m
+	if player.weapons:  # null during _ready, before the player has set up its weapons
+		player.weapons.phone_forced = visible and m == Mode.TABLET
 	for i in _mode_buttons.size():
 		_mode_buttons[i].button_pressed = i == m
 
@@ -102,21 +111,30 @@ func nudge(dir: Vector2) -> void:
 			_set_window(Rect2(_window().position + dir, _window().size))
 		Mode.MUZZLE:
 			d.muzzle_uv += dir
+		Mode.TABLET:
+			layout().hold_offset += dir
 
 
 func save() -> void:
-	var d := data()
-	var err := ResourceSaver.save(d)
-	Game.toast(("Saved " + d.resource_path.get_file()) if err == OK else "Save failed (%s)" % error_string(err))
+	var res: Resource = layout() if mode == Mode.TABLET else data()
+	var err := ResourceSaver.save(res)
+	Game.toast(("Saved " + res.resource_path.get_file()) if err == OK else "Save failed (%s)" % error_string(err))
 	if err == OK:
-		_originals.erase(d)
-		_remember(d)
+		_originals.erase(res)
+		_remember(data())
+		_remember_layout()
 
 
 func revert() -> void:
-	var d := data()
-	for p: String in _originals.get(d, {}):
-		d.set(p, _originals[d][p])
+	var res: Resource = layout() if mode == Mode.TABLET else data()
+	for p: String in _originals.get(res, {}):
+		res.set(p, _originals[res][p])
+
+
+func _remember_layout() -> void:
+	var l := layout()
+	if not _originals.has(l):
+		_originals[l] = {"hold_scale": l.hold_scale, "hold_offset": l.hold_offset}
 
 
 func _remember(d: WeaponData) -> void:
@@ -157,6 +175,8 @@ func _gui_input(event: InputEvent) -> void:
 				_drag = "resize"
 			else:
 				_drag = "move"
+		elif mode == Mode.TABLET and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			layout().hold_scale *= 1.02 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.02
 		elif mode == Mode.SIGHT and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			var f := 1.03 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.03
 			var r := _window()
@@ -167,6 +187,8 @@ func _gui_input(event: InputEvent) -> void:
 		match mode:
 			Mode.HIP:
 				d.sprite_offset += rel / vp.y
+			Mode.TABLET:
+				layout().hold_offset += rel / vp.y
 			Mode.SIGHT:
 				if _drag == "resize":
 					_set_window(Rect2(_window().position, (_window().size + rel / vp).max(Vector2(0.005, 0.005))))
@@ -179,6 +201,12 @@ func _process(_delta: float) -> void:
 	if not visible:
 		return
 	var d := data()
+	if mode == Mode.TABLET:
+		var l := layout()
+		_info.text = "Tablet  (%s)\nhold_offset = %s\nhold_scale = %.3f\nDrag to move, wheel = closer / further. Arrows nudge, Shift = x10." % [
+			l.resource_path.get_file(), l.hold_offset, l.hold_scale]
+		queue_redraw()
+		return
 	_info.text = "%s  (%s)\nsprite_offset = %s\n%s = %s\nmuzzle_uv = %s\nDrag to move. Arrows nudge, Shift = x10.%s" % [
 		d.display_name, d.resource_path.get_file(), d.sprite_offset, _window_prop(), _window(), d.muzzle_uv,
 		"  Corner handle / wheel resizes." if mode == Mode.SIGHT else ""]
@@ -189,7 +217,7 @@ func _draw() -> void:
 	var vp := get_viewport_rect().size
 	var d := data()
 	var c := vp * 0.5
-	if mode == Mode.HIP:
+	if mode == Mode.HIP or mode == Mode.TABLET:
 		draw_line(c - Vector2(12, 0), c + Vector2(12, 0), Color(1, 1, 1, 0.7), 1.0)
 		draw_line(c - Vector2(0, 12), c + Vector2(0, 12), Color(1, 1, 1, 0.7), 1.0)
 		return

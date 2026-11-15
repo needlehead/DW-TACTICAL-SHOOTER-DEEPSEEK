@@ -23,6 +23,7 @@ var player: Player
 
 var grenades := 0
 var phone_blend := 0.0  ## 0 = gun up, 0.5 = gun down, 1 = phone fully raised
+var phone_forced := false  ## viewmodel editor's Tablet mode keeps the phone raised
 var _phone_cancelled := false
 var _foley: AudioStreamPlayer  # fire/ADS put the phone away until Tab is pressed again
 var _next := 0
@@ -100,7 +101,7 @@ func _process(delta: float) -> void:
 		_phone_cancelled = false
 	elif phone_blend > 0.0 and (Input.is_action_just_pressed("fire") or Input.is_action_just_pressed("ads")):
 		_phone_cancelled = true
-	var phone_target := 1.0 if wants_phone and not _phone_cancelled and state == State.READY and not current.is_reloading() else 0.0
+	var phone_target := 1.0 if phone_forced or (wants_phone and not _phone_cancelled and state == State.READY and not current.is_reloading()) else 0.0
 	var was_lowered := phone_blend >= 0.5
 	phone_blend = move_toward(phone_blend, phone_target, delta / maxf(phone_time, 0.01))
 	if was_lowered and phone_blend < 0.5:

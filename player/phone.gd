@@ -10,10 +10,8 @@ extends TextureRect
 @export var sway_amount := 1.0  ## 1 = moves exactly like the gun (sway, walk bob, inertia)
 @export var sway_tilt := 0.6  ## radians of tilt per screen height of sideways sway
 @export var overscan := 0.06  ## extra size so sway never shows the frame's cut-off edges
-## Holding it closer: scale around the frame's bottom-left corner (where the arm leaves the image), and push
-## that corner off-screen (screen heights) so sway and tilt never reveal the end of the arm.
-@export var hold_scale := 1.3
-@export var hold_offset := Vector2(-0.2, 0.06)
+## Hold position and size (scaled around the arm's exit corner, which stays off-screen); F4 -> Tablet edits it.
+@export var layout: PhoneLayout = preload("res://player/phone_layout.tres")
 @export var heroine_name := "KEI FUJIWARA"
 @export var outfit_name := "HEAVY METAL"
 @export var outfit_sprite: Texture2D
@@ -65,9 +63,9 @@ func _process(_delta: float) -> void:
 	size = vp * (1.0 + overscan)
 	var e := 1.0 - pow(1.0 - t, 3.0)  # ease out: quick lift, gentle settle
 	var sway: Vector2 = hands.hand_offset(vp.y, false) * sway_amount
-	position = Vector2(-vp.x * overscan * 0.5, 0.0) + hold_offset * vp.y + sway + Vector2(0.0, (1.0 - e) * raise_drop * vp.y)
+	position = Vector2(-vp.x * overscan * 0.5, 0.0) + layout.hold_offset * vp.y + sway + Vector2(0.0, (1.0 - e) * raise_drop * vp.y)
 	pivot_offset = Vector2(0.0, size.y)  # arm's exit corner stays put under scale and tilt
-	scale = Vector2.ONE * hold_scale
+	scale = Vector2.ONE * layout.hold_scale
 	rotation = sway.x / vp.y * sway_tilt
 	var pts := PackedVector2Array()
 	for uv in screen_quad:

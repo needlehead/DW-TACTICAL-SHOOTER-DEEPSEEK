@@ -133,6 +133,13 @@ func _runtime_checks() -> void:
 	var ed := player.get_node("HUDLayer/ViewmodelEditor") as ViewmodelEditor
 	var before := ed.data().sprite_offset
 	ed.toggle()
+	ed.set_mode(ViewmodelEditor.Mode.TABLET)
+	var hold := ed.layout().hold_offset
+	ed.nudge(Vector2(0.0, 0.02))
+	var tablet_moved := ed.layout().hold_offset.is_equal_approx(hold + Vector2(0.0, 0.02)) and player.weapons.phone_forced
+	ed.revert()
+	_check(tablet_moved and ed.layout().hold_offset == hold, "viewmodel editor: tablet mode raises the phone, nudges and reverts")
+	ed.set_mode(ViewmodelEditor.Mode.HIP)
 	ed.nudge(Vector2(0.01, 0.0))
 	var moved := ed.data().sprite_offset.is_equal_approx(before + Vector2(0.01, 0.0))
 	ed.revert()
