@@ -6,6 +6,8 @@ extends TextureRect
 @export var idle_sprite: Texture2D
 @export var walk_sprites: Array[Texture2D] = []
 @export var dead_sprite: Texture2D
+@export var crouch_idle_sprite: Texture2D  ## crouched frames; empty falls back to the standing ones
+@export var crouch_walk_sprites: Array[Texture2D] = []
 @export var frame_pitch := -80.0  ## look pitch (degrees) the frames were rendered at; fully in view there
 @export var cycle_length := 3.5  ## metres walked per loop of walk_sprites; raise to slow the legs
 @export var body_scale := 0.65  ## frame size; shrinks toward the bottom centre so the cut-off torso stays at the screen edge
@@ -41,11 +43,14 @@ func _process(delta: float) -> void:
 	position = Vector2(0.0, drop)
 	scale = Vector2.ONE * body_scale
 
+	var crouched := player.stance == Player.Stance.CROUCH
+	var idle := crouch_idle_sprite if crouched and crouch_idle_sprite else idle_sprite
+	var walk := crouch_walk_sprites if crouched and not crouch_walk_sprites.is_empty() else walk_sprites
 	var speed := player.horizontal_speed()
-	if speed < min_walk_speed or walk_sprites.is_empty() or not player.is_on_floor():
-		texture = idle_sprite
+	if speed < min_walk_speed or walk.is_empty() or not player.is_on_floor():
+		texture = idle
 		return
 	var forward := -player.global_basis.z
 	var dir := -1.0 if player.velocity.dot(forward) < -0.1 else 1.0
 	_phase = fposmod(_phase + dir * speed * delta / cycle_length, 1.0)
-	texture = walk_sprites[mini(int(_phase * walk_sprites.size()), walk_sprites.size() - 1)]
+	texture = walk[mini(int(_phase * walk.size()), walk.size() - 1)]

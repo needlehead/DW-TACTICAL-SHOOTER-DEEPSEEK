@@ -18,6 +18,13 @@
 [ext_resource type="Script" path="res://player/body_sprite.gd" id="19_body"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/idle.png" id="b_idle"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead1.png" id="b_dead"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouchidle.png" id="b_cidle"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouch.png" id="b_crouch"]
+[ext_resource type="Script" path="res://ui/portrait.gd" id="20_portrait"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitfull.png" id="p_full"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitdamage.png" id="p_damage"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitlow.png" id="p_low"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitdead.png" id="p_dead"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (1).png" id="b_w1"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (2).png" id="b_w2"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (3).png" id="b_w3"]
@@ -163,6 +170,14 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("12_hud")
 
+[node name="Portrait" type="TextureRect" parent="HUDLayer"]
+mouse_filter = 2
+script = ExtResource("20_portrait")
+full = ExtResource("p_full")
+hurt = ExtResource("p_damage")
+low = ExtResource("p_low")
+dead = ExtResource("p_dead")
+
 [node name="DebugPanel" type="PanelContainer" parent="HUDLayer"]
 offset_right = 420.0
 offset_bottom = 300.0
@@ -174,6 +189,8 @@ script = ExtResource("19_body")
 idle_sprite = ExtResource("b_idle")
 walk_sprites = Array[Texture2D]([ExtResource("b_w1"), ExtResource("b_w2"), ExtResource("b_w3"), ExtResource("b_w4"), ExtResource("b_w5"), ExtResource("b_w6"), ExtResource("b_w7"), ExtResource("b_w8"), ExtResource("b_w9"), ExtResource("b_w10"), ExtResource("b_w11"), ExtResource("b_w12"), ExtResource("b_w13"), ExtResource("b_w14"), ExtResource("b_w15"), ExtResource("b_w16"), ExtResource("b_w17"), ExtResource("b_w18"), ExtResource("b_w19"), ExtResource("b_w20"), ExtResource("b_w21"), ExtResource("b_w22"), ExtResource("b_w23"), ExtResource("b_w24"), ExtResource("b_w25")])
 dead_sprite = ExtResource("b_dead")
+crouch_idle_sprite = ExtResource("b_cidle")
+crouch_walk_sprites = Array[Texture2D]([ExtResource("b_crouch")])
 
 [node name="MuzzleSmoke" type="Control" parent="ViewmodelLayer"]
 layout_mode = 3
