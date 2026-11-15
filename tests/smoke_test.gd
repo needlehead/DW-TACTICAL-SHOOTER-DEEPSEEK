@@ -120,6 +120,13 @@ func _runtime_checks() -> void:
 	w.data.hip_spread = hip
 	player.weapons._play_foley(player.weapons.aim_sound)
 	_check(player.weapons.switch_phase == 0.0 and player.weapons.state == WeaponManager.State.READY, "aim sound doesn't lower the gun")
+	var screen := player.get_viewport().get_visible_rect().size
+	var saved_aim := player.viewmodel_aim
+	player.viewmodel_aim = screen * 0.5 + Vector2(200, 0)
+	_check((-player.aim_basis().z).dot(player.camera.global_basis.x) > 0.05, "hip fire follows the gun: sprite aimed right -> shots go right")
+	player.viewmodel_aim = Vector2.INF
+	_check((-player.aim_basis().z).is_equal_approx(-player.freeaim_basis().z), "no sprite gun: falls back to view + freeaim")
+	player.viewmodel_aim = saved_aim
 	var rifle := player.weapons.weapons[1]
 	_check(rifle.data.display_name == "Radian Rifle" and rifle.data.scope_magnification > 0.0 and rifle.current_sprite(1.0) == rifle.data.aim_sprites[-1],
 		"rifle in slot 2, scoped, last aim frame when fully aimed")
@@ -174,6 +181,9 @@ func _runtime_checks() -> void:
 	player.look_pitch = rad_to_deg(asin(d.y / d.length()))
 	player.recoil = Vector2.ZERO
 	player.recoil_target = Vector2.ZERO
+	var vm = player.get_node("LeanPivot/Head/Camera3D/Viewmodel")  # shots follow the gun: let the last burst's kick settle
+	vm.kick_pos = Vector3.ZERO
+	vm.kick_rot = Vector3.ZERO
 	for i in 2:
 		await get_tree().process_frame
 	w.data.hip_spread = 0.0

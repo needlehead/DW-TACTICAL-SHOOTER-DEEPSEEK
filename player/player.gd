@@ -67,6 +67,7 @@ var recoil_recovery := 8.0
 var since_shot := 99.0
 var look_yaw := 0.0
 var look_pitch := 0.0
+var viewmodel_aim := Vector2.INF  ## screen point the 2D gun's barrel points at (set by SpriteViewmodel); INF = none
 var death_roll := 0.0  ## current view roll in degrees (prone death)
 var eye_height := 1.65
 var spawn_transform: Transform3D
@@ -166,8 +167,16 @@ func add_recoil(kick: Vector2, recovery: float) -> void:
 	since_shot = 0.0
 
 
-## Direction the gun points: view rotated by freeaim.
+## Direction the gun points. With a 2D sprite gun: the camera ray through the screen point its barrel points
+## at, so sway, bob, inertia, kick and the freeaim drift all move the shots with the gun you see.
 func aim_basis() -> Basis:
+	if not viewmodel_aim.is_finite():
+		return freeaim_basis()
+	return Basis.looking_at(camera.project_ray_normal(viewmodel_aim), camera.global_basis.y)
+
+
+## The view rotated by freeaim only: for things that follow your head rather than the gun (wall check, throws).
+func freeaim_basis() -> Basis:
 	return camera.global_basis * Basis.from_euler(Vector3(deg_to_rad(freeaim.y), deg_to_rad(freeaim.x), 0.0))
 
 

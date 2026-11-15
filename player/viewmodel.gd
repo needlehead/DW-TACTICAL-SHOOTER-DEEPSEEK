@@ -74,7 +74,7 @@ func _update_wall_block(d: WeaponData, delta: float) -> void:
 	var cam := player.camera
 	var length := d.vm_size.z + absf(d.hip_offset.z) + wall_check_extra
 	var from := cam.global_position
-	var q := PhysicsRayQueryParameters3D.create(from, from - player.aim_basis().z * length, Ballistics.WORLD)
+	var q := PhysicsRayQueryParameters3D.create(from, from - player.freeaim_basis().z * length, Ballistics.WORLD)  # not the sprite aim: a lowered gun would see the floor and stay lowered
 	var hit := get_world_3d().direct_space_state.intersect_ray(q)
 	var target := 0.0
 	if not hit.is_empty():

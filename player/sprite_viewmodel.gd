@@ -63,6 +63,7 @@ func _process(delta: float) -> void:
 	texture = w.current_sprite(player.ads_blend, _sprint_t)
 	visible = texture != null and player.alive
 	if not visible:
+		player.viewmodel_aim = Vector2.INF
 		return
 	var d := w.data
 	var vp := get_viewport_rect().size
@@ -94,9 +95,12 @@ func _process(delta: float) -> void:
 		var sight := base + window.get_center() * size + d.sprite_offset * k
 		off += (vp * 0.5 - sight) * w.sight_progress(player.ads_blend)
 	position = base + off
+	var rest_aim := vp * 0.5 - (base + d.sprite_offset * k)  # sprite-local point that sits on screen centre at rest
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
 	rotation = kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick
+	# Where the barrel points: the rest point carried by the sprite's motion; aiming pulls it onto the sights (centre).
+	player.viewmodel_aim = (get_transform() * rest_aim).lerp(vp * 0.5, player.ads_blend)
 
 	var shooting := texture == d.shoot_sprite and d.shoot_blur > 0.0
 	var fade := 1.0 - w.since_shot / d.shoot_frame_time if shooting else 0.0

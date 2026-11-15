@@ -70,7 +70,7 @@ func throw_grenade() -> void:
 	var g := grenade_scene.instantiate() as Grenade
 	g.thrower = player
 	player.get_parent().add_child(g)
-	var fwd := -player.aim_basis().z
+	var fwd := -player.freeaim_basis().z
 	g.global_position = player.camera.global_position + fwd * 0.4
 	g.linear_velocity = player.velocity + fwd * throw_speed + Vector3.UP * 2.0
 	state = State.EQUIP

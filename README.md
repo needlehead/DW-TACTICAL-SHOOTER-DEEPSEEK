@@ -103,6 +103,13 @@ The `Ambience` autoload plays every track in `my sounds/ambience/tracks/` in a s
 `python tools/split_ambience.py <mix.mp3> "my sounds/ambience/tracks"` (cuts land in quiet moments every 4-7 min).
 The source mix lives in `my sounds/ambience/source/`, which Godot ignores (`.gdignore`) and git ignores (288 MB).
 
+## Hip fire follows the gun
+
+With a sprite gun, shots go where the gun is pointing: `SpriteViewmodel` tracks the screen point that sits on the
+centre when the gun is at rest, carried by sway, bob, inertia, kick, the freeaim drift and stance pull-in, and
+`Player.aim_basis()` fires through it (the HUD aim dot shows it). Aiming blends it back onto the sights. The wall
+check and grenade throws still use the view (`freeaim_basis()`).
+
 ## Sprite shading
 
 The viewmodel sprites (gun, body, phone) darken when your hands are out of the sun: `SpriteShadow` (a CanvasModulate in
