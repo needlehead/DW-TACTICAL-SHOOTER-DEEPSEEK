@@ -68,3 +68,4 @@ canted_sight_window = Rect2(0.4742, 0.3965, 0.0738, 0.0889)
 fire_sound = ExtResource("snd_fire")
 fire_volume_db = 2.0
 sprite_offset = Vector2(0.050000004, 0.08999999)
+muzzle_uv = Vector2(0.55, 0.434)

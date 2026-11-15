@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://player/footsteps.gd" id="2_steps"]
+[ext_resource type="Script" path="res://player/muzzle_flash.gd" id="26_flash"]
 [ext_resource type="Script" path="res://player/player_voice.gd" id="25_voice"]
 [ext_resource type="AudioStream" path="res://my sounds/generic/breath_loop.ogg" id="v_breath"]
 [ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (1).wav" id="v_dmg1"]
@@ -257,6 +258,9 @@ script = ExtResource("16_smoke")
 [node name="SpriteViewmodel" type="TextureRect" parent="ViewmodelLayer"]
 mouse_filter = 2
 script = ExtResource("15_sprite")
+
+[node name="MuzzleFlash" type="Control" parent="ViewmodelLayer"]
+script = ExtResource("26_flash")
 
 [node name="Phone" type="TextureRect" parent="ViewmodelLayer"]
 mouse_filter = 2
