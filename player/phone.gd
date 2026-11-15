@@ -7,6 +7,9 @@ extends TextureRect
 ## Screen corners on the frame (0-1 UV): top-left, top-right, bottom-right, bottom-left.
 @export var screen_quad := PackedVector2Array([Vector2(0.3477, 0.5208), Vector2(0.5273, 0.4917), Vector2(0.5359, 0.6979), Vector2(0.3594, 0.7444)])
 @export var raise_drop := 0.8  ## screen heights below the bottom edge when put away
+@export var sway_amount := 1.0  ## 1 = moves exactly like the gun (sway, walk bob, inertia)
+@export var sway_tilt := 0.6  ## radians of tilt per screen height of sideways sway
+@export var overscan := 0.06  ## extra size so sway never shows the frame's cut-off edges
 @export var heroine_name := "KEI FUJIWARA"
 @export var outfit_name := "HEAVY METAL"
 @export var outfit_sprite: Texture2D
@@ -24,6 +27,7 @@ var _outfit: AtlasTexture
 @onready var player: Player = owner
 @onready var manager: WeaponManager = owner.get_node("LeanPivot/Head/Camera3D/Viewmodel/Weapons")
 @onready var portrait: Node = owner.get_node("HUDLayer/Portrait")
+@onready var hands = owner.get_node("ViewmodelLayer/SpriteViewmodel")  # shares the gun's sway/bob
 
 
 func _ready() -> void:
@@ -54,12 +58,15 @@ func _process(_delta: float) -> void:
 	if not visible:
 		return
 	var vp := get_viewport_rect().size
-	size = vp
+	size = vp * (1.0 + overscan)
 	var e := 1.0 - pow(1.0 - t, 3.0)  # ease out: quick lift, gentle settle
-	position = Vector2(0.0, (1.0 - e) * raise_drop * vp.y)
+	var sway: Vector2 = hands.hand_offset(vp.y) * sway_amount
+	position = Vector2(-vp.x * overscan * 0.5, 0.0) + sway + Vector2(0.0, (1.0 - e) * raise_drop * vp.y)
+	pivot_offset = Vector2(size.x * 0.4, size.y)  # wrist, roughly
+	rotation = sway.x / vp.y * sway_tilt
 	var pts := PackedVector2Array()
 	for uv in screen_quad:
-		pts.append(uv * vp)
+		pts.append(uv * size)
 	_poly.polygon = pts
 	_screen.queue_redraw()
 

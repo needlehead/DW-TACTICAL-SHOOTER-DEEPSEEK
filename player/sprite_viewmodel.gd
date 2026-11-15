@@ -36,6 +36,16 @@ func _ready() -> void:
 	add_child(_holo)
 
 
+## Sway, bob, inertia and freeaim as a screen offset (pixels); anything held in the hands (gun, phone) uses it.
+func hand_offset(k: float) -> Vector2:
+	var sway: Vector2 = viewmodel.sway
+	var bob: Vector3 = viewmodel.bob
+	var inertia: Vector3 = viewmodel.inertia_offset
+	return Vector2(
+		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - deg_to_rad(player.freeaim.x) * freeaim_scale,
+		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - deg_to_rad(player.freeaim.y) * freeaim_scale) * k
+
+
 func _process(_delta: float) -> void:
 	var w := player.weapons.current
 	texture = w.current_sprite(player.ads_blend)
@@ -46,17 +56,11 @@ func _process(_delta: float) -> void:
 	var vp := get_viewport_rect().size
 	var k := vp.y
 	var ads := 0.0 if d.ads_sprite or not d.aim_sprites.is_empty() else player.ads_blend
-	var sway: Vector2 = viewmodel.sway
-	var bob: Vector3 = viewmodel.bob
-	var inertia: Vector3 = viewmodel.inertia_offset
 	var kick: Vector3 = viewmodel.kick_pos
 	var kick_rot: Vector3 = viewmodel.kick_rot
 	var lower: float = viewmodel.lower
 
-	var off := Vector2(
-		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - deg_to_rad(player.freeaim.x) * freeaim_scale,
-		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - deg_to_rad(player.freeaim.y) * freeaim_scale
-			+ kick.z * kick_scale + lower * lower_drop + player.sprint_blend * sprint_drop) * k
+	var off := hand_offset(k) + Vector2(0.0, kick.z * kick_scale + lower * lower_drop + player.sprint_blend * sprint_drop) * k
 	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads + d.sprite_offset * k
 	var flick := sin(PI * clampf(w.since_mode_switch / d.mode_switch_time, 0.0, 1.0))
 	off += mode_switch_drop * k * flick
