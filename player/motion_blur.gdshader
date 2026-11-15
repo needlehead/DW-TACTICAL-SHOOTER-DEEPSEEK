@@ -12,5 +12,6 @@ void fragment() {
 		acc += vec4(c.rgb * c.a, c.a);  // premultiply so transparent edges don't darken the streak
 	}
 	acc /= float(samples);
-	COLOR = vec4(acc.rgb / max(acc.a, 0.0001), acc.a) * COLOR;
+	// COLOR already holds the texture sample here; replace it rather than multiply, or colours get squared.
+	COLOR = vec4(acc.rgb / max(acc.a, 0.0001), acc.a);
 }
