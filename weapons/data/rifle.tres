@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (6).png" id="r_a6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (7).png" id="r_a7"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (8).png" id="r_a8"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/idle.png" id="r_idle"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/newidle.png" id="r_idle"]
 [ext_resource type="AudioStream" path="res://my sounds/mp7/mp7supfire.ogg" id="snd_fire"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (2).png" id="r_c2"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (3).png" id="r_c3"]
@@ -16,6 +16,26 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (5).png" id="r_c5"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (6).png" id="r_c6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (7).png" id="r_c7"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0001.png" id="r_rl0"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0003.png" id="r_rl1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0005.png" id="r_rl2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0007.png" id="r_rl3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0008.png" id="r_rl4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0009.png" id="r_rl5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0010.png" id="r_rl6"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0011.png" id="r_rl7"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0012.png" id="r_rl8"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0013.png" id="r_rl9"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0014.png" id="r_rl10"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0015.png" id="r_rl11"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0016.png" id="r_rl12"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0017.png" id="r_rl13"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0018.png" id="r_rl14"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0019.png" id="r_rl15"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0020.png" id="r_rl16"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0021.png" id="r_rl17"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0022.png" id="r_rl18"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0023.png" id="r_rl19"]
 
 [resource]
 script = ExtResource("1_wd")
@@ -35,6 +55,7 @@ recoil_pattern = PackedVector2Array(0, 0.8, 0.1, 0.9, 0.15, 0.8, 0.05, 0.7, -0.1
 vm_kick_back = 0.04
 vm_kick_rot = 2.5
 idle_sprite = ExtResource("r_idle")
+reload_sprites = Array[Texture2D]([ExtResource("r_rl0"), ExtResource("r_rl1"), ExtResource("r_rl2"), ExtResource("r_rl3"), ExtResource("r_rl4"), ExtResource("r_rl5"), ExtResource("r_rl6"), ExtResource("r_rl7"), ExtResource("r_rl8"), ExtResource("r_rl9"), ExtResource("r_rl10"), ExtResource("r_rl11"), ExtResource("r_rl12"), ExtResource("r_rl13"), ExtResource("r_rl14"), ExtResource("r_rl15"), ExtResource("r_rl16"), ExtResource("r_rl17"), ExtResource("r_rl18"), ExtResource("r_rl19")])
 aim_sprites = Array[Texture2D]([ExtResource("r_a2"), ExtResource("r_a3"), ExtResource("r_a4"), ExtResource("r_a5"), ExtResource("r_a6"), ExtResource("r_a7"), ExtResource("r_a8")])
 sight_window = Rect2(0.3871, 0.2958, 0.2047, 0.3639)
 reticle_color = Color(1, 0.35, 0.1, 1)
