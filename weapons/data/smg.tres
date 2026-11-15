@@ -1,17 +1,37 @@
-[gd_resource type="Resource" script_class="WeaponData" format=3]
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://b1sssuo32wuse"]
 
-[ext_resource type="Script" path="res://weapons/weapon_data.gd" id="1_wd"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/idle.png" id="2_idle"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/shoot.png" id="3_shoot"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (1).png" id="r1"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (2).png" id="r2"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (3).png" id="r3"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (4).png" id="r4"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (5).png" id="r5"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (6).png" id="r6"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (7).png" id="r7"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (8).png" id="r8"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (9).png" id="r9"]
+[ext_resource type="Script" uid="uid://dhdk3my2xnm08" path="res://weapons/weapon_data.gd" id="1_wd"]
+[ext_resource type="Texture2D" uid="uid://dxuu0ysipl7h2" path="res://koikatsu sprites/testing/idle.png" id="2_idle"]
+[ext_resource type="Texture2D" uid="uid://tgu53fire34q" path="res://koikatsu sprites/testing/shoot.png" id="3_shoot"]
+[ext_resource type="Texture2D" uid="uid://ct75k5wi5hkrt" path="res://koikatsu sprites/testing/reload (1).png" id="r1"]
+[ext_resource type="Texture2D" uid="uid://dgtsuiyugklut" path="res://koikatsu sprites/testing/reload (2).png" id="r2"]
+[ext_resource type="Texture2D" uid="uid://t1xpcc0l0pkj" path="res://koikatsu sprites/testing/reload (3).png" id="r3"]
+[ext_resource type="Texture2D" uid="uid://mmqd6ccdylhu" path="res://koikatsu sprites/testing/reload (4).png" id="r4"]
+[ext_resource type="Texture2D" uid="uid://dp2rwtm4eimgv" path="res://koikatsu sprites/testing/reload (5).png" id="r5"]
+[ext_resource type="Texture2D" uid="uid://hqqkrainwhmh" path="res://koikatsu sprites/testing/reload (6).png" id="r6"]
+[ext_resource type="Texture2D" uid="uid://4qohelq55t5u" path="res://koikatsu sprites/testing/reload (7).png" id="r7"]
+[ext_resource type="Texture2D" uid="uid://7wllqpgk77xt" path="res://koikatsu sprites/testing/reload (8).png" id="r8"]
+[ext_resource type="Texture2D" uid="uid://b5atdt7y6c381" path="res://koikatsu sprites/testing/reload (9).png" id="r9"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (1).png" id="e1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (2).png" id="e2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (3).png" id="e3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (4).png" id="e4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (5).png" id="e5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (6).png" id="e6"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (7).png" id="e7"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (8).png" id="e8"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (9).png" id="e9"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (10).png" id="e10"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (11).png" id="e11"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (12).png" id="e12"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (13).png" id="e13"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (14).png" id="e14"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (15).png" id="e15"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (16).png" id="e16"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (17).png" id="e17"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (18).png" id="e18"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (19).png" id="e19"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (20).png" id="e20"]
 
 [resource]
 script = ExtResource("1_wd")
@@ -25,7 +45,6 @@ min_damage_mult = 0.55
 penetration_power = 0.4
 max_penetrations = 1
 muzzle_velocity = 400.0
-mag_size = 30
 spare_mags = 5
 reload_time = 2.0
 empty_reload_time = 2.6
@@ -41,17 +60,17 @@ spread_per_shot = 0.15
 spread_max = 3.0
 spread_recover = 8.0
 recoil_pattern = PackedVector2Array(0, 0.5, 0.05, 0.55, 0.1, 0.5, 0.1, 0.45, 0, 0.4, -0.1, 0.4, -0.15, 0.35, -0.05, 0.35, 0.1, 0.35)
-recoil_random = Vector2(0.2, 0.1)
-camera_recoil = 1.0
 recoil_recovery = 9.0
 vm_kick_back = 0.03
 vm_kick_rot = 1.5
+idle_sprite = ExtResource("2_idle")
+shoot_sprite = ExtResource("3_shoot")
+reload_sprites = Array[Texture2D]([ExtResource("r1"), ExtResource("r2"), ExtResource("r3"), ExtResource("r4"), ExtResource("r5"), ExtResource("r6"), ExtResource("r7"), ExtResource("r8"), ExtResource("r9")])
+empty_reload_sprites = Array[Texture2D]([ExtResource("e1"), ExtResource("e2"), ExtResource("e3"), ExtResource("e4"), ExtResource("e5"), ExtResource("e6"), ExtResource("e7"), ExtResource("e8"), ExtResource("e9"), ExtResource("e10"), ExtResource("e11"), ExtResource("e12"), ExtResource("e13"), ExtResource("e14"), ExtResource("e15"), ExtResource("e16"), ExtResource("e17"), ExtResource("e18"), ExtResource("e19"), ExtResource("e20")])
+reload_fps = 7.0
+muzzle_uv = Vector2(0.583, 0.506)
+suppressed = true
 vm_size = Vector3(0.06, 0.11, 0.5)
 color = Color(0.3, 0.3, 0.32, 1)
 hip_offset = Vector3(0.16, -0.15, -0.3)
 ads_distance = 0.24
-idle_sprite = ExtResource("2_idle")
-shoot_sprite = ExtResource("3_shoot")
-reload_sprites = Array[Texture2D]([ExtResource("r1"), ExtResource("r2"), ExtResource("r3"), ExtResource("r4"), ExtResource("r5"), ExtResource("r6"), ExtResource("r7"), ExtResource("r8"), ExtResource("r9")])
-muzzle_uv = Vector2(0.583, 0.506)
-suppressed = true

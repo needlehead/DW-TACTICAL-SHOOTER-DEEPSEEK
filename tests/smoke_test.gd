@@ -43,6 +43,7 @@ func _logic_checks() -> void:
 	w.since_shot = 0.0
 	_check(w.current_sprite(0.0) == data.shoot_sprite, "shoot sprite right after firing")
 	w.since_shot = 99.0
+	data.reload_fps = 0.0
 	w.start_reload()
 	_check(w.current_sprite(0.0) == data.reload_sprites[0], "first reload frame at start")
 	w.reload_left = w.reload_total * 0.5
@@ -52,6 +53,19 @@ func _logic_checks() -> void:
 	_check(w.current_sprite(0.0) == data.reload_sprites[3], "reload_fps 10: frame 3 at 0.35 s")
 	w.reload_left = 0.01
 	_check(w.current_sprite(0.0) == data.reload_sprites[-1], "reload_fps: last frame holds")
+	w.reload_left = 0.0
+	w.mag = 0
+	w.chambered = false
+	w.start_reload()
+	var empty_frames := data.empty_reload_sprites if not data.empty_reload_sprites.is_empty() else data.reload_sprites
+	_check(w.empty_reload and w.current_sprite(0.0) == empty_frames[0], "empty reload uses empty_reload_sprites")
+	w.reload_left = 0.0
+	var saved_aim := data.aim_sprites
+	data.aim_sprites = [data.reload_sprites[0], data.reload_sprites[1], data.reload_sprites[2]]
+	_check(w.current_sprite(0.0) == data.idle_sprite, "aim frames: idle at hip")
+	_check(w.current_sprite(0.5) == data.aim_sprites[1], "aim frames: middle frame half aimed")
+	_check(w.current_sprite(1.0) == data.aim_sprites[-1], "aim frames: last frame fully aimed")
+	data.aim_sprites = saved_aim
 	data.reload_fps = 0.0
 	w.free()
 

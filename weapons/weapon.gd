@@ -16,6 +16,7 @@ var shot_index := 0
 var since_shot := 99.0
 var reload_left := 0.0
 var reload_total := 1.0
+var empty_reload := false
 var player: Player
 
 var _cooldown := 0.0
@@ -55,7 +56,8 @@ func start_reload() -> void:
 	if spare.is_empty() or spare.max() <= mag:
 		Game.toast("No fuller magazine")
 		return
-	reload_left = data.reload_time if chambered else data.empty_reload_time
+	empty_reload = not chambered
+	reload_left = data.empty_reload_time if empty_reload else data.reload_time
 	reload_total = reload_left
 
 
@@ -153,13 +155,19 @@ func _muzzle_flash() -> void:
 func current_sprite(ads_blend: float) -> Texture2D:
 	if data.idle_sprite == null:
 		return null
-	if is_reloading() and not data.reload_sprites.is_empty():
-		var n := data.reload_sprites.size()
+	var reload_frames := data.reload_sprites
+	if empty_reload and not data.empty_reload_sprites.is_empty():
+		reload_frames = data.empty_reload_sprites
+	if is_reloading() and not reload_frames.is_empty():
+		var n := reload_frames.size()
 		var elapsed := reload_total - reload_left
 		var frame := int(elapsed * data.reload_fps) if data.reload_fps > 0.0 else int(elapsed / reload_total * n)
-		return data.reload_sprites[mini(frame, n - 1)]
+		return reload_frames[mini(frame, n - 1)]
 	if since_shot < data.shoot_frame_time and data.shoot_sprite:
 		return data.shoot_sprite
+	if ads_blend > 0.0 and not data.aim_sprites.is_empty():
+		var n := data.aim_sprites.size()
+		return data.aim_sprites[mini(int(ads_blend * n), n - 1)]
 	if ads_blend > 0.5 and data.ads_sprite:
 		return data.ads_sprite
 	return data.idle_sprite

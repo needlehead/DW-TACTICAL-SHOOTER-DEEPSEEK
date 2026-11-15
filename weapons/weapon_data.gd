@@ -59,7 +59,11 @@ const AUTO := 4
 @export var idle_sprite: Texture2D
 @export var shoot_sprite: Texture2D  ## shown for shoot_frame_time after each shot, with motion blur
 @export var ads_sprite: Texture2D  ## optional; without it the hip sprite zooms toward centre
+## Optional hip-to-ADS transition, picked by aim progress; the last frame is the held ADS frame.
+## Overrides ads_sprite. Aiming out plays the same frames backwards.
+@export var aim_sprites: Array[Texture2D] = []
 @export var reload_sprites: Array[Texture2D] = []  ## played over the reload (see reload_fps)
+@export var empty_reload_sprites: Array[Texture2D] = []  ## reloads from empty; falls back to reload_sprites
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
 ## 0 = stretch the frames evenly over the whole reload time.
 @export var reload_fps := 0.0

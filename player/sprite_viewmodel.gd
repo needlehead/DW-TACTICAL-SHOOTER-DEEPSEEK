@@ -13,7 +13,7 @@ extends TextureRect
 @export var kick_scale := 1.5
 @export var lower_drop := 0.6
 @export var sprint_drop := 0.12
-## Used only when the weapon has no ads_sprite: zoom and shift the hip frame toward centre.
+## Used only when the weapon has no ads_sprite/aim_sprites: zoom and shift the hip frame toward centre.
 @export var ads_zoom := 0.12
 @export var ads_shift := Vector2(-0.1, -0.03)
 
@@ -41,7 +41,7 @@ func _process(_delta: float) -> void:
 	var d := w.data
 	var vp := get_viewport_rect().size
 	var k := vp.y
-	var ads := 0.0 if d.ads_sprite else player.ads_blend
+	var ads := 0.0 if d.ads_sprite or not d.aim_sprites.is_empty() else player.ads_blend
 	var sway: Vector2 = viewmodel.sway
 	var bob: Vector3 = viewmodel.bob
 	var inertia: Vector3 = viewmodel.inertia_offset
