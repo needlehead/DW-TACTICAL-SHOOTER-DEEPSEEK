@@ -23,6 +23,7 @@
 [ext_resource type="Script" path="res://player/viewmodel.gd" id="3_vm"]
 [ext_resource type="Script" path="res://weapons/weapon_manager.gd" id="4_wm"]
 [ext_resource type="Resource" path="res://weapons/data/smg.tres" id="8_smg"]
+[ext_resource type="Resource" path="res://weapons/data/rifle.tres" id="8_rifle"]
 [ext_resource type="Script" path="res://weapons/weapon_data.gd" id="9_wd"]
 [ext_resource type="Script" path="res://core/health.gd" id="10_health"]
 [ext_resource type="Script" path="res://core/hitbox.gd" id="11_hb"]
@@ -125,7 +126,7 @@ script = ExtResource("3_vm")
 script = ExtResource("4_wm")
 equip_sound = ExtResource("snd_equip")
 aim_sound = ExtResource("snd_aim")
-loadout = Array[ExtResource("9_wd")]([ExtResource("8_smg")])
+loadout = Array[ExtResource("9_wd")]([ExtResource("8_smg"), ExtResource("8_rifle")])
 grenade_scene = ExtResource("13_gren")
 
 [node name="ViewmodelLayer" type="CanvasLayer" parent="."]

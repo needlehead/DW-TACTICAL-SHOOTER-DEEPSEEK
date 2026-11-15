@@ -66,6 +66,8 @@ const AUTO := 4
 @export var sight_window := Rect2()
 @export var reticle_size := 0.0  ## holographic ring diameter, fraction of screen height; 0 = no reticle
 @export var reticle_color := Color(1.0, 0.2, 0.12)
+## > 0: a magnified optic. The lens (sight_window) shows a picture-in-picture view at this zoom, with an ACOG-style reticle.
+@export var scope_magnification := 0.0
 @export var reload_sprites: Array[Texture2D] = []  ## played over the reload (see reload_fps)
 @export var empty_reload_sprites: Array[Texture2D] = []  ## reloads from empty; falls back to reload_sprites
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.

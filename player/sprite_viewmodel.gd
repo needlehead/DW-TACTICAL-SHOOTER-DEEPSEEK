@@ -25,6 +25,7 @@ extends TextureRect
 
 var _blur := ShaderMaterial.new()
 var _holo := HoloSight.new()
+var _scope := ScopeView.new()
 
 @onready var player: Player = owner
 @onready var viewmodel: Node3D = owner.get_node("LeanPivot/Head/Camera3D/Viewmodel")
@@ -38,6 +39,7 @@ func _ready() -> void:
 	# Always attached (2 identical taps when idle) so the shader compiles at load, not on the first shot.
 	material = _blur
 	add_child(_holo)
+	add_child(_scope)
 
 
 ## Sway, bob, inertia and freeaim as a screen offset (pixels); anything held in the hands (gun, phone) uses it.
@@ -99,3 +101,10 @@ func _process(_delta: float) -> void:
 		_holo.diameter = d.reticle_size * k
 		_holo.color = d.reticle_color
 		_holo.queue_redraw()
+	_scope.visible = d.scope_magnification > 0.0 and d.sight_window.has_area() and texture == d.aim_sprites.back()
+	if _scope.visible:
+		_scope.position = d.sight_window.position * size
+		_scope.size = d.sight_window.size * size
+		_scope.magnification = d.scope_magnification
+		_scope.reticle_color = d.reticle_color
+		_scope.follow(player)

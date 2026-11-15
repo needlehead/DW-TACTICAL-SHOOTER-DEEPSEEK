@@ -56,6 +56,7 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 | `empty_reload_sprites` | Optional frames for reloads from empty (slide/bolt locked). |
 | `reload_fps` | Playback rate for the reload frames; the last frame holds until the reload ends. 0 = stretch them evenly over the reload time. |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
+| `scope_magnification` | Magnified optic: the lens (`sight_window` on the last aim frame) shows a picture-in-picture view at this zoom, with an ACOG reticle in `reticle_color`. |
 | `fire_sound` | One shot, played per round (overlapping) with `fire_pitch_jitter`; goes through the gun reverb. |
 | `mode_switch_time` | Length of the selector-flick animation (B); twist and dip amounts are on the SpriteViewmodel node. |
 | `aim_sprites` | Optional hip-to-ADS transition, driven by aim progress; last frame is held while aimed. Overrides `ads_sprite`. Must have transparent backgrounds. |

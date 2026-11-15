@@ -120,6 +120,9 @@ func _runtime_checks() -> void:
 	w.data.hip_spread = hip
 	player.weapons._play_foley(player.weapons.aim_sound)
 	_check(player.weapons.switch_phase == 0.0 and player.weapons.state == WeaponManager.State.READY, "aim sound doesn't lower the gun")
+	var rifle := player.weapons.weapons[1]
+	_check(rifle.data.display_name == "Radian Rifle" and rifle.data.scope_magnification > 0.0 and rifle.current_sprite(1.0) == rifle.data.aim_sprites[-1],
+		"rifle in slot 2, scoped, last aim frame when fully aimed")
 	var amb := get_node("/root/Ambience")
 	var all: Array[String] = ["a", "b", "c"]
 	var pass1: Array[String] = amb.shuffled(all, "a")

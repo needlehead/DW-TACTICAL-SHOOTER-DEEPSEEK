@@ -89,7 +89,8 @@ func _draw() -> void:
 	var c := size * 0.5
 	if not cam.is_position_behind(aim):
 		c = bodycam.to_screen(cam.unproject_position(aim))
-	var through_holo := player.ads_blend > 0.8 and player.weapons.current.data.reticle_size > 0.0
+	var optic := player.weapons.current.data
+	var through_holo := player.ads_blend > 0.8 and (optic.reticle_size > 0.0 or optic.scope_magnification > 0.0)
 	if show_aim_dot and player.alive and not through_holo and player.weapons.phone_blend == 0.0:
 		draw_circle(c, 2.0, Color(1, 1, 1, 0.6))
 	if _hit_t > 0.0:
