@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dfvo13p5ibv6y"
+path="res://.godot/imported/concrete5.ogg-670845510c3f67356f01f43ea19ea1a4.oggvorbisstr"
+
+[deps]
+
+source_file="res://my sounds/footsteps/concrete5.ogg"
+dest_files=["res://.godot/imported/concrete5.ogg-670845510c3f67356f01f43ea19ea1a4.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

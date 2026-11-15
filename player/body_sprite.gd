@@ -33,6 +33,10 @@ func _process(delta: float) -> void:
 		texture = dead_prone_sprite if player.stance == Player.Stance.PRONE and dead_prone_sprite else dead_sprite
 		position = Vector2.ZERO
 		scale = Vector2.ONE  # death frame stays full size
+		# Prone death: the arms lie on the floor, so they tilt on screen with the world (overscale hides the corners).
+		pivot_offset = vp * 0.5
+		rotation = deg_to_rad(player.death_roll)
+		scale = Vector2.ONE * (1.0 + absf(rotation) * 0.6)
 		visible = texture != null
 		return
 	# Angle above the render pitch -> screen distance the body drops (linear in FOV is close enough here).
@@ -43,6 +47,7 @@ func _process(delta: float) -> void:
 		return
 	position = Vector2(0.0, drop)
 	scale = Vector2.ONE * body_scale
+	rotation = 0.0
 
 	var crouched := player.stance == Player.Stance.CROUCH
 	var idle := crouch_idle_sprite if crouched and crouch_idle_sprite else idle_sprite

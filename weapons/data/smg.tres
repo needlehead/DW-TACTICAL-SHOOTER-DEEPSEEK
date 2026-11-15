@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (3).png" id="a3"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (4).png" id="a4"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (5).png" id="a5"]
+[ext_resource type="AudioStream" path="res://my sounds/mp7/mp7_indoor_silenced_close_loop.wav" id="snd_fire"]
 
 [resource]
 script = ExtResource("1_wd")
@@ -77,6 +78,8 @@ reload_sprites = Array[Texture2D]([ExtResource("r1"), ExtResource("r2"), ExtReso
 empty_reload_sprites = Array[Texture2D]([ExtResource("e1"), ExtResource("e2"), ExtResource("e3"), ExtResource("e4"), ExtResource("e5"), ExtResource("e6"), ExtResource("e7"), ExtResource("e8"), ExtResource("e9"), ExtResource("e10"), ExtResource("e11"), ExtResource("e12"), ExtResource("e13"), ExtResource("e14"), ExtResource("e15"), ExtResource("e16"), ExtResource("e17"), ExtResource("e18"), ExtResource("e19"), ExtResource("e20")])
 muzzle_uv = Vector2(0.583, 0.506)
 suppressed = true
+fire_sound = ExtResource("snd_fire")
+fire_sound_rpm = 923.0
 vm_size = Vector3(0.06, 0.11, 0.5)
 color = Color(0.3, 0.3, 0.32, 1)
 hip_offset = Vector3(0.16, -0.15, -0.3)

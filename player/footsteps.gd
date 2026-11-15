@@ -1,5 +1,5 @@
 extends Node3D
-## Footstep audio hook. No assets yet: drop streams into `steps` and they play on each stride.
+## Footstep audio: a random clip from `steps` on each stride, louder when moving faster.
 ## `speed` is forwarded so AI hearing can hook the same signal later.
 
 @export var steps: Array[AudioStream] = []
@@ -19,4 +19,5 @@ func _on_footstep(speed: float) -> void:
 		return
 	_audio.stream = steps.pick_random()
 	_audio.volume_db = volume_db + linear_to_db(clampf(speed / 5.0, 0.3, 1.0))
+	_audio.pitch_scale = randf_range(0.94, 1.06)
 	_audio.play()

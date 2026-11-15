@@ -56,6 +56,8 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 | `empty_reload_sprites` | Optional frames for reloads from empty (slide/bolt locked). |
 | `reload_fps` | Playback rate for the reload frames; the last frame holds until the reload ends. 0 = stretch them evenly over the reload time. |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
+| `fire_sound` / `fire_sound_rpm` | Looping full-auto recording; plays while firing and stops between shots. `fire_sound_rpm` is the recording's rate, so the pitch is matched to `rpm`. |
+| `mode_switch_time` | Length of the selector-flick animation (B); twist and dip amounts are on the SpriteViewmodel node. |
 | `aim_sprites` | Optional hip-to-ADS transition, driven by aim progress; last frame is held while aimed. Overrides `ads_sprite`. Must have transparent backgrounds. |
 | `sight_window` | Sight glass on the last aim frame (UV rect); aiming slides the frame so its centre lands on the aim point. |
 | `reticle_size` / `reticle_color` | Holographic reticle drawn inside `sight_window` at the true aim point (0 = none). |
@@ -75,6 +77,7 @@ Bullet impacts leave a decal, a dust burst tinted to the surface colour, and deb
 `BodySprite` (in `player.tscn` → ViewmodelLayer, behind the gun) shows full-screen frames of your own body, rendered looking down:
 `idle_sprite`, `walk_sprites` (looped by distance walked, `cycle_length` m per loop, reversed when backing up) and `dead_sprite`.
 It slides into view as you look down; `frame_pitch` is the look pitch the frames were rendered at, `body_scale` the frame size. Hidden while prone.
+Killed while prone: `dead_prone_sprite`, and the view tilts by `dead_prone_roll` (on Player). Footstep clips are in `Footsteps.steps`.
 `crouch_idle_sprite` / `crouch_walk_sprites` replace the standing frames while crouched.
 
 `Portrait` (HUDLayer, bottom-left) shows `full` / `hurt` / `low` / `dead` by health; thresholds `hurt_below` (0.66) and

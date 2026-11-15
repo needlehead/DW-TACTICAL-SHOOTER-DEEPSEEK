@@ -17,6 +17,8 @@ var since_shot := 99.0
 var reload_left := 0.0
 var reload_total := 1.0
 var empty_reload := false
+var since_mode_switch := 99.0
+var _fire_audio: AudioStreamPlayer3D
 var player: Player
 
 var _cooldown := 0.0
@@ -43,6 +45,7 @@ func refill() -> void:
 func cycle_mode() -> void:
 	var ms := data.modes()
 	mode = ms[(ms.find(mode) + 1) % ms.size()]
+	since_mode_switch = 0.0
 	Game.toast(WeaponData.mode_name(mode))
 
 
@@ -68,6 +71,12 @@ func cancel_reload() -> void:
 ## Called every frame by the manager while this weapon is out.
 func tick(delta: float, held: bool, pressed: bool, allowed: bool) -> void:
 	since_shot += delta
+	since_mode_switch += delta
+	if _fire_audio and _fire_audio.playing and since_shot >= 0.9 * 60.0 / data.rpm:
+		# Stop between shots unless the next one is coming; the loop would otherwise play a phantom shot.
+		var next_coming := allowed and not is_reloading() and chambered and (_burst_left > 0 or (mode == WeaponData.AUTO and held))
+		if not next_coming:
+			_fire_audio.stop()
 	bloom = move_toward(bloom, 0.0, data.spread_recover * delta)
 	_cooldown -= delta
 	if is_reloading():
@@ -139,6 +148,21 @@ func _shoot() -> void:
 	bloom = minf(bloom + data.spread_per_shot, data.spread_max)
 	fired.emit()
 	_muzzle_flash()
+	_play_fire_sound()
+
+
+func _play_fire_sound() -> void:
+	if data.fire_sound == null:
+		return
+	if _fire_audio == null:
+		_fire_audio = AudioStreamPlayer3D.new()
+		add_child(_fire_audio)
+	if _fire_audio.playing:
+		return  # full-auto: the loop is already in step with the shots
+	_fire_audio.stream = data.fire_sound
+	_fire_audio.volume_db = data.fire_volume_db
+	_fire_audio.pitch_scale = data.rpm / data.fire_sound_rpm if data.fire_sound_rpm > 0.0 else 1.0
+	_fire_audio.play()
 
 
 func _muzzle_flash() -> void:

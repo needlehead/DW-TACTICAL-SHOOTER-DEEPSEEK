@@ -13,6 +13,10 @@ func _ready() -> void:
 			_fail("could not load " + path)
 	_logic_checks()
 	await _runtime_checks()
+	for p: AudioStreamPlayer3D in get_tree().root.find_children("*", "AudioStreamPlayer3D", true, false):
+		p.stop()
+	for i in 3:  # let the audio server drop the stopped playbacks before quitting
+		await get_tree().process_frame
 	print("SMOKE TEST: %s" % ("OK" if failures == 0 else "%d FAILURES" % failures))
 	get_tree().quit(1 if failures else 0)
 

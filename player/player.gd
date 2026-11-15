@@ -28,6 +28,7 @@ enum Stance { STAND, CROUCH, PRONE }
 @export_group("Stance")  # arrays are indexed by Stance
 @export var eye_heights := PackedFloat32Array([1.65, 1.1, 0.35])
 @export var dead_eye_height := 0.25  ## camera drops to the floor on death
+@export var dead_prone_roll := 14.0  ## degrees the view tilts when killed while prone
 @export var capsule_heights := PackedFloat32Array([1.8, 1.25, 0.6])
 @export var stance_spread_mult := PackedFloat32Array([1.0, 0.75, 0.5])
 @export var stance_recoil_mult := PackedFloat32Array([1.0, 0.8, 0.6])
@@ -64,6 +65,7 @@ var recoil_recovery := 8.0
 var since_shot := 99.0
 var look_yaw := 0.0
 var look_pitch := 0.0
+var death_roll := 0.0  ## current view roll in degrees (prone death)
 var eye_height := 1.65
 var spawn_transform: Transform3D
 
@@ -179,6 +181,9 @@ func _process(delta: float) -> void:
 	_apply_look(Vector2.ZERO)  # re-clamps freeaim as the ADS deadzone shrinks
 	rotation.y = deg_to_rad(look_yaw + recoil.x)
 	head.rotation.x = deg_to_rad(clampf(look_pitch + recoil.y, -max_pitch, max_pitch))
+	var roll_target := dead_prone_roll if stance == Stance.PRONE else 0.0
+	death_roll = 0.0 if alive else move_toward(death_roll, roll_target, dead_prone_roll / 0.7 * delta)  # eases in over 0.7 s
+	head.rotation.z = deg_to_rad(death_roll)
 
 	var eye_target := eye_heights[stance] if alive else dead_eye_height
 	eye_height = move_toward(eye_height, eye_target, stance_change_speed * delta)

@@ -71,6 +71,11 @@ const AUTO := 4
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
 ## 0 = stretch the frames evenly over the whole reload time.
 @export var reload_fps := 0.0
+## Fire sound: a looping full-auto recording. Plays while firing; stops just before the next shot after you stop.
+@export var fire_sound: AudioStream
+@export var fire_sound_rpm := 0.0  ## rate the recording was made at; pitch is matched to `rpm` (0 = no matching)
+@export var fire_volume_db := 0.0
+@export var mode_switch_time := 0.35  ## selector-flick animation length
 @export var sprite_offset := Vector2(0.0, 0.08)  ## fraction of screen height; +y moves the gun down
 @export var shoot_frame_time := 0.07
 @export var shoot_blur := 0.0223  ## streak length as a fraction of the frame width (57 px on 2560)

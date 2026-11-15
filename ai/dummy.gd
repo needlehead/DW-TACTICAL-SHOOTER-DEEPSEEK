@@ -21,6 +21,7 @@ var _patrol_index := 0
 var _alert := 0.0
 var _react := 0.0
 var _fire_cd := 0.0
+var _audio: AudioStreamPlayer3D
 var _fall: Tween
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -125,6 +126,14 @@ func _shoot(player: Player) -> void:
 	var aim := player.camera.global_position + Vector3.DOWN * 0.35
 	var dir := Ballistics.spread_dir((aim - from).normalized(), aim_error_deg)
 	Ballistics.fire(get_world_3d().direct_space_state, from, dir, weapon, self, _hitbox_rids(), damage_scale)
+	if weapon.fire_sound:
+		if _audio == null:
+			_audio = AudioStreamPlayer3D.new()
+			add_child(_audio)
+			_audio.stream = weapon.fire_sound
+			_audio.volume_db = weapon.fire_volume_db
+		_audio.play()
+		get_tree().create_timer(0.9 * 60.0 / weapon.rpm).timeout.connect(_audio.stop)  # one shot out of the loop
 	flash.visible = true
 	await get_tree().create_timer(0.05).timeout
 	flash.visible = false

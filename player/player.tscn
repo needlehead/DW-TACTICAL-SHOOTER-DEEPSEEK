@@ -2,6 +2,14 @@
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://player/footsteps.gd" id="2_steps"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete1.ogg" id="fs1"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete2.ogg" id="fs2"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete3.ogg" id="fs3"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete4.ogg" id="fs4"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete5.ogg" id="fs5"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete6.ogg" id="fs6"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete7.ogg" id="fs7"]
+[ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete8.ogg" id="fs8"]
 [ext_resource type="Script" path="res://player/viewmodel.gd" id="3_vm"]
 [ext_resource type="Script" path="res://weapons/weapon_manager.gd" id="4_wm"]
 [ext_resource type="Resource" path="res://weapons/data/smg.tres" id="8_smg"]
@@ -81,6 +89,7 @@ shape = SubResource("capsule")
 
 [node name="Footsteps" type="Node3D" parent="."]
 script = ExtResource("2_steps")
+steps = Array[AudioStream]([ExtResource("fs1"), ExtResource("fs2"), ExtResource("fs3"), ExtResource("fs4"), ExtResource("fs5"), ExtResource("fs6"), ExtResource("fs7"), ExtResource("fs8")])
 
 [node name="LeanPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.825, 0)

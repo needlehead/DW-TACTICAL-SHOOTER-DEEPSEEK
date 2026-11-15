@@ -14,6 +14,8 @@ extends TextureRect
 @export var lower_drop := 0.6
 @export var sprint_drop := 0.12
 ## Used only when the weapon has no ads_sprite/aim_sprites: zoom and shift the hip frame toward centre.
+@export var mode_switch_rot := -0.07  ## radians the gun twists while flicking the fire selector
+@export var mode_switch_drop := Vector2(0.02, 0.035)  ## screen heights right/down at the peak of the flick
 @export var ads_zoom := 0.12
 @export var ads_shift := Vector2(-0.1, -0.03)
 
@@ -56,6 +58,8 @@ func _process(_delta: float) -> void:
 		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - deg_to_rad(player.freeaim.y) * freeaim_scale
 			+ kick.z * kick_scale + lower * lower_drop + player.sprint_blend * sprint_drop) * k
 	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads + d.sprite_offset * k
+	var flick := sin(PI * clampf(w.since_mode_switch / d.mode_switch_time, 0.0, 1.0))
+	off += mode_switch_drop * k * flick
 
 	size = vp * (1.0 + overscan)
 	var base := Vector2(-vp.x * overscan * 0.5, 0.0)  # overscan hangs below the screen
@@ -66,7 +70,7 @@ func _process(_delta: float) -> void:
 	position = base + off
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads)
-	rotation = kick_rot.z * 0.5 + player.sprint_blend * 0.08
+	rotation = kick_rot.z * 0.5 + player.sprint_blend * 0.08 + mode_switch_rot * flick
 
 	var shooting := texture == d.shoot_sprite and d.shoot_blur > 0.0
 	var fade := 1.0 - w.since_shot / d.shoot_frame_time if shooting else 0.0
