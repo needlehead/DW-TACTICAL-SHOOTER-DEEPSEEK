@@ -53,6 +53,7 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 | `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with motion blur. |
 | `reload_sprites` | Any number of frames, spread evenly over the reload time (tactical and empty). |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
+| `sprite_offset` | Per-weapon placement in screen heights (+y = lower). Default 0.08 down. |
 | `shoot_frame_time`, `shoot_blur` | How long the shoot frame shows, and the blur streak length (fraction of screen height). |
 
 The motion blur is a shader (`player/motion_blur.gdshader`) applied in-engine, so the source PNGs stay untouched. Sway, bob, kick, sprint and lowering move the sprite using the same values as the 3D viewmodel. The scale factors are exported on `Player/ViewmodelLayer/SpriteViewmodel`.

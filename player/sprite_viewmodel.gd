@@ -53,7 +53,7 @@ func _process(_delta: float) -> void:
 		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - deg_to_rad(player.freeaim.x) * freeaim_scale,
 		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - deg_to_rad(player.freeaim.y) * freeaim_scale
 			+ kick.z * kick_scale + lower * lower_drop + player.sprint_blend * sprint_drop) * k
-	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads
+	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads + d.sprite_offset * k
 
 	size = vp * (1.0 + overscan)
 	position = Vector2(-vp.x * overscan * 0.5, 0.0) + off  # overscan hangs below the screen
