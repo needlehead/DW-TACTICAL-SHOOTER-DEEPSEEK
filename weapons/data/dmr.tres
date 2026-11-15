@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://weapons/weapon_data.gd" id="1_wd"]
+
+[resource]
+script = ExtResource("1_wd")
+display_name = "DMR"
+fire_modes = 1
+rpm = 300.0
+damage = 70.0
+falloff_start = 80.0
+falloff_end = 250.0
+min_damage_mult = 0.8
+penetration_power = 0.7
+max_penetrations = 2
+muzzle_velocity = 850.0
+mag_size = 20
+spare_mags = 4
+reload_time = 2.8
+empty_reload_time = 3.5
+ads_time = 0.38
+ads_zoom = 2.2
+equip_time = 0.75
+holster_time = 0.5
+sprint_to_fire_time = 0.3
+hip_spread = 4.0
+ads_spread = 0.05
+move_spread = 3.0
+spread_per_shot = 0.8
+spread_max = 5.0
+spread_recover = 5.0
+recoil_pattern = PackedVector2Array(0.1, 2.2, -0.2, 2, 0.2, 2)
+recoil_random = Vector2(0.4, 0.3)
+camera_recoil = 1.0
+recoil_recovery = 9.0
+vm_kick_back = 0.08
+vm_kick_rot = 5.0
+vm_size = Vector3(0.06, 0.1, 0.95)
+color = Color(0.36, 0.27, 0.18, 1)
+hip_offset = Vector3(0.17, -0.15, -0.3)
+ads_distance = 0.2

@@ -73,6 +73,8 @@ var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var lean_pivot: Node3D = $LeanPivot
 @onready var head: Node3D = $LeanPivot/Head
 @onready var camera: Camera3D = $LeanPivot/Head/Camera3D
+@onready var weapons: WeaponManager = $LeanPivot/Head/Camera3D/Viewmodel/Weapons
+@onready var weapon_camera: Camera3D = $ViewmodelLayer/Container/SubViewport/WeaponCamera
 
 
 func _ready() -> void:
@@ -82,6 +84,17 @@ func _ready() -> void:
 	look_yaw = rotation_degrees.y
 	eye_height = eye_heights[stance]
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# The viewmodel renders in its own transparent viewport so it never clips into walls.
+	var env := Environment.new()
+	env.background_mode = Environment.BG_CLEAR_COLOR
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.55, 0.55, 0.6)
+	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	weapon_camera.environment = env
+
+
+func hitbox_rids() -> Array[RID]:
+	return []
 
 
 func controls_active() -> bool:
@@ -152,6 +165,8 @@ func _process(delta: float) -> void:
 	lean_pivot.position.y = eye_height * 0.5
 	head.position.y = eye_height * 0.5
 	camera.fov = base_fov / lerpf(1.0, ads_zoom, ads_blend)
+	weapon_camera.global_transform = camera.global_transform
+	weapon_camera.fov = 60.0 / lerpf(1.0, ads_zoom, ads_blend * 0.3)
 
 
 func _physics_process(delta: float) -> void:

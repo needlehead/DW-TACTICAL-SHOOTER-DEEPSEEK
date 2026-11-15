@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://weapons/weapon_data.gd" id="1_wd"]
+
+[resource]
+script = ExtResource("1_wd")
+display_name = "Pistol"
+fire_modes = 1
+rpm = 400.0
+damage = 34.0
+falloff_start = 10.0
+falloff_end = 40.0
+min_damage_mult = 0.6
+penetration_power = 0.35
+max_penetrations = 1
+muzzle_velocity = 360.0
+mag_size = 15
+spare_mags = 3
+reload_time = 1.8
+empty_reload_time = 2.2
+ads_time = 0.2
+ads_zoom = 1.15
+equip_time = 0.35
+holster_time = 0.3
+sprint_to_fire_time = 0.12
+hip_spread = 2.5
+ads_spread = 0.3
+move_spread = 1.5
+spread_per_shot = 0.5
+spread_max = 3.0
+spread_recover = 7.0
+recoil_pattern = PackedVector2Array(0, 1.4, 0.1, 1.5, -0.1, 1.5)
+recoil_random = Vector2(0.3, 0.2)
+camera_recoil = 1.0
+recoil_recovery = 10.0
+vm_kick_back = 0.06
+vm_kick_rot = 6.0
+vm_size = Vector3(0.04, 0.1, 0.2)
+color = Color(0.12, 0.12, 0.13, 1)
+hip_offset = Vector3(0.14, -0.14, -0.32)
+ads_distance = 0.32

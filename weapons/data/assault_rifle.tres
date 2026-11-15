@@ -1,0 +1,41 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://weapons/weapon_data.gd" id="1_wd"]
+
+[resource]
+script = ExtResource("1_wd")
+display_name = "Assault Rifle"
+fire_modes = 5
+rpm = 750.0
+damage = 38.0
+falloff_start = 40.0
+falloff_end = 150.0
+min_damage_mult = 0.7
+penetration_power = 0.55
+max_penetrations = 2
+muzzle_velocity = 880.0
+mag_size = 30
+spare_mags = 5
+reload_time = 2.5
+empty_reload_time = 3.2
+ads_time = 0.3
+ads_zoom = 1.35
+equip_time = 0.6
+holster_time = 0.45
+sprint_to_fire_time = 0.25
+hip_spread = 3.0
+ads_spread = 0.15
+move_spread = 2.0
+spread_per_shot = 0.2
+spread_max = 3.0
+spread_recover = 6.0
+recoil_pattern = PackedVector2Array(0, 0.9, 0.1, 1, 0.15, 1, 0.25, 0.9, 0.3, 0.8, 0.35, 0.7, 0.2, 0.6, 0, 0.6, -0.2, 0.55, -0.4, 0.5, -0.5, 0.45, -0.4, 0.4, -0.2, 0.4, 0.1, 0.4, 0.3, 0.4)
+recoil_random = Vector2(0.25, 0.12)
+camera_recoil = 1.0
+recoil_recovery = 7.0
+vm_kick_back = 0.045
+vm_kick_rot = 2.5
+vm_size = Vector3(0.06, 0.09, 0.75)
+color = Color(0.24, 0.29, 0.22, 1)
+hip_offset = Vector3(0.17, -0.15, -0.28)
+ads_distance = 0.22
