@@ -1,12 +1,12 @@
 extends Control
 ## Minimal HUD: aim-point dot (shows freeaim), hit marker, damage-direction arcs, toasts,
-## weapon/fire mode, and an exact ammo readout only when toggled (F2) for debugging.
+## and toasts. Weapon/ammo/HP text and the portrait are diegetic (on the phone); F2 shows them for debugging.
 
 @export var show_aim_dot := true
 @export var hit_marker_time := 0.25
 @export var damage_indicator_time := 1.5
 
-var show_ammo := false
+var show_debug_hud := false
 
 var _hit_t := 0.0
 var _hit_kill := false
@@ -45,7 +45,7 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_ammo"):
-		show_ammo = not show_ammo
+		show_debug_hud = not show_debug_hud
 
 
 func _on_hit_confirmed(_zone: StringName, _damage: float, killed: bool) -> void:
@@ -74,7 +74,8 @@ func _process(delta: float) -> void:
 
 	var w := player.weapons.current
 	var text := "%s  |  %s" % [w.data.display_name, WeaponData.mode_name(w.mode)]
-	if show_ammo:
+	_info.visible = show_debug_hud
+	if show_debug_hud:
 		text += "\n%d%s  |  spares %s" % [w.mag, " +1" if w.chambered else "", str(w.spare)]
 	text += "\nFrags %d   HP %d" % [player.weapons.grenades, ceili(player.health.current)]
 	_info.text = text
@@ -89,7 +90,7 @@ func _draw() -> void:
 	if not cam.is_position_behind(aim):
 		c = bodycam.to_screen(cam.unproject_position(aim))
 	var through_holo := player.ads_blend > 0.8 and player.weapons.current.data.reticle_size > 0.0
-	if show_aim_dot and player.alive and not through_holo:
+	if show_aim_dot and player.alive and not through_holo and player.weapons.phone_blend == 0.0:
 		draw_circle(c, 2.0, Color(1, 1, 1, 0.6))
 	if _hit_t > 0.0:
 		var col := Color(1, 0.2, 0.2) if _hit_kill else Color.WHITE

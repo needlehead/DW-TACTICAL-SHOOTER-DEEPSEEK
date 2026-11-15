@@ -113,6 +113,11 @@ func _runtime_checks() -> void:
 	for i in 4:
 		w._shoot()
 	w.data.hip_spread = hip
+	_check(w.mag_estimate() == "Nearly full", "phone mag estimate at 25/30")
+	player.weapons.phone_blend = 0.75
+	_check(not player.weapons.can_fire() and player.weapons.phone_gun_lower() == 1.0 and player.weapons.phone_raise() == 0.5,
+		"phone up: gun fully lowered, phone half raised, can't fire")
+	player.weapons.phone_blend = 0.0
 	_check(target.health.dead, "4 SMG torso shots kill a 10 m dummy")
 	_check(Game.last_ttk.contains("4 hits"), "TTK recorded: " + Game.last_ttk)
 	_check(w.mag == 25, "4 rounds spent")

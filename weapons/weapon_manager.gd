@@ -10,6 +10,7 @@ enum State { READY, HOLSTER, EQUIP }
 @export var grenade_scene: PackedScene
 @export var grenade_count := 2
 @export var throw_speed := 14.0
+@export var phone_time := 0.6  ## hold Tab: gun goes down (first half), then the phone comes up (second half)
 
 var weapons: Array[Weapon] = []
 var current: Weapon
@@ -18,6 +19,8 @@ var switch_phase := 1.0  ## 0 = raised, 1 = fully lowered; drives the viewmodel
 var player: Player
 
 var grenades := 0
+var phone_blend := 0.0  ## 0 = gun up, 0.5 = gun down, 1 = phone fully raised
+var _phone_cancelled := false  # fire/ADS put the phone away until Tab is pressed again
 var _next := 0
 
 
@@ -67,14 +70,31 @@ func throw_grenade() -> void:
 	switch_phase = 1.0
 
 
+## Gun lowering share of the phone transition (0..1).
+func phone_gun_lower() -> float:
+	return clampf(phone_blend * 2.0, 0.0, 1.0)
+
+
+## Phone raise share of the phone transition (0..1).
+func phone_raise() -> float:
+	return clampf(phone_blend * 2.0 - 1.0, 0.0, 1.0)
+
+
 func can_fire() -> bool:
-	return state == State.READY and player.controls_active() and not player.is_sprinting \
+	return state == State.READY and phone_blend == 0.0 and player.controls_active() and not player.is_sprinting \
 		and player.sprint_recovery <= 0.0 and player.wall_block < 0.6
 
 
 func _process(delta: float) -> void:
 	var active := player.controls_active()
-	if active:
+	var wants_phone := active and Input.is_action_pressed("phone")
+	if not wants_phone:
+		_phone_cancelled = false
+	elif phone_blend > 0.0 and (Input.is_action_just_pressed("fire") or Input.is_action_just_pressed("ads")):
+		_phone_cancelled = true
+	var phone_target := 1.0 if wants_phone and not _phone_cancelled and state == State.READY and not current.is_reloading() else 0.0
+	phone_blend = move_toward(phone_blend, phone_target, delta / maxf(phone_time, 0.01))
+	if active and phone_blend == 0.0:
 		for i in weapons.size():
 			if Input.is_action_just_pressed("weapon_%d" % (i + 1)):
 				select(i)
@@ -95,7 +115,7 @@ func _process(delta: float) -> void:
 			if switch_phase <= 0.0:
 				state = State.READY
 	# Pushed every frame so live-tuned values apply immediately.
-	player.ads_blocked = state != State.READY or current.is_reloading()
+	player.ads_blocked = state != State.READY or current.is_reloading() or phone_blend > 0.0
 	player.ads_time = current.data.ads_time
 	player.ads_zoom = current.data.ads_zoom
 	player.sprint_to_fire = current.data.sprint_to_fire_time

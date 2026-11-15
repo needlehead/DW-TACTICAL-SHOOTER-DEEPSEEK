@@ -37,7 +37,8 @@ If you edit `killhouse.tscn` by hand instead, select `NavigationRegion3D` and cl
 | Frag grenade | G |
 | Reset dummies, health, ammo, doors | F5 |
 | Debug panel and live tuning | F1 (frees the mouse) |
-| Exact ammo counter | F2 |
+| Phone (status: vitals, outfit, weapon, mags) | Hold Tab |
+| Debug HUD (weapon/HP text, exact ammo, portrait) | F2 |
 | Bodycam effect on/off | F3 |
 | Release / capture mouse | Esc |
 
@@ -78,6 +79,14 @@ It slides into view as you look down; `frame_pitch` is the look pitch the frames
 
 `Portrait` (HUDLayer, bottom-left) shows `full` / `hurt` / `low` / `dead` by health; thresholds `hurt_below` (0.66) and
 `low_below` (0.33) are fractions of max health. Frames can be full-screen renders: each is cropped to its visible pixels.
+
+## Phone (diegetic UI)
+
+There's no status HUD by default: hold **Tab** and Kei lowers the gun and pulls out her phone, showing her health face and
+vitals, outfit, weapon and fire mode, a rough mag estimate (Full / Nearly full / Half / Nearly empty), spare mags and frags.
+No firing, aiming or reloading while it's out; pressing fire or aim puts it away. Settings live on the `Phone` node in
+`player.tscn` (`heroine_name`, `outfit_name`, `outfit_sprite`, `screen_quad` for the screen corners on the frame) and
+`phone_time` on the WeaponManager. Decisions: `docs/decisions/2026-11-15-diegetic-phone.md`.
 
 ## Bodycam look
 

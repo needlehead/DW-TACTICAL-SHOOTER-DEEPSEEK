@@ -22,6 +22,9 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouchidle.png" id="b_cidle"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouch.png" id="b_crouch"]
 [ext_resource type="Script" path="res://ui/portrait.gd" id="20_portrait"]
+[ext_resource type="Script" path="res://player/phone.gd" id="21_phone"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/diegeticuitest.png" id="ph_frame"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/outfit1.png" id="ph_outfit"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitfull.png" id="p_full"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitdamage.png" id="p_damage"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitlow.png" id="p_low"]
@@ -207,3 +210,9 @@ script = ExtResource("16_smoke")
 [node name="SpriteViewmodel" type="TextureRect" parent="ViewmodelLayer"]
 mouse_filter = 2
 script = ExtResource("15_sprite")
+
+[node name="Phone" type="TextureRect" parent="ViewmodelLayer"]
+mouse_filter = 2
+script = ExtResource("21_phone")
+frame = ExtResource("ph_frame")
+outfit_sprite = ExtResource("ph_outfit")

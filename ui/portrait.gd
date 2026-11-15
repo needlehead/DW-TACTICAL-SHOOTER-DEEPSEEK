@@ -1,5 +1,5 @@
 extends TextureRect
-## Doom-style status portrait in the bottom-left corner, picked by health: full / hurt / low / dead.
+## Doom-style status portrait (bottom-left with F2, always on the phone), picked by health: full / hurt / low / dead.
 ## Frames are full-screen renders; each is cropped to its visible pixels once at load.
 
 @export var full: Texture2D
@@ -14,6 +14,7 @@ extends TextureRect
 var _cropped := {}  # Texture2D -> AtlasTexture
 
 @onready var health: Health = owner.get_node("Health")
+@onready var hud: Control = owner.get_node("HUDLayer/HUD")
 
 
 func _ready() -> void:
@@ -28,10 +29,15 @@ func _ready() -> void:
 			_cropped[t] = a
 
 
-func _process(_delta: float) -> void:
+## Cropped face for the current health; the phone shows it too.
+func face() -> Texture2D:
 	var f := health.current / health.max_health
 	var t := dead if health.dead else low if f <= low_below else hurt if f <= hurt_below else full
-	texture = _cropped.get(t)
+	return _cropped.get(t)
+
+
+func _process(_delta: float) -> void:
+	texture = face() if hud.show_debug_hud else null  # diegetic by default: the phone shows it
 	if texture == null:
 		return
 	var vp := get_viewport_rect().size

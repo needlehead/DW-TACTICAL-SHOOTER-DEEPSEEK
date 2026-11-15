@@ -152,6 +152,18 @@ func _muzzle_flash() -> void:
 
 
 ## Doom-style frame for the current state, or null when this weapon has no sprites.
+## Rough fill of the loaded mag, as you'd judge it by weight (what the phone shows).
+func mag_estimate() -> String:
+	var f := float(mag) / data.mag_size
+	if f >= 0.9:
+		return "Full"
+	if f >= 0.6:
+		return "Nearly full"
+	if f >= 0.35:
+		return "Half"
+	return "Nearly empty" if mag > 0 else "Empty"
+
+
 func current_sprite(ads_blend: float) -> Texture2D:
 	if data.idle_sprite == null:
 		return null
