@@ -6,9 +6,10 @@ uniform sampler2D screen_tex : hint_screen_texture, filter_linear, repeat_disabl
 uniform float distortion : hint_range(0.0, 1.0) = 0.22;  // barrel strength; corners stay pinned to corners
 uniform float aberration : hint_range(0.0, 0.03) = 0.006;  // R/B split, grows toward the edges
 uniform float sharpen : hint_range(0.0, 2.0) = 0.6;
-uniform float saturation : hint_range(0.0, 1.5) = 0.8;
+uniform float saturation : hint_range(0.0, 1.5) = 0.9;
 uniform float contrast : hint_range(0.5, 1.5) = 1.12;
-uniform float brightness : hint_range(-0.2, 0.2) = 0.02;
+uniform float brightness : hint_range(-0.2, 0.2) = 0.0;
+uniform float highlight_knee : hint_range(0.5, 1.0) = 0.75;  // brightness above this rolls off softly instead of clipping
 uniform vec3 tint = vec3(0.98, 1.0, 1.02);
 uniform float vignette : hint_range(0.0, 1.0) = 0.55;
 uniform float grain : hint_range(0.0, 0.3) = 0.05;
@@ -40,9 +41,16 @@ void fragment() {
 		+ texture(screen_tex, uv + vec2(0.0, px.y) * 1.5).rgb + texture(screen_tex, uv - vec2(0.0, px.y) * 1.5).rgb) * 0.25;
 	col += (col - blur) * sharpen;
 
+	// Grade brightness only, keeping each pixel's colour ratios, with a soft shoulder: per-channel contrast clipped
+	// light skin's red first and washed it out to pale peach.
 	float lum = dot(col, vec3(0.299, 0.587, 0.114));
 	col = mix(vec3(lum), col, saturation);
-	col = (col - 0.5) * contrast + 0.5 + brightness;
+	float graded = (lum - 0.5) * contrast + 0.5 + brightness;
+	if (graded > highlight_knee) {
+		float e = graded - highlight_knee;
+		graded = highlight_knee + e / (1.0 + e / (1.0 - highlight_knee));
+	}
+	col += graded - lum;  // shift, not scale: scaling blew up colour fringes on near-black pixels
 	col *= tint;
 
 	float edge = dot(SCREEN_UV - 0.5, SCREEN_UV - 0.5) * 2.0;  // 0 centre, 1 corner
