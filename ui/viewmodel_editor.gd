@@ -75,7 +75,7 @@ func data() -> WeaponData:
 ## The sight window being edited: the canted one while the canted sight is active.
 func _window_prop() -> String:
 	var w := player.weapons.current
-	return "canted_sight_window" if w.canted and not w.data.canted_aim_sprites.is_empty() else "sight_window"
+	return "canted_sight_window" if w.using_canted() else "sight_window"
 
 
 func _window() -> Rect2:

@@ -1,8 +1,6 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3]
 
 [ext_resource type="Script" path="res://weapons/weapon_data.gd" id="1_wd"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/idle.png" id="r_idle"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (1).png" id="r_a1"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (2).png" id="r_a2"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (3).png" id="r_a3"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (4).png" id="r_a4"]
@@ -10,11 +8,14 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (6).png" id="r_a6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (7).png" id="r_a7"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (8).png" id="r_a8"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/idle.png" id="r_idle"]
 [ext_resource type="AudioStream" path="res://my sounds/mp7/mp7supfire.ogg" id="snd_fire"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (2).png" id="r_c2"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (3).png" id="r_c3"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (4).png" id="r_c4"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (5).png" id="r_c5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (2).png" id="r_c2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (3).png" id="r_c3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (4).png" id="r_c4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (5).png" id="r_c5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (6).png" id="r_c6"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (7).png" id="r_c7"]
 
 [resource]
 script = ExtResource("1_wd")
@@ -22,37 +23,24 @@ display_name = "Radian Rifle"
 fire_modes = 5
 rpm = 750.0
 damage = 34.0
-falloff_start = 30.0
-falloff_end = 120.0
-min_damage_mult = 0.6
 penetration_power = 0.55
-max_penetrations = 2
-mag_size = 30
-spare_mags = 4
-reload_time = 2.4
 empty_reload_time = 3.0
-ads_time = 0.3
 ads_zoom = 1.1
-equip_time = 0.55
-holster_time = 0.4
 sprint_to_fire_time = 0.22
 hip_spread = 2.8
 ads_spread = 0.1
 move_spread = 1.8
 spread_per_shot = 0.2
-spread_max = 3.5
-spread_recover = 6.0
 recoil_pattern = PackedVector2Array(0, 0.8, 0.1, 0.9, 0.15, 0.8, 0.05, 0.7, -0.1, 0.65, -0.2, 0.6, -0.1, 0.55, 0.1, 0.55, 0.2, 0.5)
-recoil_recovery = 7.0
 vm_kick_back = 0.04
 vm_kick_rot = 2.5
 idle_sprite = ExtResource("r_idle")
-sprite_offset = Vector2(0.08, 0.16)
 aim_sprites = Array[Texture2D]([ExtResource("r_a2"), ExtResource("r_a3"), ExtResource("r_a4"), ExtResource("r_a5"), ExtResource("r_a6"), ExtResource("r_a7"), ExtResource("r_a8")])
 sight_window = Rect2(0.3871, 0.2958, 0.2047, 0.3639)
-scope_magnification = 4.0
-canted_aim_sprites = Array[Texture2D]([ExtResource("r_c2"), ExtResource("r_c3"), ExtResource("r_c4"), ExtResource("r_c5")])
-canted_sight_window = Rect2(0.4734, 0.3972, 0.0766, 0.0903)
 reticle_color = Color(1, 0.35, 0.1, 1)
+scope_magnification = 4.0
+canted_aim_sprites = Array[Texture2D]([ExtResource("r_c2"), ExtResource("r_c3"), ExtResource("r_c4"), ExtResource("r_c5"), ExtResource("r_c6"), ExtResource("r_c7")])
+canted_sight_window = Rect2(0.4742, 0.3965, 0.0738, 0.0889)
 fire_sound = ExtResource("snd_fire")
 fire_volume_db = 2.0
+sprite_offset = Vector2(0.050000004, 0.08999999)

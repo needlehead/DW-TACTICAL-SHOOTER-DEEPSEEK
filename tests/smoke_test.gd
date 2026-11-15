@@ -132,9 +132,13 @@ func _runtime_checks() -> void:
 	_check(moved and ed.data().sprite_offset == before, "viewmodel editor: nudge moves the gun, revert restores")
 	ed.toggle()
 	rifle.toggle_canted()
+	rifle.cant_t = 0.5
+	_check(is_equal_approx(rifle.sight_progress(1.0), 1.0 - rifle.data.cant_dip), "sight switch dips mid-roll")
+	rifle.cant_t = 1.0
 	_check(rifle.canted and rifle.current_sprite(1.0) == rifle.data.canted_aim_sprites[-1] and rifle.aim_window() == rifle.data.canted_sight_window,
 		"rifle canted sight: own frames and window")
 	rifle.toggle_canted()
+	rifle.cant_t = 0.0
 	_check(not rifle.canted and rifle.current_sprite(1.0) == rifle.data.aim_sprites[-1], "rifle canted toggles back to the ACOG")
 	var phone_script: GDScript = load("res://player/phone.gd")
 	_check(is_equal_approx(phone_script.ecg(0.20), 1.0) and phone_script.ecg(0.35) == 0.0 and phone_script.ecg(0.22) < 1.0,

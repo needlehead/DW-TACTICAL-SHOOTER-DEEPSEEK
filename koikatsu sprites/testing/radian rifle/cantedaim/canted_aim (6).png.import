@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4y50fo0siox"
-path="res://.godot/imported/canted (2).png-e2ae15689e5b05dcbc6169f37a9fb404.ctex"
+uid="uid://bwfcdcrdifv6n"
+path="res://.godot/imported/canted_aim (6).png-edcfe471d32f7be6b3e40bfafc123ea6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (2).png"
-dest_files=["res://.godot/imported/canted (2).png-e2ae15689e5b05dcbc6169f37a9fb404.ctex"]
+source_file="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (6).png"
+dest_files=["res://.godot/imported/canted_aim (6).png-edcfe471d32f7be6b3e40bfafc123ea6.ctex"]
 
 [params]
 

@@ -18,7 +18,8 @@ var reload_left := 0.0
 var reload_total := 1.0
 var empty_reload := false
 var since_mode_switch := 99.0
-var canted := false  ## using the canted sight (only if the weapon has one)
+var canted := false  ## canted sight selected (only if the weapon has one)
+var cant_t := 0.0  ## 0 main sight .. 1 canted; eases toward `canted` so switching while aimed rolls through
 var _fire_audio: AudioStreamPlayer3D
 var player: Player
 
@@ -73,6 +74,7 @@ func cancel_reload() -> void:
 func tick(delta: float, held: bool, pressed: bool, allowed: bool) -> void:
 	since_shot += delta
 	since_mode_switch += delta
+	cant_t = move_toward(cant_t, 1.0 if canted else 0.0, delta / maxf(data.cant_time, 0.01))
 	bloom = move_toward(bloom, 0.0, data.spread_recover * delta)
 	_cooldown -= delta
 	if is_reloading():
@@ -184,13 +186,24 @@ func mag_estimate() -> String:
 	return "Nearly empty" if mag > 0 else "Empty"
 
 
-## Aim-in frames and sight window of the active sight (canted or main).
+## The sight on screen right now: flips to the canted one halfway through the roll.
+func using_canted() -> bool:
+	return cant_t >= 0.5 and not data.canted_aim_sprites.is_empty()
+
+
+## Aim-in frames and sight window of the sight on screen.
 func aim_frames() -> Array[Texture2D]:
-	return data.canted_aim_sprites if canted and not data.canted_aim_sprites.is_empty() else data.aim_sprites
+	return data.canted_aim_sprites if using_canted() else data.aim_sprites
 
 
 func aim_window() -> Rect2:
-	return data.canted_sight_window if canted and not data.canted_aim_sprites.is_empty() else data.sight_window
+	return data.canted_sight_window if using_canted() else data.sight_window
+
+
+## How far along the aim-in frames to show: ADS progress, dipped mid-roll so switching sights while aimed runs
+## back down one sequence and up the other (both start from the idle pose) instead of snapping between them.
+func sight_progress(ads_blend: float) -> float:
+	return ads_blend * (1.0 - data.cant_dip * (1.0 - absf(cant_t * 2.0 - 1.0)))
 
 
 func toggle_canted() -> void:
@@ -212,9 +225,10 @@ func current_sprite(ads_blend: float) -> Texture2D:
 	var aimed_frames := ads_blend >= 0.5 and not frames.is_empty()  # hip shoot frame would jump off the sight
 	if since_shot < data.shoot_frame_time and data.shoot_sprite and not aimed_frames:
 		return data.shoot_sprite
-	if ads_blend > 0.0 and not frames.is_empty():
+	var progress := sight_progress(ads_blend)
+	if progress > 0.0 and not frames.is_empty():
 		var n := frames.size()
-		return frames[mini(int(ads_blend * n), n - 1)]
+		return frames[mini(int(progress * n), n - 1)]
 	if ads_blend > 0.5 and data.ads_sprite:
 		return data.ads_sprite
 	return data.idle_sprite

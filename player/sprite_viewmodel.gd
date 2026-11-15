@@ -84,7 +84,7 @@ func _process(_delta: float) -> void:
 	if not frames.is_empty() and window.has_area():
 		# Slide the frame so the sight glass ends up on the screen centre (the aim point once fully aimed).
 		var sight := base + window.get_center() * size + d.sprite_offset * k
-		off += (vp * 0.5 - sight) * player.ads_blend
+		off += (vp * 0.5 - sight) * w.sight_progress(player.ads_blend)
 	position = base + off
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
@@ -99,16 +99,16 @@ func _process(_delta: float) -> void:
 	_blur.set_shader_parameter("samples", 12 if shooting else 2)
 
 	var aimed: bool = window.has_area() and not frames.is_empty() and texture == frames.back()
-	var dot_size := d.canted_dot_size if w.canted else d.reticle_size
+	var dot_size := d.canted_dot_size if w.using_canted() else d.reticle_size
 	_holo.visible = aimed and dot_size > 0.0
 	if _holo.visible:
 		_holo.position = window.position * size
 		_holo.size = window.size * size
 		_holo.diameter = dot_size * k
-		_holo.color = d.canted_dot_color if w.canted else d.reticle_color
-		_holo.dot_only = w.canted
+		_holo.color = d.canted_dot_color if w.using_canted() else d.reticle_color
+		_holo.dot_only = w.using_canted()
 		_holo.queue_redraw()
-	_scope.visible = aimed and not w.canted and d.scope_magnification > 0.0
+	_scope.visible = aimed and not w.using_canted() and d.scope_magnification > 0.0
 	if _scope.visible:
 		_scope.position = window.position * size
 		_scope.size = window.size * size
