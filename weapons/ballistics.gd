@@ -41,6 +41,11 @@ static func trace_segment(space: PhysicsDirectSpaceState3D, shot: Shot, from: Ve
 			return false
 		var pos: Vector3 = hit.position
 		var normal: Vector3 = hit.normal
+		var hitbox := hit.collider as Hitbox
+		if hitbox:
+			hitbox.hit(shot.data.damage_at(shot.origin.distance_to(pos)) * shot.damage_mult, shot.source)
+			Impact.puff(pos, normal, Color(0.6, 0.05, 0.05), 10)
+			return true
 		Impact.bullet_hole(pos, normal, hit.collider)
 		var penetrable := PhysicsServer3D.body_get_collision_layer(hit.rid) & PENETRABLE
 		if not penetrable or shot.penetrations >= shot.data.max_penetrations:

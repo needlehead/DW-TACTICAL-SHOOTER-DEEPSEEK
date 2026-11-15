@@ -38,6 +38,23 @@ func _logic_checks() -> void:
 	_check(w.chambered and w.mag == 29 and w.spare.size() == 4, "empty reload gives 29+1, empty mag dropped")
 	w.free()
 
+	# TTK sanity: AR kills in 3 torso hits / 1 head hit up close; limbs take longer.
+	var h := Health.new()
+	add_child(h)
+	for i in 2:
+		h.take_damage(data.damage, &"torso", null)
+	_check(not h.dead, "AR: alive after 2 torso hits")
+	h.take_damage(data.damage, &"torso", null)
+	_check(h.dead, "AR: dead after 3 torso hits")
+	h.reset()
+	h.take_damage(data.damage, &"head", null)
+	_check(h.dead, "AR: one-shot headshot")
+	h.reset()
+	for i in 3:
+		h.take_damage(data.damage, &"arms", null)
+	_check(not h.dead, "AR: survives 3 arm hits")
+	h.queue_free()
+
 
 func _check(ok: bool, what: String) -> void:
 	if not ok:

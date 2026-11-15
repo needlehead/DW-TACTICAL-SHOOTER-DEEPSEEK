@@ -75,6 +75,8 @@ var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var camera: Camera3D = $LeanPivot/Head/Camera3D
 @onready var weapons: WeaponManager = $LeanPivot/Head/Camera3D/Viewmodel/Weapons
 @onready var weapon_camera: Camera3D = $ViewmodelLayer/Container/SubViewport/WeaponCamera
+@onready var health: Health = $Health
+@onready var _hitbox_rids: Array[RID] = [($LeanPivot/TorsoHitbox as Hitbox).get_rid(), ($LeanPivot/Head/HeadHitbox as Hitbox).get_rid()]
 
 
 func _ready() -> void:
@@ -84,6 +86,7 @@ func _ready() -> void:
 	look_yaw = rotation_degrees.y
 	eye_height = eye_heights[stance]
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	health.died.connect(func(_source: Node) -> void: alive = false)
 	# The viewmodel renders in its own transparent viewport so it never clips into walls.
 	var env := Environment.new()
 	env.background_mode = Environment.BG_CLEAR_COLOR
@@ -94,7 +97,22 @@ func _ready() -> void:
 
 
 func hitbox_rids() -> Array[RID]:
-	return []
+	return _hitbox_rids
+
+
+## Reset key: full health and ammo; respawn only if dead.
+func reset() -> void:
+	if not alive:
+		global_transform = spawn_transform
+		look_yaw = rotation_degrees.y
+		look_pitch = 0.0
+		velocity = Vector3.ZERO
+		_set_stance(Stance.STAND)
+	alive = true
+	health.reset()
+	recoil = Vector2.ZERO
+	recoil_target = Vector2.ZERO
+	weapons.refill()
 
 
 func controls_active() -> bool:

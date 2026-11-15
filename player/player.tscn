@@ -9,10 +9,19 @@
 [ext_resource type="Resource" path="res://weapons/data/dmr.tres" id="7_dmr"]
 [ext_resource type="Resource" path="res://weapons/data/smg.tres" id="8_smg"]
 [ext_resource type="Script" path="res://weapons/weapon_data.gd" id="9_wd"]
+[ext_resource type="Script" path="res://core/health.gd" id="10_health"]
+[ext_resource type="Script" path="res://core/hitbox.gd" id="11_hb"]
+[ext_resource type="Script" path="res://ui/hud.gd" id="12_hud"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.3
 height = 1.8
+
+[sub_resource type="BoxShape3D" id="torso"]
+size = Vector3(0.45, 1.15, 0.3)
+
+[sub_resource type="SphereShape3D" id="head"]
+radius = 0.13
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -68,3 +77,39 @@ render_target_update_mode = 4
 cull_mask = 2
 fov = 60.0
 near = 0.01
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("10_health")
+
+[node name="TorsoHitbox" type="Area3D" parent="LeanPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("11_hb")
+
+[node name="Shape" type="CollisionShape3D" parent="LeanPivot/TorsoHitbox"]
+shape = SubResource("torso")
+
+[node name="HeadHitbox" type="Area3D" parent="LeanPivot/Head"]
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("11_hb")
+zone = &"head"
+
+[node name="Shape" type="CollisionShape3D" parent="LeanPivot/Head/HeadHitbox"]
+shape = SubResource("head")
+
+[node name="HUDLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="HUD" type="Control" parent="HUDLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("12_hud")

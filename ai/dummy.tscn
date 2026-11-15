@@ -1,0 +1,173 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ai/dummy.gd" id="1_dummy"]
+[ext_resource type="Script" path="res://core/health.gd" id="2_health"]
+[ext_resource type="Script" path="res://core/hitbox.gd" id="3_hb"]
+[ext_resource type="Resource" path="res://weapons/data/assault_rifle.tres" id="4_ar"]
+
+[sub_resource type="CapsuleShape3D" id="capsule"]
+radius = 0.32
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="flash_mat"]
+shading_mode = 0
+albedo_color = Color(1, 0.8, 0.3, 1)
+
+[sub_resource type="SphereMesh" id="flash_mesh"]
+material = SubResource("flash_mat")
+radius = 0.07
+height = 0.14
+
+[sub_resource type="SphereMesh" id="m_Head"]
+radius = 0.13
+height = 0.26
+
+[sub_resource type="SphereShape3D" id="s_Head"]
+radius = 0.13
+
+[sub_resource type="BoxMesh" id="m_Torso"]
+size = Vector3(0.46, 0.62, 0.26)
+
+[sub_resource type="BoxShape3D" id="s_Torso"]
+size = Vector3(0.46, 0.62, 0.26)
+
+[sub_resource type="BoxMesh" id="m_ArmL"]
+size = Vector3(0.12, 0.62, 0.12)
+
+[sub_resource type="BoxShape3D" id="s_ArmL"]
+size = Vector3(0.12, 0.62, 0.12)
+
+[sub_resource type="BoxMesh" id="m_ArmR"]
+size = Vector3(0.12, 0.62, 0.12)
+
+[sub_resource type="BoxShape3D" id="s_ArmR"]
+size = Vector3(0.12, 0.62, 0.12)
+
+[sub_resource type="BoxMesh" id="m_LegL"]
+size = Vector3(0.17, 0.86, 0.17)
+
+[sub_resource type="BoxShape3D" id="s_LegL"]
+size = Vector3(0.17, 0.86, 0.17)
+
+[sub_resource type="BoxMesh" id="m_LegR"]
+size = Vector3(0.17, 0.86, 0.17)
+
+[sub_resource type="BoxShape3D" id="s_LegR"]
+size = Vector3(0.17, 0.86, 0.17)
+
+[node name="Dummy" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_dummy")
+weapon = ExtResource("4_ar")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("capsule")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_health")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.6
+target_desired_distance = 0.8
+radius = 0.4
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="Head" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, 0)
+mesh = SubResource("m_Head")
+
+[node name="HitboxHead" type="Area3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_hb")
+zone = &"head"
+
+[node name="Shape" type="CollisionShape3D" parent="Body/HitboxHead"]
+shape = SubResource("s_Head")
+
+[node name="Torso" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+mesh = SubResource("m_Torso")
+
+[node name="HitboxTorso" type="Area3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_hb")
+zone = &"torso"
+
+[node name="Shape" type="CollisionShape3D" parent="Body/HitboxTorso"]
+shape = SubResource("s_Torso")
+
+[node name="ArmL" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31, 1.15, 0)
+mesh = SubResource("m_ArmL")
+
+[node name="HitboxArmL" type="Area3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31, 1.15, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_hb")
+zone = &"arms"
+
+[node name="Shape" type="CollisionShape3D" parent="Body/HitboxArmL"]
+shape = SubResource("s_ArmL")
+
+[node name="ArmR" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31, 1.15, 0)
+mesh = SubResource("m_ArmR")
+
+[node name="HitboxArmR" type="Area3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31, 1.15, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_hb")
+zone = &"arms"
+
+[node name="Shape" type="CollisionShape3D" parent="Body/HitboxArmR"]
+shape = SubResource("s_ArmR")
+
+[node name="LegL" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.43, 0)
+mesh = SubResource("m_LegL")
+
+[node name="HitboxLegL" type="Area3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.43, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_hb")
+zone = &"legs"
+
+[node name="Shape" type="CollisionShape3D" parent="Body/HitboxLegL"]
+shape = SubResource("s_LegL")
+
+[node name="LegR" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.43, 0)
+mesh = SubResource("m_LegR")
+
+[node name="HitboxLegR" type="Area3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.43, 0)
+collision_layer = 4
+collision_mask = 0
+monitoring = false
+script = ExtResource("3_hb")
+zone = &"legs"
+
+[node name="Shape" type="CollisionShape3D" parent="Body/HitboxLegR"]
+shape = SubResource("s_LegR")
+
+[node name="Muzzle" type="Node3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 1.35, -0.45)
+
+[node name="Flash" type="MeshInstance3D" parent="Body/Muzzle"]
+visible = false
+mesh = SubResource("flash_mesh")
