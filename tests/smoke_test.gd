@@ -130,6 +130,10 @@ func _runtime_checks() -> void:
 	_check(sky.enclosure == 0.0 and is_equal_approx(sky.wet, probe.wet_range.x), "reverb: open sky is driest")
 	var here := probe.estimate(space, player.camera.global_position, [player.get_rid()] as Array[RID])
 	_check(here.wet >= sky.wet and AudioServer.get_bus_index(&"World") >= 0, "reverb: World bus exists, walls add reverb")
+	var sky_pts := PackedVector3Array([Vector3(0, 300, 0)])
+	var under_ground := PackedVector3Array([Vector3(0, -5, 0)])
+	_check(SpriteShadow.lit_fraction(space, sky_pts, Vector3.UP, []) == 1.0 and SpriteShadow.lit_fraction(space, under_ground, Vector3.UP, []) == 0.0,
+		"sprite shadow: open sky lit, under the ground shaded")
 	_check(w.mag_estimate() == "Nearly full", "phone mag estimate at 25/30")
 	player.weapons.phone_blend = 0.75
 	_check(not player.weapons.can_fire() and player.weapons.phone_gun_lower() == 1.0 and player.weapons.phone_raise() == 0.5,

@@ -98,6 +98,12 @@ The `Ambience` autoload plays every track in `my sounds/ambience/tracks/` in a s
 `python tools/split_ambience.py <mix.mp3> "my sounds/ambience/tracks"` (cuts land in quiet moments every 4-7 min).
 The source mix lives in `my sounds/ambience/source/`, which Godot ignores (`.gdignore`) and git ignores (288 MB).
 
+## Sprite shading
+
+The viewmodel sprites (gun, body, phone) darken when your hands are out of the sun: `SpriteShadow` (a CanvasModulate in
+ViewmodelLayer) casts a few rays from around the hands toward the level's DirectionalLight3D and fades between
+`lit_color` and `shadow_color`. Sample points and fade speed are on the node.
+
 ## Handling sounds
 
 `WeaponManager` plays `equip_sound` when a gun comes up (switch, after a grenade, phone put away) and `aim_sound` when

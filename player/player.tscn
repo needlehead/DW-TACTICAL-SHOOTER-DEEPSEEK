@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://player/footsteps.gd" id="2_steps"]
+[ext_resource type="Script" path="res://player/sprite_shadow.gd" id="23_shadow"]
 [ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete1.wav" id="j1"]
 [ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete2.wav" id="j2"]
 [ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete3.wav" id="j3"]
@@ -128,6 +129,9 @@ loadout = Array[ExtResource("9_wd")]([ExtResource("8_smg")])
 grenade_scene = ExtResource("13_gren")
 
 [node name="ViewmodelLayer" type="CanvasLayer" parent="."]
+
+[node name="SpriteShadow" type="CanvasModulate" parent="ViewmodelLayer"]
+script = ExtResource("23_shadow")
 
 [node name="Container" type="SubViewportContainer" parent="ViewmodelLayer"]
 anchors_preset = 15
