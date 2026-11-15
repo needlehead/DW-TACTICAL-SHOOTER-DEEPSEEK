@@ -27,6 +27,7 @@ enum Stance { STAND, CROUCH, PRONE }
 
 @export_group("Stance")  # arrays are indexed by Stance
 @export var eye_heights := PackedFloat32Array([1.65, 1.1, 0.35])
+@export var dead_eye_height := 0.25  ## camera drops to the floor on death
 @export var capsule_heights := PackedFloat32Array([1.8, 1.25, 0.6])
 @export var stance_spread_mult := PackedFloat32Array([1.0, 0.75, 0.5])
 @export var stance_recoil_mult := PackedFloat32Array([1.0, 0.8, 0.6])
@@ -179,7 +180,8 @@ func _process(delta: float) -> void:
 	rotation.y = deg_to_rad(look_yaw + recoil.x)
 	head.rotation.x = deg_to_rad(clampf(look_pitch + recoil.y, -max_pitch, max_pitch))
 
-	eye_height = move_toward(eye_height, eye_heights[stance], stance_change_speed * delta)
+	var eye_target := eye_heights[stance] if alive else dead_eye_height
+	eye_height = move_toward(eye_height, eye_target, stance_change_speed * delta)
 	lean_pivot.position.y = eye_height * 0.5
 	head.position.y = eye_height * 0.5
 	camera.fov = base_fov / lerpf(1.0, ads_zoom, ads_blend)

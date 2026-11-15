@@ -15,6 +15,34 @@
 [ext_resource type="Script" path="res://player/muzzle_smoke.gd" id="16_smoke"]
 [ext_resource type="Script" path="res://ui/bodycam.gd" id="17_bodycam"]
 [ext_resource type="Shader" path="res://ui/bodycam.gdshader" id="18_bodycam_shader"]
+[ext_resource type="Script" path="res://player/body_sprite.gd" id="19_body"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/idle.png" id="b_idle"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead1.png" id="b_dead"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (1).png" id="b_w1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (2).png" id="b_w2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (3).png" id="b_w3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (4).png" id="b_w4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (5).png" id="b_w5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (6).png" id="b_w6"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (7).png" id="b_w7"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (8).png" id="b_w8"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (9).png" id="b_w9"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (10).png" id="b_w10"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (11).png" id="b_w11"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (12).png" id="b_w12"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (13).png" id="b_w13"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (14).png" id="b_w14"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (15).png" id="b_w15"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (16).png" id="b_w16"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (17).png" id="b_w17"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (18).png" id="b_w18"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (19).png" id="b_w19"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (20).png" id="b_w20"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (21).png" id="b_w21"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (22).png" id="b_w22"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (23).png" id="b_w23"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (24).png" id="b_w24"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/walk (25).png" id="b_w25"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.3
@@ -139,6 +167,13 @@ script = ExtResource("12_hud")
 offset_right = 420.0
 offset_bottom = 300.0
 script = ExtResource("14_debug")
+
+[node name="BodySprite" type="TextureRect" parent="ViewmodelLayer"]
+mouse_filter = 2
+script = ExtResource("19_body")
+idle_sprite = ExtResource("b_idle")
+walk_sprites = Array[Texture2D]([ExtResource("b_w1"), ExtResource("b_w2"), ExtResource("b_w3"), ExtResource("b_w4"), ExtResource("b_w5"), ExtResource("b_w6"), ExtResource("b_w7"), ExtResource("b_w8"), ExtResource("b_w9"), ExtResource("b_w10"), ExtResource("b_w11"), ExtResource("b_w12"), ExtResource("b_w13"), ExtResource("b_w14"), ExtResource("b_w15"), ExtResource("b_w16"), ExtResource("b_w17"), ExtResource("b_w18"), ExtResource("b_w19"), ExtResource("b_w20"), ExtResource("b_w21"), ExtResource("b_w22"), ExtResource("b_w23"), ExtResource("b_w24"), ExtResource("b_w25")])
+dead_sprite = ExtResource("b_dead")
 
 [node name="MuzzleSmoke" type="Control" parent="ViewmodelLayer"]
 layout_mode = 3

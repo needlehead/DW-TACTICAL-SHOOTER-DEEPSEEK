@@ -69,6 +69,12 @@ The loadout is a single suppressed SMG (`weapons/data/smg.tres`) using the frame
 
 Bullet impacts leave a decal, a dust burst tinted to the surface colour, and debris chunks. Hitboxes get a blood puff instead.
 
+## First-person body
+
+`BodySprite` (in `player.tscn` → ViewmodelLayer, behind the gun) shows full-screen frames of your own body, rendered looking down:
+`idle_sprite`, `walk_sprites` (looped by distance walked, `cycle_length` m per loop, reversed when backing up) and `dead_sprite`.
+It slides into view as you look down; `frame_pitch` is the look pitch the frames were rendered at. Hidden while prone.
+
 ## Bodycam look
 
 `ui/bodycam.gdshader` runs over the 3D world and the weapon sprite. The HUD and debug panel sit on a higher layer and stay undistorted, and the HUD aim dot and hit marker are moved through the same lens maths so they stay on target. It has a wide-lens barrel distortion, chromatic aberration at the edges, over-sharpening, a washed-out grade, vignette, grain, and a REC/timestamp overlay. While it's on, the FOV goes to `bodycam_fov` (95°), because the lens magnifies the centre. Every value is a shader parameter on `Player/PostFXLayer/Bodycam`'s material and can be changed live.
