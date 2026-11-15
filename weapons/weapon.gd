@@ -10,7 +10,7 @@ signal fired
 var mag := 0  ## rounds in the inserted magazine (not counting the chamber)
 var chambered := false
 var spare: Array[int] = []  ## round count of each spare magazine; never topped up
-var mode := WeaponData.SEMI
+var mode := 0  ## 0 until refill() picks the most automatic mode
 var bloom := 0.0
 var shot_index := 0
 var since_shot := 99.0
@@ -140,6 +140,8 @@ func _shoot() -> void:
 
 
 func _muzzle_flash() -> void:
+	if data.suppressed:
+		return
 	_flash.visible = true
 	_light.light_energy = 3.0
 	await get_tree().create_timer(0.04).timeout

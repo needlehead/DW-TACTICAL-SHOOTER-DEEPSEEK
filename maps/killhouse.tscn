@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://maps/door.gd" id="2_immnm"]
 [ext_resource type="PackedScene" path="res://ai/dummy.tscn" id="3_mncj7"]
 [ext_resource type="Script" path="res://ai/dummy.gd" id="4_vuqpj"]
-[ext_resource type="Resource" path="res://weapons/data/assault_rifle.tres" id="5_g5x3w"]
+[ext_resource type="Resource" path="res://weapons/data/smg.tres" id="5_g5x3w"]
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="6_78idy"]
 [ext_resource type="Script" path="res://player/player.gd" id="7_krsat"]
 
@@ -44,385 +44,385 @@ albedo_color = Color(0.95, 0.85, 0.2, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4g01u"]
 albedo_color = Color(0.45, 0.4, 0.33, 1)
 
-[node name="Killhouse" type="Node3D" unique_id=797383847]
+[node name="Killhouse" type="Node3D" unique_id=1521105099]
 
-[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1538278870]
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=499483629]
 transform = Transform3D(0.81915206, -0.43938506, 0.36868784, 0, 0.64278764, 0.76604444, -0.57357645, -0.62750685, 0.5265408, 0, 0, 0)
 shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=988310517]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1324879622]
 environment = SubResource("Environment_gvjit")
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=1187272046]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=735643861]
 navigation_mesh = SubResource("NavigationMesh_weg48")
 
-[node name="Ground" type="CSGBox3D" parent="NavigationRegion3D" unique_id=2091799259]
+[node name="Ground" type="CSGBox3D" parent="NavigationRegion3D" unique_id=203739382]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 30)
 use_collision = true
 collision_mask = 0
 size = Vector3(300, 1, 300)
 material = SubResource("StandardMaterial3D_yfgq3")
 
-[node name="House" type="Node3D" parent="NavigationRegion3D" unique_id=1028393806]
+[node name="House" type="Node3D" parent="NavigationRegion3D" unique_id=1156781954]
 
-[node name="ExtNorth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1698424767]
+[node name="ExtNorth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2091997311]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8625, 1.5, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(2.525, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2113826535]
+[node name="ExtNorth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1847399939]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.45, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=559033065]
+[node name="ExtNorth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1282714057]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.55, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1268944246]
+[node name="ExtNorth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1873348069]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(10.8, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=596277724]
+[node name="ExtNorth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=101063147]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.45, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=632637139]
+[node name="ExtNorth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=478120326]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.55, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2042053192]
+[node name="ExtNorth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1918783194]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.950001, 1.5, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(4.7, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1139123]
+[node name="ExtNorth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=873257823]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.65, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.4, 0.7, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtNorth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1069475709]
+[node name="ExtNorth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=640785663]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9125, 1.5, 9)
 use_collision = true
 collision_mask = 0
 size = Vector3(2.425, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=355861344]
+[node name="ExtSouth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1241123647]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8375, 1.5, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(2.575, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=444641603]
+[node name="ExtSouth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=396694199]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.6, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.1, 0.8, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=535466567]
+[node name="ExtSouth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=46065088]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.025, 1.5, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(4.85, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=784987828]
+[node name="ExtSouth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1098748291]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.45, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=16507755]
+[node name="ExtSouth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1671986432]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.55, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1907431466]
+[node name="ExtSouth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1677112319]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(10.8, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1964412355]
+[node name="ExtSouth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=658370884]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.45, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1219736107]
+[node name="ExtSouth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1551173512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.55, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 0.9, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtSouth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=476847886]
+[node name="ExtSouth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=635392116]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.862499, 1.5, -9)
 use_collision = true
 collision_mask = 0
 size = Vector3(2.525, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtWest_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=536997904]
+[node name="ExtWest_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1851067836]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, -4.9125)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 8.425)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtWest_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=378837161]
+[node name="ExtWest_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1625661455]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.65, 0)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.7, 1.4)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtWest_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1044349872]
+[node name="ExtWest_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1233911375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, 2.5500002)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.7)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtWest_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1342179780]
+[node name="ExtWest_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=772299987]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.45, 5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.9, 1.2)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtWest_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1016207311]
+[node name="ExtWest_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1144990175]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.55, 5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.9, 1.2)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtWest_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=274701507]
+[node name="ExtWest_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=10559400]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, 7.362499)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.525)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtEast_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=310257450]
+[node name="ExtEast_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1342771838]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, -7.3625)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.525)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtEast_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=403835276]
+[node name="ExtEast_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2146969059]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.45, -5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.9, 1.2)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtEast_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=451479748]
+[node name="ExtEast_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=429076388]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.55, -5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.9, 1.2)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtEast_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=790534623]
+[node name="ExtEast_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1426237311]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, -2.5500002)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.7)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtEast_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1389802556]
+[node name="ExtEast_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1036285697]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.65, 0)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.7, 1.4)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="ExtEast_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1952686431]
+[node name="ExtEast_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=507009918]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, 4.9125004)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 8.425)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1049099487]
+[node name="HallNorth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1003757406]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8375, 1.5, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(2.575, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1421112160]
+[node name="HallNorth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=810517041]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.6, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.1, 0.8, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=165365956]
+[node name="HallNorth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=202786837]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.075, 1.5, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(4.75, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=307708853]
+[node name="HallNorth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1649101635]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.65, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.4, 0.7, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1279551610]
+[node name="HallNorth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1285231199]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07499981, 1.5, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(4.75, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=746085868]
+[node name="HallNorth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1130329473]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.6, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.1, 0.8, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1718425930]
+[node name="HallNorth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1476860692]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.924999, 1.5, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(4.75, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1911884969]
+[node name="HallNorth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1909273965]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.65, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.4, 0.7, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallNorth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1741305027]
+[node name="HallNorth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1198510490]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9125, 1.5, 1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(2.425, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=733756210]
+[node name="HallSouth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2109305054]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.4125, 1.5, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.425, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=860993149]
+[node name="HallSouth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2117454810]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.65, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.4, 0.7, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=196281050]
+[node name="HallSouth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1120496467]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.425, 1.5, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(5.75, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=769697261]
+[node name="HallSouth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=323449375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.6, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.1, 0.8, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1814185874]
+[node name="HallSouth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=657943807]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07499981, 1.5, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(4.75, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1748883851]
+[node name="HallSouth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=710884390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.65, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.4, 0.7, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=140630577]
+[node name="HallSouth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1850397138]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.075001, 1.5, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(4.75, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=45260661]
+[node name="HallSouth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1998336994]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.6, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.1, 0.8, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="HallSouth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=792598685]
+[node name="HallSouth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=800980688]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8375, 1.5, -1.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(2.575, 3, 0.25)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivN1N2_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1811233710]
+[node name="DivN1N2_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1541282370]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 2.7125)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.175)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivN1N2_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1709409141]
+[node name="DivN1N2_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=103076112]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.65, 5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.7, 1.4)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivN1N2_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2037960626]
+[node name="DivN1N2_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=90613136]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 7.4125)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.425)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivN2N3_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=505046862]
+[node name="DivN2N3_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1458556563]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 5.125)
 use_collision = true
 collision_layer = 9
@@ -430,35 +430,35 @@ collision_mask = 0
 size = Vector3(0.1, 3, 7.85)
 material = SubResource("StandardMaterial3D_jq4wq")
 
-[node name="DivN3N4_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2061969089]
+[node name="DivN3N4_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2069217715]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 2.7625)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.275)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivN3N4_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=184875306]
+[node name="DivN3N4_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1406633076]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.45, 5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.9, 1.2)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivN3N4_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1409661076]
+[node name="DivN3N4_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1615289300]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.55, 5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.9, 1.2)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivN3N4_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1868614499]
+[node name="DivN3N4_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=511318840]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 7.3625)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 3.525)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivS1S2_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=383800520]
+[node name="DivS1S2_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2045354970]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -7.375)
 use_collision = true
 collision_layer = 9
@@ -466,7 +466,7 @@ collision_mask = 0
 size = Vector3(0.1, 3, 3.35)
 material = SubResource("StandardMaterial3D_jq4wq")
 
-[node name="DivS1S2_Thin_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1922357624]
+[node name="DivS1S2_Thin_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2019628212]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.65, -5)
 use_collision = true
 collision_layer = 9
@@ -474,7 +474,7 @@ collision_mask = 0
 size = Vector3(0.1, 0.7, 1.4)
 material = SubResource("StandardMaterial3D_jq4wq")
 
-[node name="DivS1S2_Thin_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=179509745]
+[node name="DivS1S2_Thin_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=961813187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -2.75)
 use_collision = true
 collision_layer = 9
@@ -482,28 +482,28 @@ collision_mask = 0
 size = Vector3(0.1, 3, 3.1)
 material = SubResource("StandardMaterial3D_jq4wq")
 
-[node name="DivS2S3_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1054167420]
+[node name="DivS2S3_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=169024905]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -7.9125)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 2.425)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivS2S3_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1107237763]
+[node name="DivS2S3_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=749172799]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, -6)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 0.7, 1.4)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivS2S3_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1466780257]
+[node name="DivS2S3_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=308012486]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -3.2125)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 4.175)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="DivS3S4_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1096621520]
+[node name="DivS3S4_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=962105942]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -5.125)
 use_collision = true
 collision_layer = 9
@@ -511,129 +511,129 @@ collision_mask = 0
 size = Vector3(0.1, 3, 7.85)
 material = SubResource("StandardMaterial3D_jq4wq")
 
-[node name="CrateN2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1991766279]
+[node name="CrateN2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=398532403]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 6)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 1, 1.2)
 material = SubResource("StandardMaterial3D_0jx4w")
 
-[node name="CrateS3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=246576487]
+[node name="CrateS3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2061729509]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, -6.5)
 use_collision = true
 collision_mask = 0
 size = Vector3(2, 1, 0.8)
 material = SubResource("StandardMaterial3D_0jx4w")
 
-[node name="PillarN4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2144469233]
+[node name="PillarN4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1293453376]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1.5, 5)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.6, 3, 0.6)
 material = SubResource("StandardMaterial3D_f6sw2")
 
-[node name="CrateHall" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1750227311]
+[node name="CrateHall" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=151162932]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 0.6)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.9, 1, 0.6)
 material = SubResource("StandardMaterial3D_0jx4w")
 
-[node name="CrateOutside" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=606644225]
+[node name="CrateOutside" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1720584807]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.5, -4)
 use_collision = true
 collision_mask = 0
 size = Vector3(1.2, 1, 2.4)
 material = SubResource("StandardMaterial3D_0jx4w")
 
-[node name="Range" type="Node3D" parent="." unique_id=2000167978]
+[node name="Range" type="Node3D" parent="." unique_id=44220103]
 
-[node name="FiringLine" type="CSGBox3D" parent="Range" unique_id=1435840491]
+[node name="FiringLine" type="CSGBox3D" parent="Range" unique_id=953335598]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 14)
 collision_mask = 0
 size = Vector3(12, 0.02, 0.15)
 material = SubResource("StandardMaterial3D_m8866")
 
-[node name="Label_FIRING_LINE" type="Label3D" parent="Range" unique_id=466711040]
+[node name="Label_FIRING_LINE" type="Label3D" parent="Range" unique_id=479795645]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 2, 14)
 billboard = 1
 text = "FIRING LINE"
 font_size = 64
 
-[node name="BermWest" type="CSGBox3D" parent="Range" unique_id=828852771]
+[node name="BermWest" type="CSGBox3D" parent="Range" unique_id=666557917]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 1.25, 71)
 use_collision = true
 collision_mask = 0
 size = Vector3(1, 2.5, 110)
 material = SubResource("StandardMaterial3D_4g01u")
 
-[node name="BermEast" type="CSGBox3D" parent="Range" unique_id=1222050817]
+[node name="BermEast" type="CSGBox3D" parent="Range" unique_id=26671329]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 1.25, 71)
 use_collision = true
 collision_mask = 0
 size = Vector3(1, 2.5, 110)
 material = SubResource("StandardMaterial3D_4g01u")
 
-[node name="Backstop" type="CSGBox3D" parent="Range" unique_id=1078449016]
+[node name="Backstop" type="CSGBox3D" parent="Range" unique_id=1899672428]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 127)
 use_collision = true
 collision_mask = 0
 size = Vector3(14, 6, 1)
 material = SubResource("StandardMaterial3D_4g01u")
 
-[node name="Marker10" type="CSGBox3D" parent="Range" unique_id=124101067]
+[node name="Marker10" type="CSGBox3D" parent="Range" unique_id=1872000985]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 24)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.15, 1.5, 0.15)
 material = SubResource("StandardMaterial3D_m8866")
 
-[node name="Label_10_m" type="Label3D" parent="Range" unique_id=809403883]
+[node name="Label_10_m" type="Label3D" parent="Range" unique_id=1357043215]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, 24)
 billboard = 1
 text = "10 m"
 font_size = 64
 
-[node name="Marker25" type="CSGBox3D" parent="Range" unique_id=653745178]
+[node name="Marker25" type="CSGBox3D" parent="Range" unique_id=1460369423]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 39)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.15, 1.5, 0.15)
 material = SubResource("StandardMaterial3D_m8866")
 
-[node name="Label_25_m" type="Label3D" parent="Range" unique_id=889723973]
+[node name="Label_25_m" type="Label3D" parent="Range" unique_id=891118963]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.5, 39)
 billboard = 1
 text = "25 m"
 font_size = 64
 
-[node name="Marker50" type="CSGBox3D" parent="Range" unique_id=261055217]
+[node name="Marker50" type="CSGBox3D" parent="Range" unique_id=1149810750]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 64)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.15, 1.5, 0.15)
 material = SubResource("StandardMaterial3D_m8866")
 
-[node name="Label_50_m" type="Label3D" parent="Range" unique_id=1206398186]
+[node name="Label_50_m" type="Label3D" parent="Range" unique_id=308781270]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.5, 64)
 billboard = 1
 text = "50 m"
 font_size = 64
 
-[node name="Marker100" type="CSGBox3D" parent="Range" unique_id=863393725]
+[node name="Marker100" type="CSGBox3D" parent="Range" unique_id=1682064505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 114)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.15, 1.5, 0.15)
 material = SubResource("StandardMaterial3D_m8866")
 
-[node name="Label_100_m" type="Label3D" parent="Range" unique_id=1141691623]
+[node name="Label_100_m" type="Label3D" parent="Range" unique_id=1119708938]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, 114)
 billboard = 1
 text = "100 m"
 font_size = 64
 
-[node name="PenBoard_Thin" type="CSGBox3D" parent="Range" unique_id=1863098696]
+[node name="PenBoard_Thin" type="CSGBox3D" parent="Range" unique_id=908389135]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1, 28.4)
 use_collision = true
 collision_layer = 9
@@ -641,47 +641,47 @@ collision_mask = 0
 size = Vector3(1.6, 2, 0.1)
 material = SubResource("StandardMaterial3D_jq4wq")
 
-[node name="Label_penetration" type="Label3D" parent="Range" unique_id=455354939]
+[node name="Label_penetration" type="Label3D" parent="Range" unique_id=289722864]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 2.4, 28.4)
 billboard = 1
 text = "penetration"
 font_size = 64
 
-[node name="Doors" type="Node3D" parent="." unique_id=1855119117]
+[node name="Doors" type="Node3D" parent="." unique_id=996583647]
 
-[node name="Door" type="AnimatableBody3D" parent="Doors" unique_id=1551330423 instance=ExtResource("1_5pou3")]
+[node name="Door" type="AnimatableBody3D" parent="Doors" unique_id=497340516 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, 1.25)
 collision_layer = 9
 collision_mask = 0
 script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@2" type="AnimatableBody3D" parent="Doors" unique_id=807868982 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@2" type="AnimatableBody3D" parent="Doors" unique_id=1639956668 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 1.25)
 collision_layer = 9
 collision_mask = 0
 script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@3" type="AnimatableBody3D" parent="Doors" unique_id=1459353381 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@3" type="AnimatableBody3D" parent="Doors" unique_id=18892773 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -1.25)
 collision_layer = 9
 collision_mask = 0
 script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@4" type="AnimatableBody3D" parent="Doors" unique_id=1735232245 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@4" type="AnimatableBody3D" parent="Doors" unique_id=1359804456 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, -1.25)
 collision_layer = 9
 collision_mask = 0
 script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@5" type="AnimatableBody3D" parent="Doors" unique_id=730846008 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@5" type="AnimatableBody3D" parent="Doors" unique_id=1898470006 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, -9)
 collision_layer = 9
 collision_mask = 0
 script = ExtResource("2_immnm")
 
-[node name="Dummies" type="Node3D" parent="." unique_id=505103778]
+[node name="Dummies" type="Node3D" parent="." unique_id=728357150]
 
-[node name="Range0" type="CharacterBody3D" parent="Dummies" unique_id=105481534 instance=ExtResource("3_mncj7")]
+[node name="Range0" type="CharacterBody3D" parent="Dummies" unique_id=2032691872 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 24)
 collision_layer = 2
 collision_mask = 3
@@ -691,7 +691,7 @@ shoots_back = false
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range1" type="CharacterBody3D" parent="Dummies" unique_id=515591126 instance=ExtResource("3_mncj7")]
+[node name="Range1" type="CharacterBody3D" parent="Dummies" unique_id=8485948 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 39)
 collision_layer = 2
 collision_mask = 3
@@ -701,7 +701,7 @@ shoots_back = false
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range2" type="CharacterBody3D" parent="Dummies" unique_id=1249300880 instance=ExtResource("3_mncj7")]
+[node name="Range2" type="CharacterBody3D" parent="Dummies" unique_id=1755494783 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 64)
 collision_layer = 2
 collision_mask = 3
@@ -711,7 +711,7 @@ shoots_back = false
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range3" type="CharacterBody3D" parent="Dummies" unique_id=802138758 instance=ExtResource("3_mncj7")]
+[node name="Range3" type="CharacterBody3D" parent="Dummies" unique_id=195582094 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 114)
 collision_layer = 2
 collision_mask = 3
@@ -721,7 +721,7 @@ shoots_back = false
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range4" type="CharacterBody3D" parent="Dummies" unique_id=2128341207 instance=ExtResource("3_mncj7")]
+[node name="Range4" type="CharacterBody3D" parent="Dummies" unique_id=544868895 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 29)
 collision_layer = 2
 collision_mask = 3
@@ -731,7 +731,7 @@ shoots_back = false
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Room5" type="CharacterBody3D" parent="Dummies" unique_id=425317060 instance=ExtResource("3_mncj7")]
+[node name="Room5" type="CharacterBody3D" parent="Dummies" unique_id=1602121593 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -6)
 collision_layer = 2
 collision_mask = 3
@@ -740,7 +740,7 @@ patrol_points = PackedVector3Array()
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room6" type="CharacterBody3D" parent="Dummies" unique_id=2115528327 instance=ExtResource("3_mncj7")]
+[node name="Room6" type="CharacterBody3D" parent="Dummies" unique_id=2037225424 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -6)
 collision_layer = 2
 collision_mask = 3
@@ -749,7 +749,7 @@ patrol_points = PackedVector3Array()
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room7" type="CharacterBody3D" parent="Dummies" unique_id=403808713 instance=ExtResource("3_mncj7")]
+[node name="Room7" type="CharacterBody3D" parent="Dummies" unique_id=695712405 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
 collision_layer = 2
 collision_mask = 3
@@ -758,7 +758,7 @@ patrol_points = PackedVector3Array()
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room8" type="CharacterBody3D" parent="Dummies" unique_id=1343825788 instance=ExtResource("3_mncj7")]
+[node name="Room8" type="CharacterBody3D" parent="Dummies" unique_id=510091609 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 3)
 collision_layer = 2
 collision_mask = 3
@@ -767,7 +767,7 @@ patrol_points = PackedVector3Array()
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room9" type="CharacterBody3D" parent="Dummies" unique_id=461341816 instance=ExtResource("3_mncj7")]
+[node name="Room9" type="CharacterBody3D" parent="Dummies" unique_id=1039196792 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -5)
 collision_layer = 2
 collision_mask = 3
@@ -776,7 +776,7 @@ patrol_points = PackedVector3Array()
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Patrol10" type="CharacterBody3D" parent="Dummies" unique_id=540095296 instance=ExtResource("3_mncj7")]
+[node name="Patrol10" type="CharacterBody3D" parent="Dummies" unique_id=301224934 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, 0)
 collision_layer = 2
 collision_mask = 3
@@ -785,7 +785,7 @@ patrol_points = PackedVector3Array(-10.5, 0, 0, 10.5, 0, 0)
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.35, 0.75, 1)
 
-[node name="Patrol11" type="CharacterBody3D" parent="Dummies" unique_id=1015628354 instance=ExtResource("3_mncj7")]
+[node name="Patrol11" type="CharacterBody3D" parent="Dummies" unique_id=1582927128 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 5)
 collision_layer = 2
 collision_mask = 3
@@ -794,7 +794,7 @@ patrol_points = PackedVector3Array(-9, 0, 5, -3, 0, 3.5)
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.35, 0.75, 1)
 
-[node name="Patrol12" type="CharacterBody3D" parent="Dummies" unique_id=376942798 instance=ExtResource("3_mncj7")]
+[node name="Patrol12" type="CharacterBody3D" parent="Dummies" unique_id=1994104195 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -12)
 collision_layer = 2
 collision_mask = 3
@@ -803,7 +803,7 @@ patrol_points = PackedVector3Array(-16, 0, -12, 16, 0, -12)
 weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.35, 0.75, 1)
 
-[node name="Player" type="CharacterBody3D" parent="." unique_id=1923994118 instance=ExtResource("6_78idy")]
+[node name="Player" type="CharacterBody3D" parent="." unique_id=759163239 instance=ExtResource("6_78idy")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.05, 12.5)
 collision_layer = 2
 collision_mask = 3

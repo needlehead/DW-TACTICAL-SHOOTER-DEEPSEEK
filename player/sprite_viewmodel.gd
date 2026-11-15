@@ -1,7 +1,7 @@
 extends TextureRect
 ## Doom-style 2D viewmodel. Shows the active weapon's frame (idle / shoot / reload / ADS) and moves it
 ## with the same sway, bob, inertia, kick and lowering the 3D viewmodel computes. Shoot frames get a
-## motion blur that fades over the frame. Hidden for weapons without sprites (greybox 3D gun instead).
+## horizontal motion blur that fades over the frame. Hidden for weapons without sprites (greybox 3D gun instead).
 
 ## Extra size around the screen so bob and kick never reveal the frame's cut-off bottom edge.
 @export var overscan := 0.1
@@ -63,5 +63,5 @@ func _process(_delta: float) -> void:
 
 	var shooting := texture == d.shoot_sprite and d.shoot_blur > 0.0
 	var fade := 1.0 - w.since_shot / d.shoot_frame_time if shooting else 0.0
-	_blur.set_shader_parameter("blur_dir", Vector2(kick_rot.z * 0.3, 1.0) * d.shoot_blur * fade)
+	_blur.set_shader_parameter("blur_dir", Vector2(1.0, kick_rot.z * 0.3) * d.shoot_blur * fade)  # horizontal streak
 	_blur.set_shader_parameter("samples", 12 if shooting else 2)

@@ -4,9 +4,6 @@
 [ext_resource type="Script" path="res://player/footsteps.gd" id="2_steps"]
 [ext_resource type="Script" path="res://player/viewmodel.gd" id="3_vm"]
 [ext_resource type="Script" path="res://weapons/weapon_manager.gd" id="4_wm"]
-[ext_resource type="Resource" path="res://weapons/data/assault_rifle.tres" id="5_ar"]
-[ext_resource type="Resource" path="res://weapons/data/pistol.tres" id="6_pistol"]
-[ext_resource type="Resource" path="res://weapons/data/dmr.tres" id="7_dmr"]
 [ext_resource type="Resource" path="res://weapons/data/smg.tres" id="8_smg"]
 [ext_resource type="Script" path="res://weapons/weapon_data.gd" id="9_wd"]
 [ext_resource type="Script" path="res://core/health.gd" id="10_health"]
@@ -15,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://weapons/grenade.tscn" id="13_gren"]
 [ext_resource type="Script" path="res://ui/debug_panel.gd" id="14_debug"]
 [ext_resource type="Script" path="res://player/sprite_viewmodel.gd" id="15_sprite"]
+[ext_resource type="Script" path="res://player/muzzle_smoke.gd" id="16_smoke"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.3
@@ -56,7 +54,7 @@ script = ExtResource("3_vm")
 
 [node name="Weapons" type="Node3D" parent="LeanPivot/Head/Camera3D/Viewmodel"]
 script = ExtResource("4_wm")
-loadout = Array[ExtResource("9_wd")]([ExtResource("5_ar"), ExtResource("6_pistol"), ExtResource("7_dmr"), ExtResource("8_smg")])
+loadout = Array[ExtResource("9_wd")]([ExtResource("8_smg")])
 grenade_scene = ExtResource("13_gren")
 
 [node name="ViewmodelLayer" type="CanvasLayer" parent="."]
@@ -126,3 +124,13 @@ script = ExtResource("14_debug")
 [node name="SpriteViewmodel" type="TextureRect" parent="ViewmodelLayer"]
 mouse_filter = 2
 script = ExtResource("15_sprite")
+
+[node name="MuzzleSmoke" type="Control" parent="ViewmodelLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("16_smoke")

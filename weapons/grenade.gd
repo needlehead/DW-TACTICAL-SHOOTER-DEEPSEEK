@@ -41,6 +41,7 @@ func explode() -> void:
 	for h: Health in best:
 		h.take_damage(best[h], &"blast", thrower)
 	Impact.puff(center, Vector3.UP, Color(0.35, 0.3, 0.25), 40, 9.0)
+	Impact.dust(center, Vector3.UP, Color(0.55, 0.5, 0.45), 24)
 	_flash(center)
 	queue_free()
 

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://ai/dummy.gd" id="1_dummy"]
 [ext_resource type="Script" path="res://core/health.gd" id="2_health"]
 [ext_resource type="Script" path="res://core/hitbox.gd" id="3_hb"]
-[ext_resource type="Resource" path="res://weapons/data/assault_rifle.tres" id="4_ar"]
+[ext_resource type="Resource" path="res://weapons/data/smg.tres" id="4_ar"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.32

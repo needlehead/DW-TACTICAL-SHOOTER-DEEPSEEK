@@ -18,10 +18,10 @@ func _ready() -> void:
 
 
 func _logic_checks() -> void:
-	var data: WeaponData = load("res://weapons/data/assault_rifle.tres")
+	var data: WeaponData = load("res://weapons/data/smg.tres")
 	_check(is_equal_approx(data.damage_at(0.0), data.damage), "no falloff up close")
 	_check(is_equal_approx(data.damage_at(1000.0), data.damage * data.min_damage_mult), "falloff floor")
-	_check(data.modes() == [WeaponData.SEMI, WeaponData.AUTO], "AR modes semi+auto")
+	_check(data.modes() == [WeaponData.SEMI, WeaponData.BURST, WeaponData.AUTO], "SMG modes semi+burst+auto")
 
 	var w := Weapon.new()
 	w.data = data
@@ -49,21 +49,21 @@ func _logic_checks() -> void:
 	_check(w.current_sprite(0.0) == data.reload_sprites[4], "middle reload frame halfway")
 	w.free()
 
-	# TTK sanity: AR kills in 3 torso hits / 1 head hit up close; limbs take longer.
+	# TTK sanity: SMG kills in 4 torso hits / 1 head hit up close; limbs take longer.
 	var h := Health.new()
 	add_child(h)
-	for i in 2:
+	for i in 3:
 		h.take_damage(data.damage, &"torso", null)
-	_check(not h.dead, "AR: alive after 2 torso hits")
+	_check(not h.dead, "SMG: alive after 3 torso hits")
 	h.take_damage(data.damage, &"torso", null)
-	_check(h.dead, "AR: dead after 3 torso hits")
+	_check(h.dead, "SMG: dead after 4 torso hits")
 	h.reset()
 	h.take_damage(data.damage, &"head", null)
-	_check(h.dead, "AR: one-shot headshot")
+	_check(h.dead, "SMG: one-shot headshot")
 	h.reset()
 	for i in 3:
 		h.take_damage(data.damage, &"arms", null)
-	_check(not h.dead, "AR: survives 3 arm hits")
+	_check(not h.dead, "SMG: survives 3 arm hits")
 	h.queue_free()
 
 
@@ -87,12 +87,12 @@ func _runtime_checks() -> void:
 	var w := player.weapons.current
 	var hip := w.data.hip_spread
 	w.data.hip_spread = 0.0
-	for i in 3:
+	for i in 4:
 		w._shoot()
 	w.data.hip_spread = hip
-	_check(target.health.dead, "3 AR torso shots kill a 10 m dummy")
-	_check(Game.last_ttk.contains("3 hits"), "TTK recorded: " + Game.last_ttk)
-	_check(w.mag == 26, "3 rounds spent")
+	_check(target.health.dead, "4 SMG torso shots kill a 10 m dummy")
+	_check(Game.last_ttk.contains("4 hits"), "TTK recorded: " + Game.last_ttk)
+	_check(w.mag == 25, "4 rounds spent")
 	# Penetration: the 15 m dummy stands behind a thin board, so it takes reduced damage.
 	var pen_target := level.get_node("Dummies/Range4") as Dummy
 	d = pen_target.global_position + Vector3.UP * 1.17 - player.camera.global_position

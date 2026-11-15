@@ -1,10 +1,21 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3]
 
 [ext_resource type="Script" path="res://weapons/weapon_data.gd" id="1_wd"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/idle.png" id="2_idle"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/shoot.png" id="3_shoot"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (1).png" id="r1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (2).png" id="r2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (3).png" id="r3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (4).png" id="r4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (5).png" id="r5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (6).png" id="r6"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (7).png" id="r7"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (8).png" id="r8"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/reload (9).png" id="r9"]
 
 [resource]
 script = ExtResource("1_wd")
-display_name = "SMG"
+display_name = "Suppressed SMG"
 fire_modes = 7
 rpm = 900.0
 damage = 26.0
@@ -39,3 +50,8 @@ vm_size = Vector3(0.06, 0.11, 0.5)
 color = Color(0.3, 0.3, 0.32, 1)
 hip_offset = Vector3(0.16, -0.15, -0.3)
 ads_distance = 0.24
+idle_sprite = ExtResource("2_idle")
+shoot_sprite = ExtResource("3_shoot")
+reload_sprites = Array[Texture2D]([ExtResource("r1"), ExtResource("r2"), ExtResource("r3"), ExtResource("r4"), ExtResource("r5"), ExtResource("r6"), ExtResource("r7"), ExtResource("r8"), ExtResource("r9")])
+muzzle_uv = Vector2(0.583, 0.506)
+suppressed = true

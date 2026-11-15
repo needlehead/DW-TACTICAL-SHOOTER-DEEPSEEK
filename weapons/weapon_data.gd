@@ -62,7 +62,9 @@ const AUTO := 4
 @export var reload_sprites: Array[Texture2D] = []  ## spread evenly over the reload time
 @export var sprite_offset := Vector2(0.0, 0.08)  ## fraction of screen height; +y moves the gun down
 @export var shoot_frame_time := 0.07
-@export var shoot_blur := 0.035  ## streak length as a fraction of screen height
+@export var shoot_blur := 0.025  ## horizontal streak length as a fraction of the frame width
+@export var muzzle_uv := Vector2(0.5, 0.5)  ## muzzle position on the idle/shoot frame (0-1); smoke spawns here
+@export var suppressed := false  ## muzzle smoke instead of flash light
 
 @export_group("Viewmodel")
 @export var vm_size := Vector3(0.06, 0.09, 0.7)

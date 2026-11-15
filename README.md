@@ -34,7 +34,6 @@ If you edit `killhouse.tscn` by hand instead, select `NavigationRegion3D` and cl
 | Reload | R |
 | Fire mode | B |
 | Interact (doors) | F |
-| Assault rifle / pistol / DMR / SMG | 1 / 2 / 3 / 4 |
 | Frag grenade | G |
 | Reset dummies, health, ammo, doors | F5 |
 | Debug panel and live tuning | F1 (frees the mouse) |
@@ -45,20 +44,24 @@ The white dot is where the gun points. In hip fire it drifts inside the aim dead
 
 ## Weapon sprites (Doom-style)
 
-Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Render each frame in Koikatsu at 16:9 (the test set is 2560�1440) with a transparent background and the arms reaching the bottom edge. Then fill the **Sprites** group on the weapon's `.tres`:
+Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Render each frame in Koikatsu at 16:9 (the test set is 2560×1440) with a transparent background and the arms reaching the bottom edge. Then fill the **Sprites** group on the weapon's `.tres`:
 
 | Field | Use |
 |---|---|
 | `idle_sprite` | Default frame. Setting it switches that weapon to sprite mode. |
-| `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with motion blur. |
+| `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with a horizontal motion blur. |
 | `reload_sprites` | Any number of frames, spread evenly over the reload time (tactical and empty). |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
 | `sprite_offset` | Per-weapon placement in screen heights (+y = lower). Default 0.08 down. |
-| `shoot_frame_time`, `shoot_blur` | How long the shoot frame shows, and the blur streak length (fraction of screen height). |
+| `shoot_frame_time`, `shoot_blur` | How long the shoot frame shows, and the horizontal blur streak length (fraction of the frame width). |
+| `muzzle_uv` | Muzzle position on the idle/shoot frame (0–1). Suppressor smoke spawns here. |
+| `suppressed` | Smoke wisps from the muzzle instead of a muzzle-flash light. |
 
 The motion blur is a shader (`player/motion_blur.gdshader`) applied in-engine, so the source PNGs stay untouched. Sway, bob, kick, sprint and lowering move the sprite using the same values as the 3D viewmodel. The scale factors are exported on `Player/ViewmodelLayer/SpriteViewmodel`.
 
-The test frames in `koikatsu sprites/testing/` are assigned to the assault rifle. The other weapons still use the greybox 3D gun.
+The loadout is a single suppressed SMG (`weapons/data/smg.tres`) using the frames in `koikatsu sprites/testing/`. Smoke look (size, opacity, rise, lifetime) is exported on `Player/ViewmodelLayer/MuzzleSmoke`.
+
+Bullet impacts leave a decal, a dust burst tinted to the surface colour, and debris chunks. Hitboxes get a blood puff instead.
 
 ## Layout
 
@@ -78,7 +81,7 @@ Render layer 2 holds the viewmodel, which is drawn by its own camera in a transp
 
 ## Systems in short
 
-- **Damage:** everything goes through `Health.take_damage(amount, zone, source)`. Zone multipliers live on Health: head ×4, torso ×1, arms ×0.6, legs ×0.7. Assault rifle up close: 3 torso hits or 1 headshot.
+- **Damage:** everything goes through `Health.take_damage(amount, zone, source)`. Zone multipliers live on Health: head ×4, torso ×1, arms ×0.6, legs ×0.7. SMG up close: 4 torso hits or 1 headshot.
 - **Ammo:** magazine round count plus a chamber flag. A tactical reload keeps the chambered round (30+1). An empty reload takes longer and chambers from the new magazine. Spare magazines keep their own counts; a partial magazine goes back in the pouch, and reloads take the fullest one.
 - **Recoil:** each weapon has a per-shot pattern (`recoil_pattern`, degrees) plus `recoil_random`. The camera kick (aim) and the viewmodel kick are tuned separately. Pulling the mouse against recoil cancels it, so a countered spray doesn't drift down when recoil recovers.
 - **Bullets:** `Ballistics.trace_segment()` is the unit of travel. Hitscan calls it once over the full range. A projectile mode would call it once per tick (`ballistic_mode` and `muzzle_velocity` are already on WeaponData).
@@ -96,7 +99,7 @@ Render layer 2 holds the viewmodel, which is drawn by its own camera in a transp
 | Player | `lean_angle` / `lean_shift` | 12° / 0.3 m |
 | Player | `ads_speed_mult`, `jump_velocity`, `vault_max_height` | 0.6, 3.6, 1.3 m |
 | Viewmodel | `sway_amount`, `inertia`, `bob_amount`, `kick_return` | 0.25, 0.012, 0.012, 14 |
-| WeaponData | damage, rpm, falloff, spreads, recoil pattern, reload and ADS times | see `weapons/data/*.tres` |
+| WeaponData | damage, rpm, falloff, spreads, recoil pattern, reload and ADS times | see `weapons/data/smg.tres` |
 | Health | `zone_multipliers` | head 4, torso 1, arms 0.6, legs 0.7 |
 | Grenade | `fuse`, `radius`, `max_damage`, `falloff_exponent` | 3.5 s, 9 m, 250, 1.5 |
 | Dummy | `aim_error_deg`, `fire_interval`, `damage_scale`, `reaction_time` | 4°, 0.7 s, 0.4, 0.6 s |
