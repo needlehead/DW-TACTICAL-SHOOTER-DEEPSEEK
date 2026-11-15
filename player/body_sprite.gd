@@ -26,10 +26,10 @@ func _process(delta: float) -> void:
 	var vp := get_viewport_rect().size
 	size = vp
 	pivot_offset = Vector2(vp.x * 0.5, vp.y)
-	scale = Vector2.ONE * body_scale
 	if not player.alive:
 		texture = dead_sprite
 		position = Vector2.ZERO
+		scale = Vector2.ONE  # death frame stays full size
 		visible = texture != null
 		return
 	# Angle above the render pitch -> screen distance the body drops (linear in FOV is close enough here).
@@ -39,6 +39,7 @@ func _process(delta: float) -> void:
 	if not visible:
 		return
 	position = Vector2(0.0, drop)
+	scale = Vector2.ONE * body_scale
 
 	var speed := player.horizontal_speed()
 	if speed < min_walk_speed or walk_sprites.is_empty() or not player.is_on_floor():
