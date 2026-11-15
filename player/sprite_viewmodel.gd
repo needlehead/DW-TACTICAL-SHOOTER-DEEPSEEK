@@ -18,6 +18,10 @@ extends TextureRect
 ## Used only when the weapon has no ads_sprite/aim_sprites: zoom and shift the hip frame toward centre.
 @export var mode_switch_rot := -0.07  ## radians the gun twists while flicking the fire selector
 @export var mode_switch_drop := Vector2(0.02, 0.035)  ## screen heights right/down at the peak of the flick
+## Reload sway: the hands tilt and dip into the reload and wander a little while working the mag.
+@export var reload_tilt := 0.045  ## radians at the middle of the reload
+@export var reload_dip := 0.03  ## screen heights down at the middle of the reload
+@export var reload_wobble := 0.008  ## screen heights of hand wander on top
 ## Lower stances pull the gun in toward the face (Insurgency-style). Blends with eye height, so it follows
 ## the stance change smoothly. Values are at full prone; crouch gets about 40% of them.
 @export var low_stance_zoom := 0.14
@@ -59,6 +63,16 @@ func hand_offset(k: float, with_freeaim := true) -> Vector2:
 		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k
 
 
+## Reload hand motion as a screen offset (screen heights). Eased in and out (zero slope at both ends) so the
+## reload starts and lands on the rest pose; the wobble rides on that envelope. x is wander only, y is dip + wander.
+func reload_sway(w: Weapon) -> Vector2:
+	if not w.is_reloading():
+		return Vector2.ZERO
+	var p := clampf(1.0 - w.reload_left / w.reload_total, 0.0, 1.0)
+	var env := (1.0 - cos(TAU * p)) * 0.5
+	return Vector2(sin(TAU * p * 2.0) * reload_wobble, reload_dip + sin(TAU * p * 3.0) * reload_wobble * 0.6) * env
+
+
 func _process(delta: float) -> void:
 	var w := player.weapons.current
 	_sprint_t = move_toward(_sprint_t, 1.0 if player.is_sprinting else 0.0, delta / sprint_swap_time)
@@ -87,6 +101,8 @@ func _process(delta: float) -> void:
 	low *= 1.0 - player.ads_blend
 	off += low_stance_shift * k * low
 	off += mode_switch_drop * k * flick
+	var rl := reload_sway(w)
+	off += rl * k
 
 	size = vp * (1.0 + overscan)
 	var base := Vector2(-vp.x * overscan * 0.5, 0.0)  # overscan hangs below the screen
@@ -100,7 +116,7 @@ func _process(delta: float) -> void:
 	var rest_aim := vp * 0.5 - (base + d.sprite_offset * k)  # sprite-local point that sits on screen centre at rest
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
-	rotation = kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick
+	rotation = kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0)
 	# Where the barrel points: the rest point carried by the sprite's motion; aiming pulls it onto the sights (centre).
 	player.viewmodel_aim = (get_transform() * rest_aim).lerp(vp * 0.5, player.ads_blend)
 

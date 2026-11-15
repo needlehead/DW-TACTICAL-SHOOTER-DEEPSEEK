@@ -161,6 +161,14 @@ func _runtime_checks() -> void:
 		"phone ECG: R spike peaks at 1, flat between beats")
 	var fx := player.get_node("HUDLayer/DamageFeedback") as DamageFeedback
 	_check(fx.low_pulse(1.0, 0.0) == 0.0 and fx.low_pulse(0.1, 0.0) > 0.0, "damage feedback: heartbeat vignette only at low health")
+	var svm = player.get_node("ViewmodelLayer/SpriteViewmodel")
+	rifle.reload_total = 2.0
+	rifle.reload_left = 1.0
+	var mid: Vector2 = svm.reload_sway(rifle)
+	rifle.reload_left = 1.999
+	var rl_start: Vector2 = svm.reload_sway(rifle)
+	rifle.reload_left = 0.0
+	_check(mid.y > 0.02 and rl_start.length() < 0.001 and svm.reload_sway(rifle) == Vector2.ZERO, "reload sway: eases in, dips mid-reload, lands at rest")
 	var voice := player.get_node("PlayerVoice") as PlayerVoice
 	voice.exertion = 0.0
 	var calm := voice.breath_target()
