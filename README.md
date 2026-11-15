@@ -51,7 +51,8 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 |---|---|
 | `idle_sprite` | Default frame. Setting it switches that weapon to sprite mode. |
 | `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with a directional motion blur. |
-| `reload_sprites` | Any number of frames, spread evenly over the reload time (tactical and empty). |
+| `reload_sprites` | Any number of frames, played over the reload (tactical and empty). |
+| `reload_fps` | Playback rate for the reload frames; the last frame holds until the reload ends. 0 = stretch them evenly over the reload time. |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
 | `sprite_offset` | Per-weapon placement in screen heights (+y = lower). Default 0.08 down. |
 | `shoot_frame_time`, `shoot_blur`, `shoot_blur_angle` | How long the shoot frame shows; blur streak length (fraction of frame width) and angle in degrees, same convention as Paint.NET's Motion Blur (−34° = down-right). |

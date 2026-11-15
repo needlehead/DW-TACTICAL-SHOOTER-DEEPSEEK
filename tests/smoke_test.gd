@@ -47,6 +47,12 @@ func _logic_checks() -> void:
 	_check(w.current_sprite(0.0) == data.reload_sprites[0], "first reload frame at start")
 	w.reload_left = w.reload_total * 0.5
 	_check(w.current_sprite(0.0) == data.reload_sprites[4], "middle reload frame halfway")
+	data.reload_fps = 10.0
+	w.reload_left = w.reload_total - 0.35
+	_check(w.current_sprite(0.0) == data.reload_sprites[3], "reload_fps 10: frame 3 at 0.35 s")
+	w.reload_left = 0.01
+	_check(w.current_sprite(0.0) == data.reload_sprites[-1], "reload_fps: last frame holds")
+	data.reload_fps = 0.0
 	w.free()
 
 	# TTK sanity: SMG kills in 4 torso hits / 1 head hit up close; limbs take longer.

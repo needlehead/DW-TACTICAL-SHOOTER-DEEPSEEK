@@ -155,7 +155,9 @@ func current_sprite(ads_blend: float) -> Texture2D:
 		return null
 	if is_reloading() and not data.reload_sprites.is_empty():
 		var n := data.reload_sprites.size()
-		return data.reload_sprites[mini(int((1.0 - reload_left / reload_total) * n), n - 1)]
+		var elapsed := reload_total - reload_left
+		var frame := int(elapsed * data.reload_fps) if data.reload_fps > 0.0 else int(elapsed / reload_total * n)
+		return data.reload_sprites[mini(frame, n - 1)]
 	if since_shot < data.shoot_frame_time and data.shoot_sprite:
 		return data.shoot_sprite
 	if ads_blend > 0.5 and data.ads_sprite:

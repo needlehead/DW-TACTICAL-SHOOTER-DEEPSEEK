@@ -59,7 +59,10 @@ const AUTO := 4
 @export var idle_sprite: Texture2D
 @export var shoot_sprite: Texture2D  ## shown for shoot_frame_time after each shot, with motion blur
 @export var ads_sprite: Texture2D  ## optional; without it the hip sprite zooms toward centre
-@export var reload_sprites: Array[Texture2D] = []  ## spread evenly over the reload time
+@export var reload_sprites: Array[Texture2D] = []  ## played over the reload (see reload_fps)
+## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
+## 0 = stretch the frames evenly over the whole reload time.
+@export var reload_fps := 0.0
 @export var sprite_offset := Vector2(0.0, 0.08)  ## fraction of screen height; +y moves the gun down
 @export var shoot_frame_time := 0.07
 @export var shoot_blur := 0.0223  ## streak length as a fraction of the frame width (57 px on 2560)
