@@ -159,6 +159,12 @@ func _runtime_checks() -> void:
 	var phone_script: GDScript = load("res://player/phone.gd")
 	_check(is_equal_approx(phone_script.ecg(0.20), 1.0) and phone_script.ecg(0.35) == 0.0 and phone_script.ecg(0.22) < 1.0,
 		"phone ECG: R spike peaks at 1, flat between beats")
+	var voice := player.get_node("PlayerVoice") as PlayerVoice
+	voice.exertion = 0.0
+	var calm := voice.breath_target()
+	voice.exertion = 0.8
+	_check(calm == 0.0 and voice.breath_target() == 0.8 and voice.breath_loop.get("loop"), "breathing: silent at rest and full health, follows exertion, loops")
+	voice.exertion = 0.0
 	var amb := get_node("/root/Ambience")
 	var all: Array[String] = ["a", "b", "c"]
 	var pass1: Array[String] = amb.shuffled(all, "a")

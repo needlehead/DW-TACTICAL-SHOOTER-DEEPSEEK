@@ -2,6 +2,16 @@
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://player/footsteps.gd" id="2_steps"]
+[ext_resource type="Script" path="res://player/player_voice.gd" id="25_voice"]
+[ext_resource type="AudioStream" path="res://my sounds/generic/breath_loop.ogg" id="v_breath"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (1).wav" id="v_dmg1"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (2).wav" id="v_dmg2"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (3).wav" id="v_dmg3"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (4).wav" id="v_dmg4"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (5).wav" id="v_dmg5"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/death (1).wav" id="v_death1"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/death (2).wav" id="v_death2"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/death (3).wav" id="v_death3"]
 [ext_resource type="Script" path="res://player/sprite_shadow.gd" id="23_shadow"]
 [ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete1.wav" id="j1"]
 [ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete2.wav" id="j2"]
@@ -101,6 +111,12 @@ shape = SubResource("capsule")
 
 [node name="ReverbProbe" type="Node" parent="."]
 script = ExtResource("22_reverb")
+
+[node name="PlayerVoice" type="Node" parent="."]
+script = ExtResource("25_voice")
+damage_sounds = Array[AudioStream]([ExtResource("v_dmg1"), ExtResource("v_dmg2"), ExtResource("v_dmg3"), ExtResource("v_dmg4"), ExtResource("v_dmg5")])
+death_sounds = Array[AudioStream]([ExtResource("v_death1"), ExtResource("v_death2"), ExtResource("v_death3")])
+breath_loop = ExtResource("v_breath")
 
 [node name="Footsteps" type="Node3D" parent="."]
 script = ExtResource("2_steps")

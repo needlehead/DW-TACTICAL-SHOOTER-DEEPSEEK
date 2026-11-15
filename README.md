@@ -116,6 +116,13 @@ The viewmodel sprites (gun, body, phone) darken when your hands are out of the s
 ViewmodelLayer) casts a few rays from around the hands toward the level's DirectionalLight3D and fades between
 `lit_color` and `shadow_color`. Sample points and fade speed are on the node.
 
+## Voice and breathing
+
+`PlayerVoice` (on the Player) plays a random `damage_sounds` clip when hit (with `damage_cooldown`), a `death_sounds`
+clip on death, and a breathing loop whose volume follows exertion (rises while sprinting, eases off after) with a floor
+when hurt (`hurt_breath` at CAUTION / DANGER). The loop is generic, shared by all heroines: rebuild it with
+`python tools/make_breath_loop.py "my sounds/generic/source/<breath>.mp3" "my sounds/generic/breath_loop.ogg"`.
+
 ## Handling sounds
 
 `WeaponManager` plays `equip_sound` when a gun comes up (switch, after a grenade, phone put away) and `aim_sound` when
