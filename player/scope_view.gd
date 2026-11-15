@@ -13,6 +13,7 @@ var _vp := SubViewport.new()
 var _cam := Camera3D.new()
 var _mat := ShaderMaterial.new()
 var _reticle := Control.new()
+var _reticle_mat := ShaderMaterial.new()
 
 
 func _ready() -> void:
@@ -27,6 +28,8 @@ func _ready() -> void:
 	_reticle.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_reticle.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_reticle.draw.connect(_draw_reticle)
+	_reticle_mat.shader = preload("res://player/unshaded.gdshader")
+	_reticle.material = _reticle_mat
 	add_child(_reticle)  # own canvas item: not masked by the lens shader
 
 
@@ -38,6 +41,9 @@ func follow(player: Player) -> void:
 	var centre := get_global_transform() * (size * 0.5)
 	var eye := (get_viewport_rect().size * 0.5 - centre) / (size.x * 0.5)
 	_mat.set_shader_parameter("eye_offset", eye * SHADOW_GAIN)
+	var undo: Vector3 = (player.get_node("ViewmodelLayer/SpriteShadow") as SpriteShadow).undo_tint()
+	_mat.set_shader_parameter("undo_tint", undo)
+	_reticle_mat.set_shader_parameter("undo_tint", undo)
 	queue_redraw()
 	_reticle.queue_redraw()
 

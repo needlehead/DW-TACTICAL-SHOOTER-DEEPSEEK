@@ -84,18 +84,19 @@ func _draw_screen() -> void:
 	_screen.draw_string(font, Vector2(16, 31), heroine_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, TEXT)
 	_screen.draw_string(font, Vector2(0, 31), Time.get_time_string_from_system().left(5), HORIZONTAL_ALIGNMENT_RIGHT, s.x - 16, 24, DIM)
 
-	# Vitals: health face + status bar.
+	# Condition: health face, status word and a sweeping heart monitor (faster and redder as health drops).
 	var h := player.health
 	var f := clampf(h.current / h.max_health, 0.0, 1.0)
 	var face: Texture2D = portrait.face()
 	if face:
-		_fit(face, Rect2(16, 56, 200, 300))
-	var status := "STABLE" if f > 0.66 else "WOUNDED" if f > 0.33 else "CRITICAL"
-	var col := Color(0.35, 0.9, 0.5) if f > 0.66 else Color(1.0, 0.8, 0.25) if f > 0.33 else Color(1.0, 0.3, 0.25)
-	_screen.draw_string(font, Vector2(16, 390), "VITALS", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
-	_screen.draw_string(font, Vector2(16, 420), status, HORIZONTAL_ALIGNMENT_LEFT, -1, 28, col)
-	_screen.draw_rect(Rect2(16, 436, 200, 14), Color(1, 1, 1, 0.12))
-	_screen.draw_rect(Rect2(16, 436, 200 * f, 14), col)
+		_fit(face, Rect2(16, 56, 200, 290))
+	var tier := 0 if f > 0.66 else 1 if f > 0.33 else 2
+	var col: Color = [Color(0.3, 0.95, 0.45), Color(1.0, 0.8, 0.2), Color(1.0, 0.25, 0.2)][tier]
+	var now := Time.get_ticks_msec() / 1000.0
+	_screen.draw_string(font, Vector2(16, 368), "CONDITION", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, DIM)
+	if tier < 2 or fmod(now, 0.8) < 0.55:  # DANGER blinks
+		_screen.draw_string(font, Vector2(16, 398), ["FINE", "CAUTION", "DANGER"][tier], HORIZONTAL_ALIGNMENT_LEFT, -1, 28, col)
+	_draw_ecg(Rect2(16, 408, 200, 70), col, [70.0, 100.0, 140.0][tier], now)
 
 	# Outfit.
 	if _outfit:
@@ -117,6 +118,43 @@ func _draw_screen() -> void:
 		_screen.draw_string(font, Vector2(478, y), r[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
 		_screen.draw_string(font, Vector2(478, y + 30), r[1], HORIZONTAL_ALIGNMENT_LEFT, s.x - 494, 24, TEXT)
 		y += 78.0
+
+
+## Heart monitor: the trace is drawn by a sweeping head and fades out behind it over one sweep.
+func _draw_ecg(box: Rect2, col: Color, bpm: float, now: float) -> void:
+	_screen.draw_rect(box, Color(0, 0, 0, 0.35))
+	const SWEEP := 1.6  # seconds per pass across the box
+	const N := 90
+	var head := fmod(now, SWEEP) / SWEEP  # 0..1 across the box
+	var prev := Vector2.ZERO
+	for i in N + 1:
+		var x := float(i) / N
+		var age := fposmod(head - x, 1.0)  # 0 at the head, 1 a full sweep ago
+		var t := now - age * SWEEP
+		var p := Vector2(box.position.x + x * box.size.x, box.get_center().y - ecg(fmod(t * bpm / 60.0, 1.0)) * box.size.y * 0.42)
+		if i > 0 and age < 0.98 and fposmod(head - (float(i - 1) / N), 1.0) > age:  # don't join across the head
+			_screen.draw_line(prev, p, Color(col, 1.0 - age), 2.0, true)
+		prev = p
+	_screen.draw_circle(Vector2(box.position.x + head * box.size.x, box.get_center().y - ecg(fmod(now * bpm / 60.0, 1.0)) * box.size.y * 0.42), 3.0, col)
+
+
+## One heartbeat (P wave, QRS spike, T wave) over phase 0..1; returns -0.4..1 (up = positive).
+static func ecg(phase: float) -> float:
+	if phase < 0.08:
+		return 0.12 * sin(phase / 0.08 * PI)
+	if phase < 0.14:
+		return 0.0
+	if phase < 0.17:
+		return lerpf(0.0, -0.2, (phase - 0.14) / 0.03)
+	if phase < 0.20:
+		return lerpf(-0.2, 1.0, (phase - 0.17) / 0.03)
+	if phase < 0.24:
+		return lerpf(1.0, -0.4, (phase - 0.20) / 0.04)
+	if phase < 0.28:
+		return lerpf(-0.4, 0.0, (phase - 0.24) / 0.04)
+	if phase > 0.42 and phase < 0.58:
+		return 0.25 * sin((phase - 0.42) / 0.16 * PI)
+	return 0.0
 
 
 ## Draw a texture as large as fits in the box, keeping aspect, centred.

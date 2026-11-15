@@ -131,6 +131,9 @@ func _runtime_checks() -> void:
 	ed.revert()
 	_check(moved and ed.data().sprite_offset == before, "viewmodel editor: nudge moves the gun, revert restores")
 	ed.toggle()
+	var phone_script: GDScript = load("res://player/phone.gd")
+	_check(is_equal_approx(phone_script.ecg(0.20), 1.0) and phone_script.ecg(0.35) == 0.0 and phone_script.ecg(0.22) < 1.0,
+		"phone ECG: R spike peaks at 1, flat between beats")
 	var amb := get_node("/root/Ambience")
 	var all: Array[String] = ["a", "b", "c"]
 	var pass1: Array[String] = amb.shuffled(all, "a")

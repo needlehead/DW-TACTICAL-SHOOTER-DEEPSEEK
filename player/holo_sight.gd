@@ -11,8 +11,8 @@ var color := Color(1.0, 0.2, 0.12)
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	clip_contents = true
-	var add := CanvasItemMaterial.new()
-	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD  # light projected on glass, never darkens
+	var add := ShaderMaterial.new()
+	add.shader = preload("res://player/unshaded_add.gdshader")  # light projected on glass: additive, ignores shade
 	material = add
 
 
@@ -23,6 +23,7 @@ func _draw() -> void:
 	if cam.is_position_behind(aim):
 		return
 	var c := get_global_transform().affine_inverse() * cam.unproject_position(aim)
+	(material as ShaderMaterial).set_shader_parameter("undo_tint", (player.get_node("ViewmodelLayer/SpriteShadow") as SpriteShadow).undo_tint())
 	var r := diameter * 0.5
 	var glow := Color(color, 0.25)
 	for pass_i in 2:

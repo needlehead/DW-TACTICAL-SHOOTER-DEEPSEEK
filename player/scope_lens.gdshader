@@ -4,6 +4,7 @@ shader_type canvas_item;
 
 uniform vec2 eye_offset = vec2(0.0);
 uniform float rim_softness = 0.03;
+uniform vec3 undo_tint = vec3(1.0);  // cancels SpriteShadow's tint: the lens shows the world as lit
 
 void fragment() {
 	vec2 d = UV * 2.0 - 1.0;
@@ -12,5 +13,5 @@ void fragment() {
 	float shadow = smoothstep(0.6, 1.05, length(d - eye_offset));
 	// COLOR already holds the view texture here; scale it, don't multiply by it again.
 	vec3 col = COLOR.rgb * (1.0 - 0.95 * shadow) * (1.0 - 0.3 * r * r);
-	COLOR = vec4(col, mask);
+	COLOR = vec4(col * undo_tint, mask);
 }

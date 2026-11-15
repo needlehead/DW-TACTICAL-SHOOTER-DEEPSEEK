@@ -28,6 +28,11 @@ func _process(delta: float) -> void:
 	color = color.lerp(shadow_color.lerp(lit_color, lit), 1.0 - exp(-fade_speed * delta))
 
 
+## Multiplier that cancels the current tint, for self-lit overlays (see unshaded.gdshader).
+func undo_tint() -> Vector3:
+	return Vector3(1.0 / maxf(color.r, 0.01), 1.0 / maxf(color.g, 0.01), 1.0 / maxf(color.b, 0.01))
+
+
 ## Share of `points` with a clear line to the sun (`to_sun` = direction toward it).
 static func lit_fraction(space: PhysicsDirectSpaceState3D, points: PackedVector3Array, to_sun: Vector3, exclude: Array[RID]) -> float:
 	var clear := 0
