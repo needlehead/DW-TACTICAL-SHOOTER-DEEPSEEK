@@ -43,6 +43,22 @@ If you edit `killhouse.tscn` by hand instead, select `NavigationRegion3D` and cl
 
 The white dot is where the gun points. In hip fire it drifts inside the aim deadzone before the view turns; when you aim down sights, the view snaps to it.
 
+## Weapon sprites (Doom-style)
+
+Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Render each frame in Koikatsu at 16:9 (the test set is 2560×1440) with a transparent background and the arms reaching the bottom edge. Then fill the **Sprites** group on the weapon's `.tres`:
+
+| Field | Use |
+|---|---|
+| `idle_sprite` | Default frame. Setting it switches that weapon to sprite mode. |
+| `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with motion blur. |
+| `reload_sprites` | Any number of frames, spread evenly over the reload time (tactical and empty). |
+| `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
+| `shoot_frame_time`, `shoot_blur` | How long the shoot frame shows, and the blur streak length (fraction of screen height). |
+
+The motion blur is a shader (`player/motion_blur.gdshader`) applied in-engine, so the source PNGs stay untouched. Sway, bob, kick, sprint and lowering move the sprite using the same values as the 3D viewmodel. The scale factors are exported on `Player/ViewmodelLayer/SpriteViewmodel`.
+
+The test frames in `koikatsu sprites/testing/` are assigned to the assault rifle. The other weapons still use the greybox 3D gun.
+
 ## Layout
 
 ```

@@ -15,6 +15,7 @@ var bloom := 0.0
 var shot_index := 0
 var since_shot := 99.0
 var reload_left := 0.0
+var reload_total := 1.0
 var player: Player
 
 var _cooldown := 0.0
@@ -55,6 +56,7 @@ func start_reload() -> void:
 		Game.toast("No fuller magazine")
 		return
 	reload_left = data.reload_time if chambered else data.empty_reload_time
+	reload_total = reload_left
 
 
 func cancel_reload() -> void:
@@ -145,20 +147,36 @@ func _muzzle_flash() -> void:
 	_light.light_energy = 0.0
 
 
+## Doom-style frame for the current state, or null when this weapon has no sprites.
+func current_sprite(ads_blend: float) -> Texture2D:
+	if data.idle_sprite == null:
+		return null
+	if is_reloading() and not data.reload_sprites.is_empty():
+		var n := data.reload_sprites.size()
+		return data.reload_sprites[mini(int((1.0 - reload_left / reload_total) * n), n - 1)]
+	if since_shot < data.shoot_frame_time and data.shoot_sprite:
+		return data.shoot_sprite
+	if ads_blend > 0.5 and data.ads_sprite:
+		return data.ads_sprite
+	return data.idle_sprite
+
+
 func _build_viewmodel() -> void:
 	var s := data.vm_size
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = data.color
 	var top := -0.035  # body top sits just under the sights
-	_vm_box(Vector3(0, top - s.y * 0.5, -s.z * 0.5 + 0.05), s, mat)  # receiver + barrel
-	_vm_box(Vector3(0, top - s.y - 0.06, -s.z * 0.35), Vector3(s.x * 0.7, 0.13, 0.07), mat)  # magazine
-	_vm_box(Vector3(0, top - s.y - 0.04, 0.0), Vector3(s.x * 0.8, 0.1, 0.05), mat)  # grip
-	var sight_mat := StandardMaterial3D.new()
-	sight_mat.albedo_color = Color(0.9, 0.5, 0.1)
-	_vm_box(Vector3(0, -0.0175, 0.0), Vector3(0.03, 0.035, 0.02), sight_mat)  # rear
-	_vm_box(Vector3(0, -0.0175, -s.z + 0.1), Vector3(0.008, 0.035, 0.01), sight_mat)  # front post
-
 	var muzzle := Vector3(0, top - s.y * 0.5, -s.z + 0.03)
+	var sprite_weapon := data.idle_sprite != null  # sprite weapons keep only the muzzle light
+	if not sprite_weapon:
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = data.color
+		_vm_box(Vector3(0, top - s.y * 0.5, -s.z * 0.5 + 0.05), s, mat)  # receiver + barrel
+		_vm_box(Vector3(0, top - s.y - 0.06, -s.z * 0.35), Vector3(s.x * 0.7, 0.13, 0.07), mat)  # magazine
+		_vm_box(Vector3(0, top - s.y - 0.04, 0.0), Vector3(s.x * 0.8, 0.1, 0.05), mat)  # grip
+		var sight_mat := StandardMaterial3D.new()
+		sight_mat.albedo_color = Color(0.9, 0.5, 0.1)
+		_vm_box(Vector3(0, -0.0175, 0.0), Vector3(0.03, 0.035, 0.02), sight_mat)  # rear
+		_vm_box(Vector3(0, -0.0175, -s.z + 0.1), Vector3(0.008, 0.035, 0.01), sight_mat)  # front post
+
 	var flash := MeshInstance3D.new()
 	var sphere := SphereMesh.new()
 	sphere.radius = 0.05
@@ -168,7 +186,7 @@ func _build_viewmodel() -> void:
 	flash_mat.albedo_color = Color(1.0, 0.8, 0.3)
 	sphere.material = flash_mat
 	flash.mesh = sphere
-	flash.layers = 2
+	flash.layers = 0 if sprite_weapon else 2
 	flash.position = muzzle
 	flash.visible = false
 	add_child(flash)

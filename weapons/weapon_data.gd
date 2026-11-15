@@ -54,6 +54,15 @@ const AUTO := 4
 @export var vm_kick_back := 0.05  ## viewmodel only, metres
 @export var vm_kick_rot := 3.0  ## viewmodel only, degrees
 
+@export_group("Sprites")
+## Doom-style 2D viewmodel. Full-screen frames (any 16:9 size). Leave idle_sprite empty to use the greybox 3D gun.
+@export var idle_sprite: Texture2D
+@export var shoot_sprite: Texture2D  ## shown for shoot_frame_time after each shot, with motion blur
+@export var ads_sprite: Texture2D  ## optional; without it the hip sprite zooms toward centre
+@export var reload_sprites: Array[Texture2D] = []  ## spread evenly over the reload time
+@export var shoot_frame_time := 0.07
+@export var shoot_blur := 0.035  ## streak length as a fraction of screen height
+
 @export_group("Viewmodel")
 @export var vm_size := Vector3(0.06, 0.09, 0.7)
 @export var color := Color(0.25, 0.28, 0.24)

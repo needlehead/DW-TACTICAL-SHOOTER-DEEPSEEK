@@ -37,6 +37,16 @@ func _logic_checks() -> void:
 	_check(not w.chambered and w.mag == 0, "empty after 31 shots")
 	w.finish_reload()  # empty: chambers from the new mag
 	_check(w.chambered and w.mag == 29 and w.spare.size() == 4, "empty reload gives 29+1, empty mag dropped")
+	# Sprite frames: idle, shoot right after a shot, reload frames spread over the reload.
+	w.since_shot = 99.0
+	_check(w.current_sprite(0.0) == data.idle_sprite, "idle sprite")
+	w.since_shot = 0.0
+	_check(w.current_sprite(0.0) == data.shoot_sprite, "shoot sprite right after firing")
+	w.since_shot = 99.0
+	w.start_reload()
+	_check(w.current_sprite(0.0) == data.reload_sprites[0], "first reload frame at start")
+	w.reload_left = w.reload_total * 0.5
+	_check(w.current_sprite(0.0) == data.reload_sprites[4], "middle reload frame halfway")
 	w.free()
 
 	# TTK sanity: AR kills in 3 torso hits / 1 head hit up close; limbs take longer.

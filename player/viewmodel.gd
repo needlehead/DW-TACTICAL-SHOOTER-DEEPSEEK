@@ -9,12 +9,16 @@ extends Node3D
 @export var kick_return := 14.0
 @export var wall_check_extra := 0.15  ## added to gun length for the wall probe
 
-var _sway := Vector2.ZERO
-var _inertia := Vector3.ZERO
+# Pose components, also read by the 2D sprite viewmodel.
+var sway := Vector2.ZERO
+var inertia_offset := Vector3.ZERO
+var bob := Vector3.ZERO
+var kick_pos := Vector3.ZERO
+var kick_rot := Vector3.ZERO
+var reload_blend := 0.0
+var lower := 0.0
+
 var _bob_t := 0.0
-var _kick_pos := Vector3.ZERO
-var _kick_rot := Vector3.ZERO
-var _reload_blend := 0.0
 
 @onready var player: Player = owner
 @onready var manager: WeaponManager = $Weapons
@@ -28,9 +32,9 @@ func _ready() -> void:
 func _on_fired(w: Weapon) -> void:
 	var d := w.data
 	var ads := player.ads_blend
-	_kick_pos.z += d.vm_kick_back * (1.0 - 0.4 * ads)
-	_kick_rot.x += deg_to_rad(d.vm_kick_rot) * (1.0 - 0.5 * ads)
-	_kick_rot.z += deg_to_rad(randf_range(-1.0, 1.0) * d.vm_kick_rot * 0.5)
+	kick_pos.z += d.vm_kick_back * (1.0 - 0.4 * ads)
+	kick_rot.x += deg_to_rad(d.vm_kick_rot) * (1.0 - 0.5 * ads)
+	kick_rot.z += deg_to_rad(randf_range(-1.0, 1.0) * d.vm_kick_rot * 0.5)
 
 
 func _process(delta: float) -> void:
@@ -38,31 +42,31 @@ func _process(delta: float) -> void:
 	var ads := player.ads_blend
 	var still := 1.0 - 0.8 * ads
 
-	_sway = _sway.lerp(-player.look_delta * deg_to_rad(sway_amount) * still, minf(1.0, sway_smooth * delta))
+	sway = sway.lerp(-player.look_delta * deg_to_rad(sway_amount) * still, minf(1.0, sway_smooth * delta))
 	player.look_delta = Vector2.ZERO
 
 	var local_vel := player.global_basis.inverse() * player.velocity
-	_inertia = _inertia.lerp(-local_vel * inertia * still, minf(1.0, 6.0 * delta))
+	inertia_offset = inertia_offset.lerp(-local_vel * inertia * still, minf(1.0, 6.0 * delta))
 
 	var hs := player.horizontal_speed()
 	if player.is_on_floor():
 		_bob_t += delta * hs * 2.4
-	var bob := Vector3(sin(_bob_t) * bob_amount, absf(cos(_bob_t)) * bob_amount, 0.0) * minf(hs / 3.0, 1.6) * (1.0 - 0.85 * ads)
+	bob = Vector3(sin(_bob_t) * bob_amount, absf(cos(_bob_t)) * bob_amount, 0.0) * minf(hs / 3.0, 1.6) * (1.0 - 0.85 * ads)
 
-	_kick_pos = _kick_pos.lerp(Vector3.ZERO, minf(1.0, kick_return * delta))
-	_kick_rot = _kick_rot.lerp(Vector3.ZERO, minf(1.0, kick_return * delta))
-	_reload_blend = move_toward(_reload_blend, 1.0 if manager.current.is_reloading() else 0.0, delta * 4.0)
+	kick_pos = kick_pos.lerp(Vector3.ZERO, minf(1.0, kick_return * delta))
+	kick_rot = kick_rot.lerp(Vector3.ZERO, minf(1.0, kick_return * delta))
+	reload_blend = move_toward(reload_blend, 1.0 if manager.current.is_reloading() else 0.0, delta * 4.0)
 	_update_wall_block(d, delta)
 
-	var lower := maxf(player.wall_block, manager.switch_phase)
+	lower = maxf(player.wall_block, manager.switch_phase)
 	var sprint := player.sprint_blend
 	var pose := d.hip_offset.lerp(Vector3(0.0, 0.0, -d.ads_distance), ads)
-	position = pose + bob + _inertia + _kick_pos \
-		+ Vector3(0.0, -0.22, 0.08) * lower + Vector3(-0.05, -0.06, 0.0) * sprint + Vector3(0, -0.05, 0) * _reload_blend
+	position = pose + bob + inertia_offset + kick_pos \
+		+ Vector3(0.0, -0.22, 0.08) * lower + Vector3(-0.05, -0.06, 0.0) * sprint + Vector3(0, -0.05, 0) * reload_blend
 	rotation = Vector3(
-		deg_to_rad(player.freeaim.y) + _sway.y + _kick_rot.x - 0.9 * lower - 0.35 * sprint - 0.3 * _reload_blend,
-		deg_to_rad(player.freeaim.x) + _sway.x + 0.7 * sprint,
-		_kick_rot.z + 0.6 * _reload_blend + 0.2 * sprint)
+		deg_to_rad(player.freeaim.y) + sway.y + kick_rot.x - 0.9 * lower - 0.35 * sprint - 0.3 * reload_blend,
+		deg_to_rad(player.freeaim.x) + sway.x + 0.7 * sprint,
+		kick_rot.z + 0.6 * reload_blend + 0.2 * sprint)
 
 
 ## Pull the gun down when its length would intersect geometry in front ("weapon lowering").
