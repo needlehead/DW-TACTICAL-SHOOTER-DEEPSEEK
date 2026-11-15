@@ -5,7 +5,7 @@ extends TextureRect
 
 @export var frame: Texture2D
 ## Screen corners on the frame (0-1 UV): top-left, top-right, bottom-right, bottom-left.
-@export var screen_quad := PackedVector2Array([Vector2(0.3477, 0.5208), Vector2(0.5273, 0.4917), Vector2(0.5359, 0.6979), Vector2(0.3594, 0.7444)])
+@export var screen_quad := PackedVector2Array([Vector2(0.3813, 0.474), Vector2(0.5229, 0.4556), Vector2(0.5318, 0.6208), Vector2(0.3896, 0.6535)])
 @export var raise_drop := 0.8  ## screen heights below the bottom edge when put away
 @export var sway_amount := 1.0  ## 1 = moves exactly like the gun (sway, walk bob, inertia)
 @export var sway_tilt := 0.6  ## radians of tilt per screen height of sideways sway
