@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://weapons/grenade.gd" id="1_gren"]
+
+[sub_resource type="PhysicsMaterial" id="bounce"]
+friction = 0.8
+bounce = 0.3
+
+[sub_resource type="StandardMaterial3D" id="mat"]
+albedo_color = Color(0.25, 0.3, 0.2, 1)
+
+[sub_resource type="SphereMesh" id="mesh"]
+material = SubResource("mat")
+radius = 0.05
+height = 0.1
+
+[sub_resource type="SphereShape3D" id="shape"]
+radius = 0.05
+
+[node name="Grenade" type="RigidBody3D"]
+collision_layer = 0
+collision_mask = 1
+mass = 0.4
+physics_material_override = SubResource("bounce")
+continuous_cd = true
+linear_damp = 0.1
+angular_damp = 2.0
+script = ExtResource("1_gren")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("mesh")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("shape")

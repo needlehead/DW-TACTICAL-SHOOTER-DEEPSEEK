@@ -75,7 +75,7 @@ func _process(delta: float) -> void:
 	var text := "%s  |  %s" % [w.data.display_name, WeaponData.mode_name(w.mode)]
 	if show_ammo:
 		text += "\n%d%s  |  spares %s" % [w.mag, " +1" if w.chambered else "", str(w.spare)]
-	text += "\nHP %d" % ceili(player.health.current)
+	text += "\nFrags %d   HP %d" % [player.weapons.grenades, ceili(player.health.current)]
 	_info.text = text
 	_center.text = "" if player.alive else "DEAD - press F5"
 	queue_redraw()

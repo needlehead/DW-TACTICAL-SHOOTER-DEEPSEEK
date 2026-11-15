@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://core/health.gd" id="10_health"]
 [ext_resource type="Script" path="res://core/hitbox.gd" id="11_hb"]
 [ext_resource type="Script" path="res://ui/hud.gd" id="12_hud"]
+[ext_resource type="PackedScene" path="res://weapons/grenade.tscn" id="13_gren"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.3
@@ -54,6 +55,7 @@ script = ExtResource("3_vm")
 [node name="Weapons" type="Node3D" parent="LeanPivot/Head/Camera3D/Viewmodel"]
 script = ExtResource("4_wm")
 loadout = Array[ExtResource("9_wd")]([ExtResource("5_ar"), ExtResource("6_pistol"), ExtResource("7_dmr"), ExtResource("8_smg")])
+grenade_scene = ExtResource("13_gren")
 
 [node name="ViewmodelLayer" type="CanvasLayer" parent="."]
 

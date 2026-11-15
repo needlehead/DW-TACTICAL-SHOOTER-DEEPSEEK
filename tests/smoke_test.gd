@@ -83,6 +83,13 @@ func _runtime_checks() -> void:
 	_check(target.health.dead, "3 AR torso shots kill a 10 m dummy")
 	_check(Game.last_ttk.contains("3 hits"), "TTK recorded: " + Game.last_ttk)
 	_check(w.mag == 26, "3 rounds spent")
+	var blast_target := level.get_node("Dummies/Range1") as Dummy
+	var g := (load("res://weapons/grenade.tscn") as PackedScene).instantiate() as Grenade
+	g.thrower = player
+	level.add_child(g)
+	g.global_position = blast_target.global_position + Vector3(0.5, 0.2, -1.0)
+	g.explode()
+	_check(blast_target.health.dead, "grenade 1.1 m away kills")
 	Game.reset_level()
 	_check(not target.health.dead and w.mag == 29, "reset revives dummies and refills ammo")
 	level.queue_free()
