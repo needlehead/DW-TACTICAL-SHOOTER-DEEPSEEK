@@ -14,6 +14,7 @@ extends TextureRect
 @export var lower_drop := 0.6
 @export var sprint_drop := 0.12  ## weapons without a sprint frame
 @export var sprint_dip := 0.55  ## weapons with a sprint frame: how far the gun drops while swapping poses
+@export var sprint_swap_time := 0.5  ## seconds for the whole dip-and-swap (the sprint itself starts immediately)
 ## Used only when the weapon has no ads_sprite/aim_sprites: zoom and shift the hip frame toward centre.
 @export var mode_switch_rot := -0.07  ## radians the gun twists while flicking the fire selector
 @export var mode_switch_drop := Vector2(0.02, 0.035)  ## screen heights right/down at the peak of the flick
@@ -25,6 +26,7 @@ extends TextureRect
 @export var ads_shift := Vector2(-0.1, -0.03)
 
 var _blur := ShaderMaterial.new()
+var _sprint_t := 0.0  # own slower, eased sprint blend for the pose swap
 var _holo := HoloSight.new()
 var _scope := ScopeView.new()
 
@@ -55,9 +57,10 @@ func hand_offset(k: float, with_freeaim := true) -> Vector2:
 		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var w := player.weapons.current
-	texture = w.current_sprite(player.ads_blend, player.sprint_blend)
+	_sprint_t = move_toward(_sprint_t, 1.0 if player.is_sprinting else 0.0, delta / sprint_swap_time)
+	texture = w.current_sprite(player.ads_blend, _sprint_t)
 	visible = texture != null and player.alive
 	if not visible:
 		return
@@ -71,7 +74,8 @@ func _process(_delta: float) -> void:
 
 	# With a sprint frame the pose itself shows sprinting: just dip out and back while it swaps.
 	var sprint_pose := d.sprint_sprite != null
-	var sprint_off := sin(PI * player.sprint_blend) * sprint_dip if sprint_pose else player.sprint_blend * sprint_drop
+	# Eased bump (0 slope at both ends, deepest at the swap) so the gun settles down and up instead of snapping.
+	var sprint_off := (1.0 - cos(TAU * _sprint_t)) * 0.5 * sprint_dip if sprint_pose else player.sprint_blend * sprint_drop
 	var off := hand_offset(k) + Vector2(0.0, kick.z * kick_scale + lower * lower_drop + sprint_off) * k
 	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads + d.sprite_offset * k
 	var flick := sin(PI * clampf(w.since_mode_switch / d.mode_switch_time, 0.0, 1.0))
