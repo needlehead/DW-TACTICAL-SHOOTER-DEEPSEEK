@@ -159,6 +159,8 @@ func _runtime_checks() -> void:
 	var phone_script: GDScript = load("res://player/phone.gd")
 	_check(is_equal_approx(phone_script.ecg(0.20), 1.0) and phone_script.ecg(0.35) == 0.0 and phone_script.ecg(0.22) < 1.0,
 		"phone ECG: R spike peaks at 1, flat between beats")
+	var fx := player.get_node("HUDLayer/DamageFeedback") as DamageFeedback
+	_check(fx.low_pulse(1.0, 0.0) == 0.0 and fx.low_pulse(0.1, 0.0) > 0.0, "damage feedback: heartbeat vignette only at low health")
 	var voice := player.get_node("PlayerVoice") as PlayerVoice
 	voice.exertion = 0.0
 	var calm := voice.breath_target()

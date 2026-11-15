@@ -22,6 +22,8 @@ extends TextureRect
 ## the stance change smoothly. Values are at full prone; crouch gets about 40% of them.
 @export var low_stance_zoom := 0.14
 @export var low_stance_shift := Vector2(-0.04, 0.02)  ## screen heights (x left/right, y down)
+@export var flash_light := 1.2  ## how brightly an unsuppressed shot lights the gun sprite
+@export var flash_light_time := 0.07  ## seconds the light takes to fade
 @export var ads_zoom := 0.12
 @export var ads_shift := Vector2(-0.1, -0.03)
 
@@ -109,6 +111,13 @@ func _process(delta: float) -> void:
 	var aspect := float(texture.get_width()) / texture.get_height()
 	_blur.set_shader_parameter("blur_dir", Vector2(cos(a), -sin(a) * aspect) * d.shoot_blur * fade)
 	_blur.set_shader_parameter("samples", 12 if shooting else 2)
+	# Muzzle flash lights the gun: local around the muzzle at the hip, an even glow when aimed (muzzle unknown).
+	var flash := 0.0 if d.suppressed else maxf(0.0, 1.0 - w.since_shot / flash_light_time)
+	var hip := texture == d.idle_sprite or texture == d.shoot_sprite
+	_blur.set_shader_parameter("flash_strength", flash * (flash_light if hip else flash_light * 0.5))
+	_blur.set_shader_parameter("flash_uv", d.muzzle_uv)
+	_blur.set_shader_parameter("flash_radius", 0.45 if hip else 3.0)
+	_blur.set_shader_parameter("aspect", aspect)
 
 	var aimed: bool = window.has_area() and not frames.is_empty() and texture == frames.back()
 	var dot_size := d.canted_dot_size if w.using_canted() else d.reticle_size

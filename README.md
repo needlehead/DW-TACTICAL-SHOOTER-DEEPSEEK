@@ -116,6 +116,12 @@ The viewmodel sprites (gun, body, phone) darken when your hands are out of the s
 ViewmodelLayer) casts a few rays from around the hands toward the level's DirectionalLight3D and fades between
 `lit_color` and `shadow_color`. Sample points and fade speed are on the node.
 
+## Damage feedback
+
+`DamageFeedback` (HUDLayer): each hit flashes the screen edges red (scaled by damage), punches the view and spikes
+the bodycam's colour fringing; below `low_health` the edges pulse with a heartbeat. The direction arcs and voice
+grunts still play. Unsuppressed shots also light the gun sprite (`flash_light` on SpriteViewmodel).
+
 ## Voice and breathing
 
 `PlayerVoice` (on the Player) plays a random `damage_sounds` clip when hit (with `damage_cooldown`), a `death_sounds`
