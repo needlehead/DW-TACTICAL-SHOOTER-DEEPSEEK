@@ -62,7 +62,8 @@ const AUTO := 4
 @export var reload_sprites: Array[Texture2D] = []  ## spread evenly over the reload time
 @export var sprite_offset := Vector2(0.0, 0.08)  ## fraction of screen height; +y moves the gun down
 @export var shoot_frame_time := 0.07
-@export var shoot_blur := 0.025  ## horizontal streak length as a fraction of the frame width
+@export var shoot_blur := 0.0223  ## streak length as a fraction of the frame width (57 px on 2560)
+@export var shoot_blur_angle := -34.0  ## degrees, Paint.NET convention: 0 = horizontal, negative = down-right
 @export var muzzle_uv := Vector2(0.5, 0.5)  ## muzzle position on the idle/shoot frame (0-1); smoke spawns here
 @export var suppressed := false  ## muzzle smoke instead of flash light
 

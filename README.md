@@ -49,11 +49,11 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 | Field | Use |
 |---|---|
 | `idle_sprite` | Default frame. Setting it switches that weapon to sprite mode. |
-| `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with a horizontal motion blur. |
+| `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with a directional motion blur. |
 | `reload_sprites` | Any number of frames, spread evenly over the reload time (tactical and empty). |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
 | `sprite_offset` | Per-weapon placement in screen heights (+y = lower). Default 0.08 down. |
-| `shoot_frame_time`, `shoot_blur` | How long the shoot frame shows, and the horizontal blur streak length (fraction of the frame width). |
+| `shoot_frame_time`, `shoot_blur`, `shoot_blur_angle` | How long the shoot frame shows; blur streak length (fraction of frame width) and angle in degrees, same convention as Paint.NET's Motion Blur (−34° = down-right). |
 | `muzzle_uv` | Muzzle position on the idle/shoot frame (0–1). Suppressor smoke spawns here. |
 | `suppressed` | Smoke wisps from the muzzle instead of a muzzle-flash light. |
 

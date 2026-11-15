@@ -1,6 +1,6 @@
 extends Control
 ## Suppressor smoke for sprite weapons: soft screen-space wisps that puff out of the muzzle on each
-## shot, drift up and sideways, swell and fade. Drawn over the weapon sprite.
+## shot, drift up and sideways, swell and fade. Drawn behind the weapon sprite (node order in player.tscn).
 
 @export var puffs_per_shot := 2
 @export var lifetime := 0.9

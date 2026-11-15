@@ -121,10 +121,6 @@ offset_right = 420.0
 offset_bottom = 300.0
 script = ExtResource("14_debug")
 
-[node name="SpriteViewmodel" type="TextureRect" parent="ViewmodelLayer"]
-mouse_filter = 2
-script = ExtResource("15_sprite")
-
 [node name="MuzzleSmoke" type="Control" parent="ViewmodelLayer"]
 layout_mode = 3
 anchors_preset = 15
@@ -134,3 +130,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("16_smoke")
+
+[node name="SpriteViewmodel" type="TextureRect" parent="ViewmodelLayer"]
+mouse_filter = 2
+script = ExtResource("15_sprite")
