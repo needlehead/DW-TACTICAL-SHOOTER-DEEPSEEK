@@ -36,6 +36,7 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0021.png" id="r_rl17"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0022.png" id="r_rl18"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0023.png" id="r_rl19"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/sprint/sprint.png" id="r_sprint"]
 
 [resource]
 script = ExtResource("1_wd")
@@ -56,6 +57,7 @@ recoil_pattern = PackedVector2Array(0, 0.8, 0.1, 0.9, 0.15, 0.8, 0.05, 0.7, -0.1
 vm_kick_back = 0.04
 vm_kick_rot = 2.5
 idle_sprite = ExtResource("r_idle")
+sprint_sprite = ExtResource("r_sprint")
 reload_sprites = Array[Texture2D]([ExtResource("r_rl0"), ExtResource("r_rl1"), ExtResource("r_rl2"), ExtResource("r_rl3"), ExtResource("r_rl4"), ExtResource("r_rl5"), ExtResource("r_rl6"), ExtResource("r_rl7"), ExtResource("r_rl8"), ExtResource("r_rl9"), ExtResource("r_rl10"), ExtResource("r_rl11"), ExtResource("r_rl12"), ExtResource("r_rl13"), ExtResource("r_rl14"), ExtResource("r_rl15"), ExtResource("r_rl16"), ExtResource("r_rl17"), ExtResource("r_rl18"), ExtResource("r_rl19")])
 aim_sprites = Array[Texture2D]([ExtResource("r_a2"), ExtResource("r_a3"), ExtResource("r_a4"), ExtResource("r_a5"), ExtResource("r_a6"), ExtResource("r_a7"), ExtResource("r_a8")])
 sight_window = Rect2(0.3871, 0.2958, 0.2047, 0.3639)

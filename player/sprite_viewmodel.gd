@@ -12,7 +12,8 @@ extends TextureRect
 @export var freeaim_scale := 1.5
 @export var kick_scale := 1.5
 @export var lower_drop := 0.6
-@export var sprint_drop := 0.12
+@export var sprint_drop := 0.12  ## weapons without a sprint frame
+@export var sprint_dip := 0.55  ## weapons with a sprint frame: how far the gun drops while swapping poses
 ## Used only when the weapon has no ads_sprite/aim_sprites: zoom and shift the hip frame toward centre.
 @export var mode_switch_rot := -0.07  ## radians the gun twists while flicking the fire selector
 @export var mode_switch_drop := Vector2(0.02, 0.035)  ## screen heights right/down at the peak of the flick
@@ -56,7 +57,7 @@ func hand_offset(k: float, with_freeaim := true) -> Vector2:
 
 func _process(_delta: float) -> void:
 	var w := player.weapons.current
-	texture = w.current_sprite(player.ads_blend)
+	texture = w.current_sprite(player.ads_blend, player.sprint_blend)
 	visible = texture != null and player.alive
 	if not visible:
 		return
@@ -68,7 +69,10 @@ func _process(_delta: float) -> void:
 	var kick_rot: Vector3 = viewmodel.kick_rot
 	var lower: float = viewmodel.lower
 
-	var off := hand_offset(k) + Vector2(0.0, kick.z * kick_scale + lower * lower_drop + player.sprint_blend * sprint_drop) * k
+	# With a sprint frame the pose itself shows sprinting: just dip out and back while it swaps.
+	var sprint_pose := d.sprint_sprite != null
+	var sprint_off := sin(PI * player.sprint_blend) * sprint_dip if sprint_pose else player.sprint_blend * sprint_drop
+	var off := hand_offset(k) + Vector2(0.0, kick.z * kick_scale + lower * lower_drop + sprint_off) * k
 	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads + d.sprite_offset * k
 	var flick := sin(PI * clampf(w.since_mode_switch / d.mode_switch_time, 0.0, 1.0))
 	# 0 standing .. 1 prone; released while aiming down sights so the sight alignment holds.
@@ -88,7 +92,7 @@ func _process(_delta: float) -> void:
 	position = base + off
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
-	rotation = kick_rot.z * 0.5 + player.sprint_blend * 0.08 + mode_switch_rot * flick
+	rotation = kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick
 
 	var shooting := texture == d.shoot_sprite and d.shoot_blur > 0.0
 	var fade := 1.0 - w.since_shot / d.shoot_frame_time if shooting else 0.0

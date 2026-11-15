@@ -210,7 +210,7 @@ func toggle_canted() -> void:
 	canted = not canted and not data.canted_aim_sprites.is_empty()
 
 
-func current_sprite(ads_blend: float) -> Texture2D:
+func current_sprite(ads_blend: float, sprint_blend := 0.0) -> Texture2D:
 	if data.idle_sprite == null:
 		return null
 	var reload_frames := data.reload_sprites
@@ -223,6 +223,8 @@ func current_sprite(ads_blend: float) -> Texture2D:
 		return reload_frames[mini(frame, n - 1)]
 	var frames := aim_frames()
 	var aimed_frames := ads_blend >= 0.5 and not frames.is_empty()  # hip shoot frame would jump off the sight
+	if sprint_blend >= 0.5 and data.sprint_sprite:  # swap at the bottom of the sprint dip
+		return data.sprint_sprite
 	if since_shot < data.shoot_frame_time and data.shoot_sprite and not aimed_frames:
 		return data.shoot_sprite
 	var progress := sight_progress(ads_blend)

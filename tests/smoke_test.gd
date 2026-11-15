@@ -131,6 +131,8 @@ func _runtime_checks() -> void:
 	ed.revert()
 	_check(moved and ed.data().sprite_offset == before, "viewmodel editor: nudge moves the gun, revert restores")
 	ed.toggle()
+	_check(rifle.current_sprite(0.0, 0.4) == rifle.data.idle_sprite and rifle.current_sprite(0.0, 0.6) == rifle.data.sprint_sprite,
+		"rifle sprint frame swaps in at the bottom of the dip")
 	rifle.toggle_canted()
 	rifle.cant_t = 0.5
 	_check(is_equal_approx(rifle.sight_progress(1.0), 1.0 - rifle.data.cant_dip), "sight switch dips mid-roll")

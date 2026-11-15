@@ -75,6 +75,8 @@ const AUTO := 4
 @export var canted_dot_color := Color(1.0, 0.12, 0.1)
 @export var cant_time := 0.35  ## seconds to roll between the main and canted sight while aimed
 @export_range(0.0, 1.0) var cant_dip := 0.55  ## how far back down the aim-in the gun goes mid-roll
+## Optional sprint pose. The gun dips out of view, swaps to this frame at the bottom and comes back up.
+@export var sprint_sprite: Texture2D
 @export var reload_sprites: Array[Texture2D] = []  ## played over the reload (see reload_fps)
 @export var empty_reload_sprites: Array[Texture2D] = []  ## reloads from empty; falls back to reload_sprites
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.

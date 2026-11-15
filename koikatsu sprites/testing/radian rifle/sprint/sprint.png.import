@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://de3sxqejtha5r"
-path="res://.godot/imported/idle.png-6c9714d023e90f318dffd956bb771cf1.ctex"
+uid="uid://bve6sklk5miy1"
+path="res://.godot/imported/sprint.png-746f56773e76371b50d2122b00636cc3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://koikatsu sprites/testing/radian rifle/idle.png"
-dest_files=["res://.godot/imported/idle.png-6c9714d023e90f318dffd956bb771cf1.ctex"]
+source_file="res://koikatsu sprites/testing/radian rifle/sprint/sprint.png"
+dest_files=["res://.godot/imported/sprint.png-746f56773e76371b50d2122b00636cc3.ctex"]
 
 [params]
 
