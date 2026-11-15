@@ -83,6 +83,20 @@ func _runtime_checks() -> void:
 	_check(target.health.dead, "3 AR torso shots kill a 10 m dummy")
 	_check(Game.last_ttk.contains("3 hits"), "TTK recorded: " + Game.last_ttk)
 	_check(w.mag == 26, "3 rounds spent")
+	# Penetration: the 15 m dummy stands behind a thin board, so it takes reduced damage.
+	var pen_target := level.get_node("Dummies/Range4") as Dummy
+	d = pen_target.global_position + Vector3.UP * 1.17 - player.camera.global_position
+	player.look_yaw = rad_to_deg(atan2(-d.x, -d.z))
+	player.look_pitch = rad_to_deg(asin(d.y / d.length()))
+	player.recoil = Vector2.ZERO
+	player.recoil_target = Vector2.ZERO
+	for i in 2:
+		await get_tree().process_frame
+	w.data.hip_spread = 0.0
+	w._shoot()
+	w.data.hip_spread = hip
+	var taken := pen_target.health.max_health - pen_target.health.current
+	_check(taken > 0.0 and taken < w.data.damage * 0.9, "penetration hit for reduced damage: %.1f" % taken)
 	var blast_target := level.get_node("Dummies/Range1") as Dummy
 	var g := (load("res://weapons/grenade.tscn") as PackedScene).instantiate() as Grenade
 	g.thrower = player
@@ -92,6 +106,11 @@ func _runtime_checks() -> void:
 	_check(blast_target.health.dead, "grenade 1.1 m away kills")
 	Game.reset_level()
 	_check(not target.health.dead and w.mag == 29, "reset revives dummies and refills ammo")
+	var panel := level.get_node("Player/HUDLayer/DebugPanel")
+	panel.visible = true
+	panel.call("_bind")
+	panel.call("_process", 0.016)
+	panel.visible = false
 	level.queue_free()
 
 

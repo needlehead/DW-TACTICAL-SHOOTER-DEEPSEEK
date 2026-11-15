@@ -13,6 +13,7 @@
 [ext_resource type="Script" path="res://core/hitbox.gd" id="11_hb"]
 [ext_resource type="Script" path="res://ui/hud.gd" id="12_hud"]
 [ext_resource type="PackedScene" path="res://weapons/grenade.tscn" id="13_gren"]
+[ext_resource type="Script" path="res://ui/debug_panel.gd" id="14_debug"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.3
@@ -115,3 +116,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("12_hud")
+
+[node name="DebugPanel" type="PanelContainer" parent="HUDLayer"]
+offset_right = 420.0
+offset_bottom = 300.0
+script = ExtResource("14_debug")

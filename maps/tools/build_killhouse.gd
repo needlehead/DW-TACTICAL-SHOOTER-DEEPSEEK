@@ -99,7 +99,7 @@ func _house(p: Node3D) -> void:
 
 func _range(p: Node3D) -> void:
 	_box(p, "FiringLine", Vector3(0, 0.01, RANGE_Z), Vector3(12, 0.02, 0.15), "marker").use_collision = false
-	_label(p, "FIRING LINE", Vector3(0, 2.6, RANGE_Z))
+	_label(p, "FIRING LINE", Vector3(-4.5, 2.0, RANGE_Z))
 	_box(p, "BermWest", Vector3(-6.5, 1.25, RANGE_Z + 57), Vector3(1, 2.5, 110), "berm")
 	_box(p, "BermEast", Vector3(6.5, 1.25, RANGE_Z + 57), Vector3(1, 2.5, 110), "berm")
 	_box(p, "Backstop", Vector3(0, 3, RANGE_Z + 113), Vector3(14, 6, 1), "berm")
@@ -109,8 +109,8 @@ func _range(p: Node3D) -> void:
 		_box(p, "Marker%d" % dist, Vector3(5.6, 0.75, z), Vector3(0.15, 1.5, 0.15), "marker")
 		_label(p, "%d m" % dist, Vector3(lanes[dist], 2.5, z))
 	# Penetration test: a dummy behind a thin board at 15 m.
-	_box(p, "PenBoard_Thin", Vector3(-4.5, 1.0, RANGE_Z + 14.4), Vector3(1.6, 2.0, THIN), "thin", Ballistics.WORLD | Ballistics.PENETRABLE)
-	_label(p, "penetration", Vector3(-4.5, 2.4, RANGE_Z + 14.4))
+	_box(p, "PenBoard_Thin", Vector3(4.5, 1.0, RANGE_Z + 14.4), Vector3(1.6, 2.0, THIN), "thin", Ballistics.WORLD | Ballistics.PENETRABLE)
+	_label(p, "penetration", Vector3(4.5, 2.4, RANGE_Z + 14.4))
 
 
 func _doors(p: Node3D) -> void:
@@ -126,7 +126,7 @@ func _dummies(p: Node3D) -> void:
 	var scene: PackedScene = load("res://ai/dummy.tscn")
 	var range_grey := Color(0.55, 0.55, 0.5)
 	# Range targets: never shoot back.
-	for spot: Vector3 in [Vector3(-3, 0, RANGE_Z + 10), Vector3(-1, 0, RANGE_Z + 25), Vector3(1, 0, RANGE_Z + 50), Vector3(3, 0, RANGE_Z + 100), Vector3(-4.5, 0, RANGE_Z + 15)]:
+	for spot: Vector3 in [Vector3(-3, 0, RANGE_Z + 10), Vector3(-1, 0, RANGE_Z + 25), Vector3(1, 0, RANGE_Z + 50), Vector3(3, 0, RANGE_Z + 100), Vector3(4.5, 0, RANGE_Z + 15)]:
 		_dummy(p, scene, "Range", spot, 0.0, false, range_grey)  # yaw 0 faces -Z, toward the firing line
 	# Stationary room dummies (one in S4 sits behind the thin S3/S4 wall).
 	for spot: Vector3 in [Vector3(-9, 0, -6), Vector3(-3, 0, -6), Vector3(3, 0, 6), Vector3(9, 0, 3), Vector3(9, 0, -5)]:

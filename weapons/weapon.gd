@@ -35,7 +35,7 @@ func refill() -> void:
 		spare.append(data.mag_size)
 	reload_left = 0.0
 	if mode not in data.modes():
-		mode = data.modes()[0]
+		mode = data.modes()[-1]  # most automatic mode by default
 
 
 func cycle_mode() -> void:
