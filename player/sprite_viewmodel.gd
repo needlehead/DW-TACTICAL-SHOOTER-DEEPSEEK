@@ -18,6 +18,7 @@ extends TextureRect
 @export var ads_shift := Vector2(-0.1, -0.03)
 
 var _blur := ShaderMaterial.new()
+var _holo := HoloSight.new()
 
 @onready var player: Player = owner
 @onready var viewmodel: Node3D = owner.get_node("LeanPivot/Head/Camera3D/Viewmodel")
@@ -30,6 +31,7 @@ func _ready() -> void:
 	stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	# Always attached (2 identical taps when idle) so the shader compiles at load, not on the first shot.
 	material = _blur
+	add_child(_holo)
 
 
 func _process(_delta: float) -> void:
@@ -56,7 +58,12 @@ func _process(_delta: float) -> void:
 	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads + d.sprite_offset * k
 
 	size = vp * (1.0 + overscan)
-	position = Vector2(-vp.x * overscan * 0.5, 0.0) + off  # overscan hangs below the screen
+	var base := Vector2(-vp.x * overscan * 0.5, 0.0)  # overscan hangs below the screen
+	if not d.aim_sprites.is_empty() and d.sight_window.has_area():
+		# Slide the frame so the sight glass ends up on the screen centre (the aim point once fully aimed).
+		var sight := base + d.sight_window.get_center() * size + d.sprite_offset * k
+		off += (vp * 0.5 - sight) * player.ads_blend
+	position = base + off
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads)
 	rotation = kick_rot.z * 0.5 + player.sprint_blend * 0.08
@@ -68,3 +75,11 @@ func _process(_delta: float) -> void:
 	var aspect := float(texture.get_width()) / texture.get_height()
 	_blur.set_shader_parameter("blur_dir", Vector2(cos(a), -sin(a) * aspect) * d.shoot_blur * fade)
 	_blur.set_shader_parameter("samples", 12 if shooting else 2)
+
+	_holo.visible = d.reticle_size > 0.0 and d.sight_window.has_area() and texture == d.aim_sprites.back()
+	if _holo.visible:
+		_holo.position = d.sight_window.position * size
+		_holo.size = d.sight_window.size * size
+		_holo.diameter = d.reticle_size * k
+		_holo.color = d.reticle_color
+		_holo.queue_redraw()

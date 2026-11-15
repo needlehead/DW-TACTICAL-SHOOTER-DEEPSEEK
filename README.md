@@ -56,6 +56,8 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 | `reload_fps` | Playback rate for the reload frames; the last frame holds until the reload ends. 0 = stretch them evenly over the reload time. |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
 | `aim_sprites` | Optional hip-to-ADS transition, driven by aim progress; last frame is held while aimed. Overrides `ads_sprite`. Must have transparent backgrounds. |
+| `sight_window` | Sight glass on the last aim frame (UV rect); aiming slides the frame so its centre lands on the aim point. |
+| `reticle_size` / `reticle_color` | Holographic reticle drawn inside `sight_window` at the true aim point (0 = none). |
 | `sprite_offset` | Per-weapon placement in screen heights (+y = lower). Default 0.08 down. |
 | `shoot_frame_time`, `shoot_blur`, `shoot_blur_angle` | How long the shoot frame shows; blur streak length (fraction of frame width) and angle in degrees, same convention as Paint.NET's Motion Blur (−34° = down-right). |
 | `muzzle_uv` | Muzzle position on the idle/shoot frame (0–1). Suppressor smoke spawns here. |

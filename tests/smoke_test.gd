@@ -65,6 +65,9 @@ func _logic_checks() -> void:
 	_check(w.current_sprite(0.0) == data.idle_sprite, "aim frames: idle at hip")
 	_check(w.current_sprite(0.5) == data.aim_sprites[1], "aim frames: middle frame half aimed")
 	_check(w.current_sprite(1.0) == data.aim_sprites[-1], "aim frames: last frame fully aimed")
+	w.since_shot = 0.0
+	_check(w.current_sprite(1.0) == data.aim_sprites[-1], "aimed firing keeps the aim frame")
+	w.since_shot = 99.0
 	data.aim_sprites = saved_aim
 	data.reload_fps = 0.0
 	w.free()

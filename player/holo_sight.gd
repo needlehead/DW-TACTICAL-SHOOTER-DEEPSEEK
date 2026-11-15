@@ -1,0 +1,34 @@
+class_name HoloSight
+extends Control
+## EOTech-style holographic reticle (ring, centre dot, four inward ticks). Child of the sprite viewmodel,
+## sized to the sight glass and clipped to it; the reticle sits on the true aim point, so it drifts
+## inside the glass with sway instead of being painted onto the frame.
+
+var diameter := 30.0
+var color := Color(1.0, 0.2, 0.12)
+
+
+func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	clip_contents = true
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD  # light projected on glass, never darkens
+	material = add
+
+
+func _draw() -> void:
+	var player := get_parent().owner as Player
+	var cam := player.camera
+	var aim := cam.global_position - player.aim_basis().z * 50.0
+	if cam.is_position_behind(aim):
+		return
+	var c := get_global_transform().affine_inverse() * cam.unproject_position(aim)
+	var r := diameter * 0.5
+	var glow := Color(color, 0.25)
+	for pass_i in 2:
+		var col := glow if pass_i == 0 else color
+		var wide := 2.5 if pass_i == 0 else 1.0
+		draw_arc(c, r, 0.0, TAU, 48, col, maxf(1.0, r * 0.07) * wide, true)
+		draw_circle(c, maxf(1.0, r * 0.05) * wide, col)
+		for dir: Vector2 in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
+			draw_line(c + dir * r, c + dir * r * 0.78, col, maxf(1.0, r * 0.07) * wide, true)

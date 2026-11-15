@@ -62,6 +62,10 @@ const AUTO := 4
 ## Optional hip-to-ADS transition, picked by aim progress; the last frame is the held ADS frame.
 ## Overrides ads_sprite. Aiming out plays the same frames backwards.
 @export var aim_sprites: Array[Texture2D] = []
+## Sight glass on the last aim frame (0-1 UV). Aiming lines its centre up with the aim point. Empty = no alignment.
+@export var sight_window := Rect2()
+@export var reticle_size := 0.0  ## holographic ring diameter, fraction of screen height; 0 = no reticle
+@export var reticle_color := Color(1.0, 0.2, 0.12)
 @export var reload_sprites: Array[Texture2D] = []  ## played over the reload (see reload_fps)
 @export var empty_reload_sprites: Array[Texture2D] = []  ## reloads from empty; falls back to reload_sprites
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.

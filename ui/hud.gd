@@ -88,7 +88,8 @@ func _draw() -> void:
 	var c := size * 0.5
 	if not cam.is_position_behind(aim):
 		c = bodycam.to_screen(cam.unproject_position(aim))
-	if show_aim_dot and player.alive:
+	var through_holo := player.ads_blend > 0.8 and player.weapons.current.data.reticle_size > 0.0
+	if show_aim_dot and player.alive and not through_holo:
 		draw_circle(c, 2.0, Color(1, 1, 1, 0.6))
 	if _hit_t > 0.0:
 		var col := Color(1, 0.2, 0.2) if _hit_kill else Color.WHITE

@@ -163,7 +163,8 @@ func current_sprite(ads_blend: float) -> Texture2D:
 		var elapsed := reload_total - reload_left
 		var frame := int(elapsed * data.reload_fps) if data.reload_fps > 0.0 else int(elapsed / reload_total * n)
 		return reload_frames[mini(frame, n - 1)]
-	if since_shot < data.shoot_frame_time and data.shoot_sprite:
+	var aimed_frames := ads_blend >= 0.5 and not data.aim_sprites.is_empty()  # hip shoot frame would jump off the sight
+	if since_shot < data.shoot_frame_time and data.shoot_sprite and not aimed_frames:
 		return data.shoot_sprite
 	if ads_blend > 0.0 and not data.aim_sprites.is_empty():
 		var n := data.aim_sprites.size()
