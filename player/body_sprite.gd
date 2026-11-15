@@ -7,7 +7,8 @@ extends TextureRect
 @export var walk_sprites: Array[Texture2D] = []
 @export var dead_sprite: Texture2D
 @export var frame_pitch := -80.0  ## look pitch (degrees) the frames were rendered at; fully in view there
-@export var cycle_length := 2.0  ## metres walked per loop of walk_sprites
+@export var cycle_length := 3.5  ## metres walked per loop of walk_sprites; raise to slow the legs
+@export var body_scale := 0.65  ## frame size; shrinks toward the bottom centre so the cut-off torso stays at the screen edge
 @export var min_walk_speed := 0.3  ## below this (m/s) the idle frame shows
 
 var _phase := 0.0
@@ -24,6 +25,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var vp := get_viewport_rect().size
 	size = vp
+	pivot_offset = Vector2(vp.x * 0.5, vp.y)
+	scale = Vector2.ONE * body_scale
 	if not player.alive:
 		texture = dead_sprite
 		position = Vector2.ZERO

@@ -73,7 +73,7 @@ Bullet impacts leave a decal, a dust burst tinted to the surface colour, and deb
 
 `BodySprite` (in `player.tscn` → ViewmodelLayer, behind the gun) shows full-screen frames of your own body, rendered looking down:
 `idle_sprite`, `walk_sprites` (looped by distance walked, `cycle_length` m per loop, reversed when backing up) and `dead_sprite`.
-It slides into view as you look down; `frame_pitch` is the look pitch the frames were rendered at. Hidden while prone.
+It slides into view as you look down; `frame_pitch` is the look pitch the frames were rendered at, `body_scale` the frame size. Hidden while prone.
 
 ## Bodycam look
 
