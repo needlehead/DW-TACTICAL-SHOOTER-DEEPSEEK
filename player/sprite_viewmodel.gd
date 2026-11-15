@@ -42,14 +42,16 @@ func _ready() -> void:
 	add_child(_scope)
 
 
-## Sway, bob, inertia and freeaim as a screen offset (pixels); anything held in the hands (gun, phone) uses it.
-func hand_offset(k: float) -> Vector2:
+## Sway, bob, inertia (and the gun's freeaim) as a screen offset (pixels); anything held in the hands uses it.
+## The phone passes with_freeaim = false: the aim deadzone belongs to the gun, not the off hand.
+func hand_offset(k: float, with_freeaim := true) -> Vector2:
 	var sway: Vector2 = viewmodel.sway
 	var bob: Vector3 = viewmodel.bob
 	var inertia: Vector3 = viewmodel.inertia_offset
+	var fa := Vector2(deg_to_rad(player.freeaim.x), deg_to_rad(player.freeaim.y)) * freeaim_scale if with_freeaim else Vector2.ZERO
 	return Vector2(
-		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - deg_to_rad(player.freeaim.x) * freeaim_scale,
-		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - deg_to_rad(player.freeaim.y) * freeaim_scale) * k
+		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - fa.x,
+		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k
 
 
 func _process(_delta: float) -> void:
@@ -77,9 +79,11 @@ func _process(_delta: float) -> void:
 
 	size = vp * (1.0 + overscan)
 	var base := Vector2(-vp.x * overscan * 0.5, 0.0)  # overscan hangs below the screen
-	if not d.aim_sprites.is_empty() and d.sight_window.has_area():
+	var frames := w.aim_frames()
+	var window := w.aim_window()
+	if not frames.is_empty() and window.has_area():
 		# Slide the frame so the sight glass ends up on the screen centre (the aim point once fully aimed).
-		var sight := base + d.sight_window.get_center() * size + d.sprite_offset * k
+		var sight := base + window.get_center() * size + d.sprite_offset * k
 		off += (vp * 0.5 - sight) * player.ads_blend
 	position = base + off
 	pivot_offset = Vector2(size.x * 0.5, size.y)
@@ -94,17 +98,20 @@ func _process(_delta: float) -> void:
 	_blur.set_shader_parameter("blur_dir", Vector2(cos(a), -sin(a) * aspect) * d.shoot_blur * fade)
 	_blur.set_shader_parameter("samples", 12 if shooting else 2)
 
-	_holo.visible = d.reticle_size > 0.0 and d.sight_window.has_area() and texture == d.aim_sprites.back()
+	var aimed: bool = window.has_area() and not frames.is_empty() and texture == frames.back()
+	var dot_size := d.canted_dot_size if w.canted else d.reticle_size
+	_holo.visible = aimed and dot_size > 0.0
 	if _holo.visible:
-		_holo.position = d.sight_window.position * size
-		_holo.size = d.sight_window.size * size
-		_holo.diameter = d.reticle_size * k
-		_holo.color = d.reticle_color
+		_holo.position = window.position * size
+		_holo.size = window.size * size
+		_holo.diameter = dot_size * k
+		_holo.color = d.canted_dot_color if w.canted else d.reticle_color
+		_holo.dot_only = w.canted
 		_holo.queue_redraw()
-	_scope.visible = d.scope_magnification > 0.0 and d.sight_window.has_area() and texture == d.aim_sprites.back()
+	_scope.visible = aimed and not w.canted and d.scope_magnification > 0.0
 	if _scope.visible:
-		_scope.position = d.sight_window.position * size
-		_scope.size = d.sight_window.size * size
+		_scope.position = window.position * size
+		_scope.size = window.size * size
 		_scope.magnification = d.scope_magnification
 		_scope.reticle_color = d.reticle_color
 		_scope.follow(player)

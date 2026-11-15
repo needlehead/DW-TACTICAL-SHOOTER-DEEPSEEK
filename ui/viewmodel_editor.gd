@@ -3,6 +3,7 @@ extends Control
 ## In-game viewmodel alignment editor (F4). Frees the mouse and edits the current weapon's sprite placement:
 ##   Hip    - drag the gun (or arrow keys) to set sprite_offset; changes show live.
 ##   Sight  - the last aim frame fills the screen; drag the box over the sight glass / lens to set sight_window
+##            (or canted_sight_window while the canted sight is selected: Canted button)
 ##            (drag the corner handle or mouse wheel to resize, arrows nudge, Shift = bigger steps).
 ##   Muzzle - the idle frame fills the screen; click the barrel end to set muzzle_uv (suppressor smoke origin).
 ## Save writes the weapon's .tres; Revert restores what it had when the editor opened.
@@ -37,6 +38,7 @@ func _ready() -> void:
 		b.toggle_mode = true
 		_mode_buttons.append(b)
 	_button(bar, "Next weapon", _next_weapon)
+	_button(bar, "Canted", func() -> void: player.weapons.current.toggle_canted())
 	_button(bar, "Save", save)
 	_button(bar, "Revert", revert)
 	_button(bar, "Close (F4)", toggle)
@@ -70,6 +72,20 @@ func data() -> WeaponData:
 	return player.weapons.current.data
 
 
+## The sight window being edited: the canted one while the canted sight is active.
+func _window_prop() -> String:
+	var w := player.weapons.current
+	return "canted_sight_window" if w.canted and not w.data.canted_aim_sprites.is_empty() else "sight_window"
+
+
+func _window() -> Rect2:
+	return data().get(_window_prop())
+
+
+func _set_window(r: Rect2) -> void:
+	data().set(_window_prop(), r)
+
+
 func set_mode(m: int) -> void:
 	mode = m
 	for i in _mode_buttons.size():
@@ -83,7 +99,7 @@ func nudge(dir: Vector2) -> void:
 		Mode.HIP:
 			d.sprite_offset += dir
 		Mode.SIGHT:
-			d.sight_window.position += dir
+			_set_window(Rect2(_window().position + dir, _window().size))
 		Mode.MUZZLE:
 			d.muzzle_uv += dir
 
@@ -105,7 +121,8 @@ func revert() -> void:
 
 func _remember(d: WeaponData) -> void:
 	if not _originals.has(d):
-		_originals[d] = {"sprite_offset": d.sprite_offset, "sight_window": d.sight_window, "muzzle_uv": d.muzzle_uv}
+		_originals[d] = {"sprite_offset": d.sprite_offset, "sight_window": d.sight_window,
+			"canted_sight_window": d.canted_sight_window, "muzzle_uv": d.muzzle_uv}
 
 
 func _next_weapon() -> void:
@@ -136,15 +153,14 @@ func _gui_input(event: InputEvent) -> void:
 				_drag = ""
 			elif mode == Mode.MUZZLE:
 				d.muzzle_uv = mb.position / vp
-			elif mode == Mode.SIGHT and mb.position.distance_to((d.sight_window.end) * vp) < HANDLE * 1.5:
+			elif mode == Mode.SIGHT and mb.position.distance_to(_window().end * vp) < HANDLE * 1.5:
 				_drag = "resize"
 			else:
 				_drag = "move"
 		elif mode == Mode.SIGHT and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			var f := 1.03 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.03
-			var c := d.sight_window.get_center()
-			d.sight_window.size *= f
-			d.sight_window.position = c - d.sight_window.size * 0.5
+			var r := _window()
+			_set_window(Rect2(r.get_center() - r.size * f * 0.5, r.size * f))
 		accept_event()
 	elif event is InputEventMouseMotion and _drag != "":
 		var rel := (event as InputEventMouseMotion).relative
@@ -153,9 +169,9 @@ func _gui_input(event: InputEvent) -> void:
 				d.sprite_offset += rel / vp.y
 			Mode.SIGHT:
 				if _drag == "resize":
-					d.sight_window.size = (d.sight_window.size + rel / vp).max(Vector2(0.005, 0.005))
+					_set_window(Rect2(_window().position, (_window().size + rel / vp).max(Vector2(0.005, 0.005))))
 				else:
-					d.sight_window.position += rel / vp
+					_set_window(Rect2(_window().position + rel / vp, _window().size))
 		accept_event()
 
 
@@ -163,8 +179,8 @@ func _process(_delta: float) -> void:
 	if not visible:
 		return
 	var d := data()
-	_info.text = "%s  (%s)\nsprite_offset = %s\nsight_window = %s\nmuzzle_uv = %s\nDrag to move. Arrows nudge, Shift = x10.%s" % [
-		d.display_name, d.resource_path.get_file(), d.sprite_offset, d.sight_window, d.muzzle_uv,
+	_info.text = "%s  (%s)\nsprite_offset = %s\n%s = %s\nmuzzle_uv = %s\nDrag to move. Arrows nudge, Shift = x10.%s" % [
+		d.display_name, d.resource_path.get_file(), d.sprite_offset, _window_prop(), _window(), d.muzzle_uv,
 		"  Corner handle / wheel resizes." if mode == Mode.SIGHT else ""]
 	queue_redraw()
 
@@ -181,13 +197,14 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, vp), Color(0.12, 0.12, 0.14))
 	var frame: Texture2D = d.idle_sprite
 	if mode == Mode.SIGHT:
-		frame = d.aim_sprites.back() if not d.aim_sprites.is_empty() else d.ads_sprite
+		var frames := player.weapons.current.aim_frames()
+		frame = frames.back() if not frames.is_empty() else d.ads_sprite
 	if frame == null:
 		draw_string(ThemeDB.fallback_font, c, "This weapon has no frame for this mode", HORIZONTAL_ALIGNMENT_CENTER, -1, 20)
 		return
 	draw_texture_rect(frame, Rect2(Vector2.ZERO, vp), false)
 	if mode == Mode.SIGHT:
-		var r := Rect2(d.sight_window.position * vp, d.sight_window.size * vp)
+		var r := Rect2(_window().position * vp, _window().size * vp)
 		draw_rect(r, Color(0, 1, 0.4, 0.15))
 		draw_rect(r, Color(0, 1, 0.4), false, 2.0)
 		var rc := r.get_center()

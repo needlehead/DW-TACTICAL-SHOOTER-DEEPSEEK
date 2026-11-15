@@ -68,6 +68,11 @@ const AUTO := 4
 @export var reticle_color := Color(1.0, 0.2, 0.12)
 ## > 0: a magnified optic. The lens (sight_window) shows a picture-in-picture view at this zoom, with an ACOG-style reticle.
 @export var scope_magnification := 0.0
+## Optional canted (offset) sight, toggled with V: its own aim-in frames, glass window and red dot.
+@export var canted_aim_sprites: Array[Texture2D] = []
+@export var canted_sight_window := Rect2()
+@export var canted_dot_size := 0.008  ## dot diameter, fraction of screen height
+@export var canted_dot_color := Color(1.0, 0.12, 0.1)
 @export var reload_sprites: Array[Texture2D] = []  ## played over the reload (see reload_fps)
 @export var empty_reload_sprites: Array[Texture2D] = []  ## reloads from empty; falls back to reload_sprites
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.

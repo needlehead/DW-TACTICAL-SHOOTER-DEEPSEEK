@@ -11,6 +11,10 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (7).png" id="r_a7"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (8).png" id="r_a8"]
 [ext_resource type="AudioStream" path="res://my sounds/mp7/mp7supfire.ogg" id="snd_fire"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (2).png" id="r_c2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (3).png" id="r_c3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (4).png" id="r_c4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted (5).png" id="r_c5"]
 
 [resource]
 script = ExtResource("1_wd")
@@ -47,6 +51,8 @@ sprite_offset = Vector2(0.08, 0.16)
 aim_sprites = Array[Texture2D]([ExtResource("r_a2"), ExtResource("r_a3"), ExtResource("r_a4"), ExtResource("r_a5"), ExtResource("r_a6"), ExtResource("r_a7"), ExtResource("r_a8")])
 sight_window = Rect2(0.3871, 0.2958, 0.2047, 0.3639)
 scope_magnification = 4.0
+canted_aim_sprites = Array[Texture2D]([ExtResource("r_c2"), ExtResource("r_c3"), ExtResource("r_c4"), ExtResource("r_c5")])
+canted_sight_window = Rect2(0.4734, 0.3972, 0.0766, 0.0903)
 reticle_color = Color(1, 0.35, 0.1, 1)
 fire_sound = ExtResource("snd_fire")
 fire_volume_db = 2.0

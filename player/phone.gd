@@ -64,7 +64,7 @@ func _process(_delta: float) -> void:
 	var vp := get_viewport_rect().size
 	size = vp * (1.0 + overscan)
 	var e := 1.0 - pow(1.0 - t, 3.0)  # ease out: quick lift, gentle settle
-	var sway: Vector2 = hands.hand_offset(vp.y) * sway_amount
+	var sway: Vector2 = hands.hand_offset(vp.y, false) * sway_amount
 	position = Vector2(-vp.x * overscan * 0.5, 0.0) + hold_offset * vp.y + sway + Vector2(0.0, (1.0 - e) * raise_drop * vp.y)
 	pivot_offset = Vector2(0.0, size.y)  # arm's exit corner stays put under scale and tilt
 	scale = Vector2.ONE * hold_scale

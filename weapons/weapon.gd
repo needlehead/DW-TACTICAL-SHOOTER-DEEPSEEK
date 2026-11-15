@@ -18,6 +18,7 @@ var reload_left := 0.0
 var reload_total := 1.0
 var empty_reload := false
 var since_mode_switch := 99.0
+var canted := false  ## using the canted sight (only if the weapon has one)
 var _fire_audio: AudioStreamPlayer3D
 var player: Player
 
@@ -183,6 +184,19 @@ func mag_estimate() -> String:
 	return "Nearly empty" if mag > 0 else "Empty"
 
 
+## Aim-in frames and sight window of the active sight (canted or main).
+func aim_frames() -> Array[Texture2D]:
+	return data.canted_aim_sprites if canted and not data.canted_aim_sprites.is_empty() else data.aim_sprites
+
+
+func aim_window() -> Rect2:
+	return data.canted_sight_window if canted and not data.canted_aim_sprites.is_empty() else data.sight_window
+
+
+func toggle_canted() -> void:
+	canted = not canted and not data.canted_aim_sprites.is_empty()
+
+
 func current_sprite(ads_blend: float) -> Texture2D:
 	if data.idle_sprite == null:
 		return null
@@ -194,12 +208,13 @@ func current_sprite(ads_blend: float) -> Texture2D:
 		var elapsed := reload_total - reload_left
 		var frame := int(elapsed * data.reload_fps) if data.reload_fps > 0.0 else int(elapsed / reload_total * n)
 		return reload_frames[mini(frame, n - 1)]
-	var aimed_frames := ads_blend >= 0.5 and not data.aim_sprites.is_empty()  # hip shoot frame would jump off the sight
+	var frames := aim_frames()
+	var aimed_frames := ads_blend >= 0.5 and not frames.is_empty()  # hip shoot frame would jump off the sight
 	if since_shot < data.shoot_frame_time and data.shoot_sprite and not aimed_frames:
 		return data.shoot_sprite
-	if ads_blend > 0.0 and not data.aim_sprites.is_empty():
-		var n := data.aim_sprites.size()
-		return data.aim_sprites[mini(int(ads_blend * n), n - 1)]
+	if ads_blend > 0.0 and not frames.is_empty():
+		var n := frames.size()
+		return frames[mini(int(ads_blend * n), n - 1)]
 	if ads_blend > 0.5 and data.ads_sprite:
 		return data.ads_sprite
 	return data.idle_sprite

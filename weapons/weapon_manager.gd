@@ -113,6 +113,8 @@ func _process(delta: float) -> void:
 				select(i)
 		if Input.is_action_just_pressed("fire_mode"):
 			current.cycle_mode()
+		if Input.is_action_just_pressed("alt_sight"):
+			current.toggle_canted()
 		if Input.is_action_just_pressed("reload") and state == State.READY:
 			current.start_reload()
 		if Input.is_action_just_pressed("grenade"):
