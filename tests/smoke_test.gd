@@ -116,6 +116,12 @@ func _runtime_checks() -> void:
 	_check(blast_target.health.dead, "grenade 1.1 m away kills")
 	Game.reset_level()
 	_check(not target.health.dead and w.mag == 29, "reset revives dummies and refills ammo")
+	# HUD markers through the bodycam lens: to_screen() must invert the shader's distortion.
+	var cam_fx := level.get_node("Player/PostFXLayer/Bodycam") as Bodycam
+	var vp := cam_fx.get_viewport_rect().size
+	for q: Vector2 in [vp * 0.5, vp * Vector2(0.3, 0.7), vp * Vector2(0.9, 0.1)]:
+		var on_screen := cam_fx.to_screen(q)
+		_check(cam_fx.distort(on_screen / vp, vp.x / vp.y).distance_to(q / vp) < 0.001, "bodycam lens inverse at %s" % q)
 	var panel := level.get_node("Player/HUDLayer/DebugPanel")
 	panel.visible = true
 	panel.call("_bind")

@@ -17,6 +17,7 @@ var _toast: Label
 var _center: Label
 
 @onready var player: Player = owner
+@onready var bodycam: Bodycam = owner.get_node("PostFXLayer/Bodycam")
 
 
 func _ready() -> void:
@@ -86,7 +87,7 @@ func _draw() -> void:
 	var aim := cam.global_position - player.aim_basis().z * 50.0
 	var c := size * 0.5
 	if not cam.is_position_behind(aim):
-		c = cam.unproject_position(aim)
+		c = bodycam.to_screen(cam.unproject_position(aim))
 	if show_aim_dot and player.alive:
 		draw_circle(c, 2.0, Color(1, 1, 1, 0.6))
 	if _hit_t > 0.0:

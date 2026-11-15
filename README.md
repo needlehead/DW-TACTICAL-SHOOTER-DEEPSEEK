@@ -38,6 +38,7 @@ If you edit `killhouse.tscn` by hand instead, select `NavigationRegion3D` and cl
 | Reset dummies, health, ammo, doors | F5 |
 | Debug panel and live tuning | F1 (frees the mouse) |
 | Exact ammo counter | F2 |
+| Bodycam effect on/off | F3 |
 | Release / capture mouse | Esc |
 
 The white dot is where the gun points. In hip fire it drifts inside the aim deadzone before the view turns; when you aim down sights, the view snaps to it.
@@ -62,6 +63,10 @@ The motion blur is a shader (`player/motion_blur.gdshader`) applied in-engine, s
 The loadout is a single suppressed SMG (`weapons/data/smg.tres`) using the frames in `koikatsu sprites/testing/`. Smoke look (size, opacity, rise, lifetime) is exported on `Player/ViewmodelLayer/MuzzleSmoke`.
 
 Bullet impacts leave a decal, a dust burst tinted to the surface colour, and debris chunks. Hitboxes get a blood puff instead.
+
+## Bodycam look
+
+`ui/bodycam.gdshader` runs over the 3D world and the weapon sprite. The HUD and debug panel sit on a higher layer and stay undistorted, and the HUD aim dot and hit marker are moved through the same lens maths so they stay on target. It has a wide-lens barrel distortion, chromatic aberration at the edges, over-sharpening, a washed-out grade, vignette, grain, and a REC/timestamp overlay. While it's on, the FOV goes to `bodycam_fov` (95°), because the lens magnifies the centre. Every value is a shader parameter on `Player/PostFXLayer/Bodycam`'s material and can be changed live.
 
 ## Layout
 

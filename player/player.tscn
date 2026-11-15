@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://ui/debug_panel.gd" id="14_debug"]
 [ext_resource type="Script" path="res://player/sprite_viewmodel.gd" id="15_sprite"]
 [ext_resource type="Script" path="res://player/muzzle_smoke.gd" id="16_smoke"]
+[ext_resource type="Script" path="res://ui/bodycam.gd" id="17_bodycam"]
+[ext_resource type="Shader" path="res://ui/bodycam.gdshader" id="18_bodycam_shader"]
 
 [sub_resource type="CapsuleShape3D" id="capsule"]
 radius = 0.3
@@ -23,6 +25,10 @@ size = Vector3(0.45, 1.15, 0.3)
 
 [sub_resource type="SphereShape3D" id="head"]
 radius = 0.13
+
+[sub_resource type="ShaderMaterial" id="bodycam_mat"]
+shader = ExtResource("18_bodycam_shader")
+shader_parameter/distortion = 0.22
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -103,8 +109,21 @@ zone = &"head"
 [node name="Shape" type="CollisionShape3D" parent="LeanPivot/Head/HeadHitbox"]
 shape = SubResource("head")
 
-[node name="HUDLayer" type="CanvasLayer" parent="."]
+[node name="PostFXLayer" type="CanvasLayer" parent="."]
 layer = 2
+
+[node name="Bodycam" type="ColorRect" parent="PostFXLayer"]
+material = SubResource("bodycam_mat")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("17_bodycam")
+
+[node name="HUDLayer" type="CanvasLayer" parent="."]
+layer = 3
 
 [node name="HUD" type="Control" parent="HUDLayer"]
 layout_mode = 3
