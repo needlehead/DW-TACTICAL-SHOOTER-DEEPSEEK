@@ -5,10 +5,11 @@ extends Node3D
 @export var steps: Array[AudioStream] = []
 @export var volume_db := -8.0
 
-var _audio := AudioStreamPlayer3D.new()
+var _audio: AudioStreamPlayer3D
 
 
 func _ready() -> void:
+	_audio = AudioStreamPlayer3D.new()
 	add_child(_audio)
 	(get_parent() as Player).footstep.connect(_on_footstep)
 

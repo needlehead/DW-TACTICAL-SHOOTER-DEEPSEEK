@@ -12,6 +12,7 @@ func _ready() -> void:
 		if load(path) == null:
 			_fail("could not load " + path)
 	_logic_checks()
+	await _runtime_checks()
 	print("SMOKE TEST: %s" % ("OK" if failures == 0 else "%d FAILURES" % failures))
 	get_tree().quit(1 if failures else 0)
 
@@ -54,6 +55,37 @@ func _logic_checks() -> void:
 		h.take_damage(data.damage, &"arms", null)
 	_check(not h.dead, "AR: survives 3 arm hits")
 	h.queue_free()
+
+
+## Plays the real level for a few seconds: patrols move, shots register, TTK and reset work.
+func _runtime_checks() -> void:
+	var level: Node = load("res://maps/killhouse.tscn").instantiate()
+	add_child(level)
+	var patrol := level.get_node("Dummies").get_children().filter(func(d: Node) -> bool: return d.name.begins_with("Patrol"))[0] as Dummy
+	var start := patrol.global_position
+	for i in 240:
+		await get_tree().physics_frame
+	_check(patrol.global_position.distance_to(start) > 1.0, "patrol dummy moves along its route")
+
+	var player := level.get_node("Player") as Player
+	var target := level.get_node("Dummies/Range0") as Dummy
+	var d := target.global_position + Vector3.UP * 1.17 - player.camera.global_position
+	player.look_yaw = rad_to_deg(atan2(-d.x, -d.z))
+	player.look_pitch = rad_to_deg(asin(d.y / d.length()))
+	for i in 2:  # process_frame fires before nodes process, so wait for one full frame
+		await get_tree().process_frame
+	var w := player.weapons.current
+	var hip := w.data.hip_spread
+	w.data.hip_spread = 0.0
+	for i in 3:
+		w._shoot()
+	w.data.hip_spread = hip
+	_check(target.health.dead, "3 AR torso shots kill a 10 m dummy")
+	_check(Game.last_ttk.contains("3 hits"), "TTK recorded: " + Game.last_ttk)
+	_check(w.mag == 26, "3 rounds spent")
+	Game.reset_level()
+	_check(not target.health.dead and w.mag == 29, "reset revives dummies and refills ammo")
+	level.queue_free()
 
 
 func _check(ok: bool, what: String) -> void:

@@ -1,0 +1,815 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://maps/door.tscn" id="1_5pou3"]
+[ext_resource type="Script" path="res://maps/door.gd" id="2_immnm"]
+[ext_resource type="PackedScene" path="res://ai/dummy.tscn" id="3_mncj7"]
+[ext_resource type="Script" path="res://ai/dummy.gd" id="4_vuqpj"]
+[ext_resource type="Resource" path="res://weapons/data/assault_rifle.tres" id="5_g5x3w"]
+[ext_resource type="PackedScene" path="res://player/player.tscn" id="6_78idy"]
+[ext_resource type="Script" path="res://player/player.gd" id="7_krsat"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_w33og"]
+
+[sub_resource type="Sky" id="Sky_628he"]
+sky_material = SubResource("ProceduralSkyMaterial_w33og")
+
+[sub_resource type="Environment" id="Environment_gvjit"]
+background_mode = 2
+sky = SubResource("Sky_628he")
+tonemap_mode = 2
+ssao_enabled = true
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_weg48"]
+vertices = PackedVector3Array(-14, 0.5, -5.75, -13.75, 0.5, -4, -12.75, 0.5, -4, -12.75, 0.5, -9.5, -16.25, 0.5, -4, -16, 0.5, -5.75, -11.25, 0.5, -119.5, -149.5, 0.5, -119.5, -149.5, 0.5, -4, -11, 0.5, -9.75, 11, 0.5, -9.75, 11.25, 0.5, -119.5, 12.5, 0.5, -9.75, 12.75, 0.5, -8, 149.5, 0.5, -8.25, 149.5, 0.5, -119.5, -11.25, 0.5, -2, -6.75, 0.5, -2, -6.5, 0.5, -4.75, -6.75, 0.5, -8.25, -11.25, 0.5, -8.25, -5.5, 0.5, -5.25, -5.25, 0.5, -2, -2.75, 0.5, -1.75, -0.75, 0.5, -2, -0.5, 0.5, -5.75, -0.75, 0.5, -8.25, -5.25, 0.5, -8.25, 0.75, 0.5, -6.75, 1.5, 0.5, -6.75, 1.75, 0.5, -7.5, 0.75, 0.5, -8.25, 4.5, 0.5, -7.5, 5.25, 0.5, -8.25, 4.75, 0.5, -5.75, 5.25, 0.5, -5.75, 6.75, 0.5, -8.25, 6.75, 0.5, -2, 11.25, 0.5, -2, 11.25, 0.5, -8.25, 12.75, 0.5, 8, 149.5, 0.5, 8.25, 1.75, 0.5, -5.5, 0.75, 0.5, -2, 5.25, 0.5, -2, -15.25, 1.5, -4.75, -15.25, 1.5, -3.25, -14.75, 1.5, -3.25, -14.75, 1.5, -4.75, -14, 0.5, -2.25, -12.75, 0.5, 8, -149.5, 0.5, 8.25, -16, 0.5, -2.25, -10.25, 0.5, -0.75, -11.5, 0.5, -0.25, -11.25, 0.5, 0.5, -9.25, 0.5, 0.75, 3.25, 0.5, -0.25, 9.25, 0.5, -0.75, 4.75, 0.5, -0.25, 8.75, 0.5, 0.75, 11.5, 0.5, 0.25, 11.25, 0.5, -0.5, 5, 0.5, 0.5, 3, 0.5, 0.75, -11.25, 0.5, 8.25, -6.75, 0.5, 8.25, -6.5, 0.5, 5.25, -6.75, 0.5, 2, -11.25, 0.5, 2, -5.25, 0.5, 6.25, -4.25, 0.5, 6.5, -4, 0.5, 4.75, -5.25, 0.5, 2, -2, 0.5, 4.75, -1.75, 0.5, 6.5, -0.75, 0.5, 6.25, -0.75, 0.5, 2, -3.25, 0.5, 1.75, 0.75, 0.5, 2, 0.75, 0.5, 8.25, 5.25, 0.5, 8.25, 5.25, 0.5, 2, 6.75, 0.5, 5, 8, 0.5, 5, 8.25, 0.5, 4, 8.75, 0.5, 1.75, 6.75, 0.5, 2, 9.75, 0.5, 4, 10, 0.5, 5, 11.25, 0.5, 5, 11.25, 0.5, 2, 9.75, 0.5, 6, 8.25, 0.5, 6, 6.75, 0.5, 8.25, 8.75, 0.5, 8.5, 11.25, 0.5, 8.25, -3.25, 1.5, 5.75, -3.25, 1.5, 6.25, -2.75, 1.5, 6.25, -2.75, 1.5, 5.75, -2, 0.5, 7.25, -0.75, 0.5, 8.25, -4, 0.5, 7.25, -5.25, 0.5, 8.25, -12.75, 0.5, 9.5, -11, 0.5, 9.75, -149.5, 0.5, 179.5, -11.25, 0.5, 179.5, 12.5, 0.5, 9.75, 11.25, 0.5, 179.5, 149.5, 0.5, 179.5, 11, 0.5, 9.75)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(5, 4, 6), PackedInt32Array(6, 4, 8), PackedInt32Array(6, 8, 7), PackedInt32Array(0, 5, 3), PackedInt32Array(3, 5, 6), PackedInt32Array(6, 9, 3), PackedInt32Array(9, 6, 10), PackedInt32Array(10, 6, 11), PackedInt32Array(12, 10, 11), PackedInt32Array(12, 11, 13), PackedInt32Array(13, 11, 14), PackedInt32Array(14, 11, 15), PackedInt32Array(18, 17, 19), PackedInt32Array(19, 17, 16), PackedInt32Array(19, 16, 20), PackedInt32Array(23, 22, 21), PackedInt32Array(24, 23, 25), PackedInt32Array(25, 23, 26), PackedInt32Array(26, 23, 21), PackedInt32Array(26, 21, 27), PackedInt32Array(29, 28, 30), PackedInt32Array(30, 28, 31), PackedInt32Array(32, 30, 33), PackedInt32Array(33, 30, 31), PackedInt32Array(34, 32, 35), PackedInt32Array(35, 32, 33), PackedInt32Array(39, 38, 36), PackedInt32Array(36, 38, 37), PackedInt32Array(13, 14, 40), PackedInt32Array(40, 14, 41), PackedInt32Array(29, 42, 28), PackedInt32Array(28, 42, 43), PackedInt32Array(34, 35, 42), PackedInt32Array(42, 35, 44), PackedInt32Array(42, 44, 43), PackedInt32Array(48, 47, 45), PackedInt32Array(45, 47, 46), PackedInt32Array(1, 2, 49), PackedInt32Array(49, 2, 50), PackedInt32Array(8, 52, 51), PackedInt32Array(51, 52, 50), PackedInt32Array(52, 49, 50), PackedInt32Array(8, 4, 52), PackedInt32Array(54, 53, 55), PackedInt32Array(55, 53, 56), PackedInt32Array(56, 53, 57), PackedInt32Array(57, 53, 58), PackedInt32Array(58, 59, 57), PackedInt32Array(62, 61, 58), PackedInt32Array(58, 61, 60), PackedInt32Array(58, 60, 63), PackedInt32Array(58, 63, 59), PackedInt32Array(57, 64, 56), PackedInt32Array(67, 66, 68), PackedInt32Array(68, 66, 65), PackedInt32Array(68, 65, 69), PackedInt32Array(71, 70, 72), PackedInt32Array(72, 70, 73), PackedInt32Array(75, 74, 76), PackedInt32Array(76, 74, 77), PackedInt32Array(73, 78, 72), PackedInt32Array(72, 78, 74), PackedInt32Array(74, 78, 77), PackedInt32Array(82, 81, 79), PackedInt32Array(79, 81, 80), PackedInt32Array(84, 83, 85), PackedInt32Array(85, 83, 87), PackedInt32Array(85, 87, 86), PackedInt32Array(90, 89, 88), PackedInt32Array(90, 88, 91), PackedInt32Array(91, 88, 86), PackedInt32Array(86, 88, 85), PackedInt32Array(92, 89, 90), PackedInt32Array(84, 93, 83), PackedInt32Array(83, 93, 94), PackedInt32Array(94, 93, 95), PackedInt32Array(95, 93, 92), PackedInt32Array(90, 96, 92), PackedInt32Array(92, 96, 95), PackedInt32Array(100, 99, 97), PackedInt32Array(97, 99, 98), PackedInt32Array(75, 76, 101), PackedInt32Array(101, 76, 102), PackedInt32Array(71, 103, 70), PackedInt32Array(70, 103, 104), PackedInt32Array(101, 102, 103), PackedInt32Array(103, 102, 104), PackedInt32Array(51, 50, 105), PackedInt32Array(105, 106, 51), PackedInt32Array(51, 106, 108), PackedInt32Array(51, 108, 107), PackedInt32Array(40, 41, 109), PackedInt32Array(109, 41, 111), PackedInt32Array(109, 111, 110), PackedInt32Array(110, 112, 109), PackedInt32Array(112, 110, 106), PackedInt32Array(106, 110, 108)]
+geometry_parsed_geometry_type = 1
+geometry_collision_mask = 1
+agent_height = 1.75
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yfgq3"]
+albedo_color = Color(0.42, 0.45, 0.38, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f6sw2"]
+albedo_color = Color(0.78, 0.76, 0.72, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jq4wq"]
+albedo_color = Color(0.85, 0.7, 0.45, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0jx4w"]
+albedo_color = Color(0.5, 0.42, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m8866"]
+albedo_color = Color(0.95, 0.85, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4g01u"]
+albedo_color = Color(0.45, 0.4, 0.33, 1)
+
+[node name="Killhouse" type="Node3D" unique_id=2114389695]
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1026969410]
+transform = Transform3D(0.81915206, -0.43938506, 0.36868784, 0, 0.64278764, 0.76604444, -0.57357645, -0.62750685, 0.5265408, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1983713724]
+environment = SubResource("Environment_gvjit")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=1279104535]
+navigation_mesh = SubResource("NavigationMesh_weg48")
+
+[node name="Ground" type="CSGBox3D" parent="NavigationRegion3D" unique_id=114394180]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 30)
+use_collision = true
+collision_mask = 0
+size = Vector3(300, 1, 300)
+material = SubResource("StandardMaterial3D_yfgq3")
+
+[node name="House" type="Node3D" parent="NavigationRegion3D" unique_id=220705666]
+
+[node name="ExtNorth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1627465370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8625, 1.5, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.525, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1474850276]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.45, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=396613825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.55, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1232606860]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(10.8, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=611352229]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.45, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=582054454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.55, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=572717217]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.950001, 1.5, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.7, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=469144955]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.65, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.4, 0.7, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtNorth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1080778064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9125, 1.5, 9)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.425, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=478482837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8375, 1.5, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.575, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1945586183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.6, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.1, 0.8, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1798246747]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.025, 1.5, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.85, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2094754356]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.45, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1561116575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.55, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=907407251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(10.8, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1436521846]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.45, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=373296192]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.55, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 0.9, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtSouth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=619524952]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.862499, 1.5, -9)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.525, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtWest_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=196497706]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, -4.9125)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 8.425)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtWest_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=843810027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.65, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.7, 1.4)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtWest_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1984153789]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, 2.5500002)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.7)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtWest_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=707956064]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.45, 5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.9, 1.2)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtWest_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=611928082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.55, 5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.9, 1.2)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtWest_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2002783788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, 7.362499)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.525)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtEast_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=782815065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, -7.3625)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.525)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtEast_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1110182035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.45, -5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.9, 1.2)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtEast_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1065049974]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.55, -5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.9, 1.2)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtEast_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=12022414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, -2.5500002)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.7)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtEast_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2027440744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.65, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.7, 1.4)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="ExtEast_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1128028145]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, 4.9125004)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 8.425)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=611324498]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8375, 1.5, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.575, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1843493436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.6, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.1, 0.8, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=807436774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.075, 1.5, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.75, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1535306699]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.65, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.4, 0.7, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1661391985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07499981, 1.5, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.75, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=840435742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.6, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.1, 0.8, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=560754290]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.924999, 1.5, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.75, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=395901152]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.65, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.4, 0.7, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallNorth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1382040750]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9125, 1.5, 1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.425, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=76100795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.4125, 1.5, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.425, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1708032010]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.65, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.4, 0.7, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=864726617]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.425, 1.5, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(5.75, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=2121137404]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.6, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.1, 0.8, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1724460471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07499981, 1.5, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.75, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_5" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=423823978]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.65, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.4, 0.7, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_6" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1985664344]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.075001, 1.5, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.75, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_7" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=429330125]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.6, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.1, 0.8, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="HallSouth_8" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1745887063]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8375, 1.5, -1.25)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.575, 3, 0.25)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivN1N2_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=189248856]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 2.7125)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.175)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivN1N2_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=90369048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.65, 5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.7, 1.4)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivN1N2_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=27766283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 7.4125)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.425)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivN2N3_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1027721069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 5.125)
+use_collision = true
+collision_layer = 9
+collision_mask = 0
+size = Vector3(0.1, 3, 7.85)
+material = SubResource("StandardMaterial3D_jq4wq")
+
+[node name="DivN3N4_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1722940603]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 2.7625)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.275)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivN3N4_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=217679358]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.45, 5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.9, 1.2)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivN3N4_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1935115556]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.55, 5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.9, 1.2)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivN3N4_3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=366914759]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 7.3625)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 3.525)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivS1S2_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1389056525]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -7.375)
+use_collision = true
+collision_layer = 9
+collision_mask = 0
+size = Vector3(0.1, 3, 3.35)
+material = SubResource("StandardMaterial3D_jq4wq")
+
+[node name="DivS1S2_Thin_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1145886259]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.65, -5)
+use_collision = true
+collision_layer = 9
+collision_mask = 0
+size = Vector3(0.1, 0.7, 1.4)
+material = SubResource("StandardMaterial3D_jq4wq")
+
+[node name="DivS1S2_Thin_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1640015391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -2.75)
+use_collision = true
+collision_layer = 9
+collision_mask = 0
+size = Vector3(0.1, 3, 3.1)
+material = SubResource("StandardMaterial3D_jq4wq")
+
+[node name="DivS2S3_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1647433238]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -7.9125)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 2.425)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivS2S3_1" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=238596203]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, -6)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 0.7, 1.4)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivS2S3_2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=227223201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -3.2125)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.25, 3, 4.175)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="DivS3S4_Thin_0" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=132087731]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -5.125)
+use_collision = true
+collision_layer = 9
+collision_mask = 0
+size = Vector3(0.1, 3, 7.85)
+material = SubResource("StandardMaterial3D_jq4wq")
+
+[node name="CrateN2" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=402196004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 6)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 1, 1.2)
+material = SubResource("StandardMaterial3D_0jx4w")
+
+[node name="CrateS3" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1028703920]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, -6.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(2, 1, 0.8)
+material = SubResource("StandardMaterial3D_0jx4w")
+
+[node name="PillarN4" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=1252121656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1.5, 5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.6, 3, 0.6)
+material = SubResource("StandardMaterial3D_f6sw2")
+
+[node name="CrateHall" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=627201669]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 0.6)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.9, 1, 0.6)
+material = SubResource("StandardMaterial3D_0jx4w")
+
+[node name="CrateOutside" type="CSGBox3D" parent="NavigationRegion3D/House" unique_id=597795906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.5, -4)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.2, 1, 2.4)
+material = SubResource("StandardMaterial3D_0jx4w")
+
+[node name="Range" type="Node3D" parent="." unique_id=379754774]
+
+[node name="FiringLine" type="CSGBox3D" parent="Range" unique_id=1142524371]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 14)
+collision_mask = 0
+size = Vector3(12, 0.02, 0.15)
+material = SubResource("StandardMaterial3D_m8866")
+
+[node name="Label_FIRING_LINE" type="Label3D" parent="Range" unique_id=1394486943]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 14)
+billboard = 1
+text = "FIRING LINE"
+font_size = 64
+
+[node name="BermWest" type="CSGBox3D" parent="Range" unique_id=1719102160]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 1.25, 71)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 2.5, 110)
+material = SubResource("StandardMaterial3D_4g01u")
+
+[node name="BermEast" type="CSGBox3D" parent="Range" unique_id=411562621]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 1.25, 71)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 2.5, 110)
+material = SubResource("StandardMaterial3D_4g01u")
+
+[node name="Backstop" type="CSGBox3D" parent="Range" unique_id=1759888633]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 127)
+use_collision = true
+collision_mask = 0
+size = Vector3(14, 6, 1)
+material = SubResource("StandardMaterial3D_4g01u")
+
+[node name="Marker10" type="CSGBox3D" parent="Range" unique_id=873859580]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 24)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.15, 1.5, 0.15)
+material = SubResource("StandardMaterial3D_m8866")
+
+[node name="Label_10_m" type="Label3D" parent="Range" unique_id=2053935094]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, 24)
+billboard = 1
+text = "10 m"
+font_size = 64
+
+[node name="Marker25" type="CSGBox3D" parent="Range" unique_id=1464262511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 39)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.15, 1.5, 0.15)
+material = SubResource("StandardMaterial3D_m8866")
+
+[node name="Label_25_m" type="Label3D" parent="Range" unique_id=2084716469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.5, 39)
+billboard = 1
+text = "25 m"
+font_size = 64
+
+[node name="Marker50" type="CSGBox3D" parent="Range" unique_id=199539601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 64)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.15, 1.5, 0.15)
+material = SubResource("StandardMaterial3D_m8866")
+
+[node name="Label_50_m" type="Label3D" parent="Range" unique_id=437697040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2.5, 64)
+billboard = 1
+text = "50 m"
+font_size = 64
+
+[node name="Marker100" type="CSGBox3D" parent="Range" unique_id=570593216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.75, 114)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.15, 1.5, 0.15)
+material = SubResource("StandardMaterial3D_m8866")
+
+[node name="Label_100_m" type="Label3D" parent="Range" unique_id=608218304]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.5, 114)
+billboard = 1
+text = "100 m"
+font_size = 64
+
+[node name="PenBoard_Thin" type="CSGBox3D" parent="Range" unique_id=2056210307]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 1, 28.4)
+use_collision = true
+collision_layer = 9
+collision_mask = 0
+size = Vector3(1.6, 2, 0.1)
+material = SubResource("StandardMaterial3D_jq4wq")
+
+[node name="Label_penetration" type="Label3D" parent="Range" unique_id=1408237362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 2.4, 28.4)
+billboard = 1
+text = "penetration"
+font_size = 64
+
+[node name="Doors" type="Node3D" parent="." unique_id=1878943012]
+
+[node name="Door" type="AnimatableBody3D" parent="Doors" unique_id=1246214064 instance=ExtResource("1_5pou3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, 1.25)
+collision_layer = 9
+collision_mask = 0
+script = ExtResource("2_immnm")
+
+[node name="@AnimatableBody3D@2" type="AnimatableBody3D" parent="Doors" unique_id=1200065520 instance=ExtResource("1_5pou3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 1.25)
+collision_layer = 9
+collision_mask = 0
+script = ExtResource("2_immnm")
+
+[node name="@AnimatableBody3D@3" type="AnimatableBody3D" parent="Doors" unique_id=2021099649 instance=ExtResource("1_5pou3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -1.25)
+collision_layer = 9
+collision_mask = 0
+script = ExtResource("2_immnm")
+
+[node name="@AnimatableBody3D@4" type="AnimatableBody3D" parent="Doors" unique_id=1401001903 instance=ExtResource("1_5pou3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, -1.25)
+collision_layer = 9
+collision_mask = 0
+script = ExtResource("2_immnm")
+
+[node name="@AnimatableBody3D@5" type="AnimatableBody3D" parent="Doors" unique_id=706715673 instance=ExtResource("1_5pou3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, -9)
+collision_layer = 9
+collision_mask = 0
+script = ExtResource("2_immnm")
+
+[node name="Dummies" type="Node3D" parent="." unique_id=212982547]
+
+[node name="Range0" type="CharacterBody3D" parent="Dummies" unique_id=689439650 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 24)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+shoots_back = false
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.55, 0.5, 1)
+
+[node name="Range1" type="CharacterBody3D" parent="Dummies" unique_id=1442673629 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 39)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+shoots_back = false
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.55, 0.5, 1)
+
+[node name="Range2" type="CharacterBody3D" parent="Dummies" unique_id=1903473565 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 64)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+shoots_back = false
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.55, 0.5, 1)
+
+[node name="Range3" type="CharacterBody3D" parent="Dummies" unique_id=96694740 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 114)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+shoots_back = false
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.55, 0.5, 1)
+
+[node name="Range4" type="CharacterBody3D" parent="Dummies" unique_id=868575135 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 29)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+shoots_back = false
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.55, 0.5, 1)
+
+[node name="Room5" type="CharacterBody3D" parent="Dummies" unique_id=1608190936 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -6)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.8, 0.45, 0.3, 1)
+
+[node name="Room6" type="CharacterBody3D" parent="Dummies" unique_id=808357511 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -6)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.8, 0.45, 0.3, 1)
+
+[node name="Room7" type="CharacterBody3D" parent="Dummies" unique_id=1038833454 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.8, 0.45, 0.3, 1)
+
+[node name="Room8" type="CharacterBody3D" parent="Dummies" unique_id=800413045 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 3)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.8, 0.45, 0.3, 1)
+
+[node name="Room9" type="CharacterBody3D" parent="Dummies" unique_id=1223977486 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -5)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array()
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.8, 0.45, 0.3, 1)
+
+[node name="Patrol10" type="CharacterBody3D" parent="Dummies" unique_id=1450786049 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, 0)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array(-10.5, 0, 0, 10.5, 0, 0)
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.35, 0.75, 1)
+
+[node name="Patrol11" type="CharacterBody3D" parent="Dummies" unique_id=1860750817 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 5)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array(-9, 0, 5, -3, 0, 3.5)
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.35, 0.75, 1)
+
+[node name="Patrol12" type="CharacterBody3D" parent="Dummies" unique_id=1554940747 instance=ExtResource("3_mncj7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -12)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("4_vuqpj")
+patrol_points = PackedVector3Array(-16, 0, -12, 16, 0, -12)
+weapon = ExtResource("5_g5x3w")
+body_color = Color(0.55, 0.35, 0.75, 1)
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=540534484 instance=ExtResource("6_78idy")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.05, 12.5)
+collision_layer = 2
+collision_mask = 3
+floor_snap_length = 0.3
+script = ExtResource("7_krsat")
+eye_heights = PackedFloat32Array(1.65, 1.1, 0.35)
+capsule_heights = PackedFloat32Array(1.8, 1.25, 0.6)
+stance_spread_mult = PackedFloat32Array(1, 0.75, 0.5)
+stance_recoil_mult = PackedFloat32Array(1, 0.8, 0.6)

@@ -12,14 +12,17 @@ var _hit_t := 0.0
 var _hit_kill := false
 var _damage_sources: Array[Dictionary] = []  # {pos: Vector3, t: float}
 var _toast_t := 0.0
-var _info := Label.new()
-var _toast := Label.new()
-var _center := Label.new()
+var _info: Label
+var _toast: Label
+var _center: Label
 
 @onready var player: Player = owner
 
 
 func _ready() -> void:
+	_info = Label.new()
+	_toast = Label.new()
+	_center = Label.new()
 	for l: Label in [_info, _toast, _center]:
 		l.add_theme_font_size_override("font_size", 18)
 		l.add_theme_color_override("font_shadow_color", Color.BLACK)
@@ -36,7 +39,7 @@ func _ready() -> void:
 	_center.add_theme_font_size_override("font_size", 32)
 	Game.hit_confirmed.connect(_on_hit_confirmed)
 	Game.toast_requested.connect(_on_toast)
-	player.health.damaged.connect(_on_player_damaged)
+	(owner.get_node("Health") as Health).damaged.connect(_on_player_damaged)  # player @onready vars are not set yet
 
 
 func _unhandled_input(event: InputEvent) -> void:
