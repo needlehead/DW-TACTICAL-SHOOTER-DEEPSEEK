@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dgipo0kykr34h"
+path="res://.godot/imported/ambience_10.ogg-5d6fa28d24d6b7e5ddd921a652ea55a2.oggvorbisstr"
+
+[deps]
+
+source_file="res://my sounds/ambience/tracks/ambience_10.ogg"
+dest_files=["res://.godot/imported/ambience_10.ogg-5d6fa28d24d6b7e5ddd921a652ea55a2.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

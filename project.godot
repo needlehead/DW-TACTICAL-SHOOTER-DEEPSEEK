@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 [autoload]
 
 Game="*res://core/game.gd"
+Ambience="*res://core/ambience.gd"
 
 [display]
 

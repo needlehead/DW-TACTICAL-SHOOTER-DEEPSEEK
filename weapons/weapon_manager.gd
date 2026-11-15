@@ -10,6 +10,9 @@ enum State { READY, HOLSTER, EQUIP }
 @export var grenade_scene: PackedScene
 @export var grenade_count := 2
 @export var throw_speed := 14.0
+@export var equip_sound: AudioStream  ## gun coming up: weapon switch, after a grenade, phone put away
+@export var aim_sound: AudioStream  ## raising the gun to aim
+@export var handling_volume_db := -6.0
 @export var phone_time := 0.6  ## hold Tab: gun goes down (first half), then the phone comes up (second half)
 
 var weapons: Array[Weapon] = []
@@ -20,7 +23,8 @@ var player: Player
 
 var grenades := 0
 var phone_blend := 0.0  ## 0 = gun up, 0.5 = gun down, 1 = phone fully raised
-var _phone_cancelled := false  # fire/ADS put the phone away until Tab is pressed again
+var _phone_cancelled := false
+var _foley: AudioStreamPlayer  # fire/ADS put the phone away until Tab is pressed again
 var _next := 0
 
 
@@ -35,6 +39,9 @@ func _ready() -> void:
 		w.refill()
 		weapons.append(w)
 	grenades = grenade_count
+	_foley = AudioStreamPlayer.new()
+	_foley.max_polyphony = 2
+	add_child(_foley)
 	_activate(0)
 
 
@@ -68,6 +75,7 @@ func throw_grenade() -> void:
 	g.linear_velocity = player.velocity + fwd * throw_speed + Vector3.UP * 2.0
 	state = State.EQUIP
 	switch_phase = 1.0
+	_play_foley(equip_sound)
 
 
 ## Gun lowering share of the phone transition (0..1).
@@ -93,7 +101,12 @@ func _process(delta: float) -> void:
 	elif phone_blend > 0.0 and (Input.is_action_just_pressed("fire") or Input.is_action_just_pressed("ads")):
 		_phone_cancelled = true
 	var phone_target := 1.0 if wants_phone and not _phone_cancelled and state == State.READY and not current.is_reloading() else 0.0
+	var was_lowered := phone_blend >= 0.5
 	phone_blend = move_toward(phone_blend, phone_target, delta / maxf(phone_time, 0.01))
+	if was_lowered and phone_blend < 0.5:
+		_play_foley(equip_sound)  # gun coming back up after the phone
+	if active and Input.is_action_just_pressed("ads") and not player.ads_blocked and not player.is_sprinting:
+		_play_foley(aim_sound)
 	if active and phone_blend == 0.0:
 		for i in weapons.size():
 			if Input.is_action_just_pressed("weapon_%d" % (i + 1)):
@@ -128,5 +141,14 @@ func _activate(index: int) -> void:
 	current = weapons[index]
 	current.visible = true
 	state = State.EQUIP
+	_play_foley(equip_sound)
+
+
+func _play_foley(s: AudioStream) -> void:
+	if s == null or _foley == null:
+		return
+	_foley.stream = s
+	_foley.volume_db = handling_volume_db
+	_foley.play()
 	switch_phase = 1.0
 	weapon_changed.emit(current)

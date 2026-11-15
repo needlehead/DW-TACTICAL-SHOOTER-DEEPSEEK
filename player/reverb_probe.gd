@@ -9,19 +9,27 @@ extends Node
 @export var rays := 12
 @export var near_wall := 6.0  ## walls closer than this count as "enclosing"
 @export var wet_range := Vector2(0.05, 0.4)  ## wet at fully open .. fully enclosed
+@export var footstep_wet_scale := 0.4  ## footsteps get this share of the gunfire wetness
 @export var smoothing := 4.0  ## how fast the reverb settles after moving between spaces (1/s)
 
 var _t := 0.0
 var _target := {}
 var _reverb: AudioEffectReverb
+var _steps_reverb: AudioEffectReverb
 
 @onready var player: Player = owner
 
 
 func _ready() -> void:
-	var bus := AudioServer.get_bus_index(&"World")
+	_reverb = _bus_reverb(&"World")
+	_steps_reverb = _bus_reverb(&"Footsteps")
+
+
+static func _bus_reverb(bus_name: StringName) -> AudioEffectReverb:
+	var bus := AudioServer.get_bus_index(bus_name)
 	if bus >= 0 and AudioServer.get_bus_effect_count(bus) > 0:
-		_reverb = AudioServer.get_bus_effect(bus, 0) as AudioEffectReverb
+		return AudioServer.get_bus_effect(bus, 0) as AudioEffectReverb
+	return null
 
 
 func _process(delta: float) -> void:
@@ -34,6 +42,9 @@ func _process(delta: float) -> void:
 	var k := 1.0 - exp(-smoothing * delta)
 	for p: String in ["wet", "room_size", "damping", "predelay_msec", "predelay_feedback"]:
 		_reverb.set(p, lerpf(_reverb.get(p), _target[p], k))
+		if _steps_reverb:
+			var v: float = _target[p] * (footstep_wet_scale if p == "wet" else 1.0)
+			_steps_reverb.set(p, lerpf(_steps_reverb.get(p), v, k))
 
 
 ## Reverb settings for a listener at `from`. A pure query, so tests can probe any spot in the level.

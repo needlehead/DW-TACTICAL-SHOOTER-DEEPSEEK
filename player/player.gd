@@ -4,6 +4,8 @@ extends CharacterBody3D
 ## The active weapon pushes its handling values (ads_time, ads_zoom, ...) into this node on equip.
 
 signal footstep(speed: float)
+signal jumped
+signal landed(fall_speed: float)
 
 enum Stance { STAND, CROUCH, PRONE }
 
@@ -214,7 +216,11 @@ func _physics_process(delta: float) -> void:
 			_jump_or_vault()
 	else:
 		velocity.y -= _gravity * delta  # no air control: momentum only
+	var was_airborne := not is_on_floor()
+	var fall_speed := -velocity.y
 	move_and_slide()
+	if was_airborne and is_on_floor() and fall_speed > 1.5:  # ignore steps and slopes
+		landed.emit(fall_speed)
 	_update_lean(delta)
 	_update_footsteps(delta)
 
@@ -243,6 +249,7 @@ func _jump_or_vault() -> void:
 		velocity += fwd * vault_push
 	else:
 		velocity.y = jump_velocity
+	jumped.emit()
 
 
 ## Returns false if there's no headroom for the new stance.

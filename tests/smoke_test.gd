@@ -13,8 +13,9 @@ func _ready() -> void:
 			_fail("could not load " + path)
 	_logic_checks()
 	await _runtime_checks()
-	for p: AudioStreamPlayer3D in get_tree().root.find_children("*", "AudioStreamPlayer3D", true, false):
-		p.stop()
+	for p: Node in get_tree().root.find_children("*", "", true, false):
+		if p is AudioStreamPlayer or p is AudioStreamPlayer3D:
+			p.call("stop")
 	for i in 3:  # let the audio server drop the stopped playbacks before quitting
 		await get_tree().process_frame
 	print("SMOKE TEST: %s" % ("OK" if failures == 0 else "%d FAILURES" % failures))
@@ -117,6 +118,10 @@ func _runtime_checks() -> void:
 	for i in 4:
 		w._shoot()
 	w.data.hip_spread = hip
+	var amb := get_node("/root/Ambience")
+	var all: Array[String] = ["a", "b", "c"]
+	var pass1: Array[String] = amb.shuffled(all, "a")
+	_check(pass1.size() == 3 and pass1[0] != "a" and pass1.has("a"), "ambience shuffle: full pass, no back-to-back repeat")
 	var probe := player.get_node("ReverbProbe") as ReverbProbe
 	var space := player.get_world_3d().direct_space_state
 	var sky := probe.estimate(space, Vector3(0, 300, 0), [] as Array[RID])

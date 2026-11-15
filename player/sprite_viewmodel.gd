@@ -16,6 +16,10 @@ extends TextureRect
 ## Used only when the weapon has no ads_sprite/aim_sprites: zoom and shift the hip frame toward centre.
 @export var mode_switch_rot := -0.07  ## radians the gun twists while flicking the fire selector
 @export var mode_switch_drop := Vector2(0.02, 0.035)  ## screen heights right/down at the peak of the flick
+## Lower stances pull the gun in toward the face (Insurgency-style). Blends with eye height, so it follows
+## the stance change smoothly. Values are at full prone; crouch gets about 40% of them.
+@export var low_stance_zoom := 0.14
+@export var low_stance_shift := Vector2(-0.04, 0.02)  ## screen heights (x left/right, y down)
 @export var ads_zoom := 0.12
 @export var ads_shift := Vector2(-0.1, -0.03)
 
@@ -63,6 +67,10 @@ func _process(_delta: float) -> void:
 	var off := hand_offset(k) + Vector2(0.0, kick.z * kick_scale + lower * lower_drop + player.sprint_blend * sprint_drop) * k
 	off += Vector2(ads_shift.x * vp.x, ads_shift.y * k) * ads + d.sprite_offset * k
 	var flick := sin(PI * clampf(w.since_mode_switch / d.mode_switch_time, 0.0, 1.0))
+	# 0 standing .. 1 prone; released while aiming down sights so the sight alignment holds.
+	var low := clampf((player.eye_heights[0] - player.eye_height) / (player.eye_heights[0] - player.eye_heights[2]), 0.0, 1.0)
+	low *= 1.0 - player.ads_blend
+	off += low_stance_shift * k * low
 	off += mode_switch_drop * k * flick
 
 	size = vp * (1.0 + overscan)
@@ -73,7 +81,7 @@ func _process(_delta: float) -> void:
 		off += (vp * 0.5 - sight) * player.ads_blend
 	position = base + off
 	pivot_offset = Vector2(size.x * 0.5, size.y)
-	scale = Vector2.ONE * (1.0 + ads_zoom * ads)
+	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
 	rotation = kick_rot.z * 0.5 + player.sprint_blend * 0.08 + mode_switch_rot * flick
 
 	var shooting := texture == d.shoot_sprite and d.shoot_blur > 0.0

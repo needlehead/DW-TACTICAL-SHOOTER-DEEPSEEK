@@ -85,10 +85,24 @@ Killed while prone: `dead_prone_sprite`, and the view tilts by `dead_prone_roll`
 
 ## Reverb
 
-Gun sounds (player and dummies) and footsteps play on the `World` bus (`default_bus_layout.tres`), which has a reverb. `ReverbProbe`
+Gun sounds (player and dummies) play on the `World` bus (`default_bus_layout.tres`), which has a reverb; footsteps,
+jumps and landings use the `Footsteps` bus, which gets the same reverb at `footstep_wet_scale` (40%) of the wetness. `ReverbProbe`
 (on the Player) casts rays around the listener a few times a second and steers it from the space you're in: tight rooms
 get a short, wet ring; open ground gets a drier sound with a delayed echo off distant walls. No zones to place, so it works
 in any map. Tuning (wet range, ray length, what counts as a near wall, update rate) is on the `ReverbProbe` node.
+
+## Ambience
+
+The `Ambience` autoload plays every track in `my sounds/ambience/tracks/` in a shuffled order, crossfading between them
+(`volume_db`, `crossfade`), on the `Ambience` bus. The tracks were cut from the 2-hour mix with
+`python tools/split_ambience.py <mix.mp3> "my sounds/ambience/tracks"` (cuts land in quiet moments every 4-7 min).
+The source mix lives in `my sounds/ambience/source/`, which Godot ignores (`.gdignore`) and git ignores (288 MB).
+
+## Handling sounds
+
+`WeaponManager` plays `equip_sound` when a gun comes up (switch, after a grenade, phone put away) and `aim_sound` when
+you start aiming. Jump and landing clips are on `Footsteps` (`jump_sounds`, `land_sounds`). Crouching and going prone
+pull the gun closer (`low_stance_zoom`, `low_stance_shift` on SpriteViewmodel).
 
 ## Phone (diegetic UI)
 

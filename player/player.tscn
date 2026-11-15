@@ -2,6 +2,14 @@
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://player/footsteps.gd" id="2_steps"]
+[ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete1.wav" id="j1"]
+[ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete2.wav" id="j2"]
+[ext_resource type="AudioStream" path="res://my sounds/jump/jump_concrete3.wav" id="j3"]
+[ext_resource type="AudioStream" path="res://my sounds/jump/landing_concrete1.wav" id="l1"]
+[ext_resource type="AudioStream" path="res://my sounds/jump/landing_concrete2.wav" id="l2"]
+[ext_resource type="AudioStream" path="res://my sounds/jump/landing_concrete3.wav" id="l3"]
+[ext_resource type="AudioStream" path="res://my sounds/generic/weap_equip.wav" id="snd_equip"]
+[ext_resource type="AudioStream" path="res://my sounds/generic/weap_aim.wav" id="snd_aim"]
 [ext_resource type="Script" path="res://player/reverb_probe.gd" id="22_reverb"]
 [ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete1.ogg" id="fs1"]
 [ext_resource type="AudioStream" path="res://my sounds/footsteps/concrete2.ogg" id="fs2"]
@@ -93,6 +101,8 @@ script = ExtResource("22_reverb")
 
 [node name="Footsteps" type="Node3D" parent="."]
 script = ExtResource("2_steps")
+jump_sounds = Array[AudioStream]([ExtResource("j1"), ExtResource("j2"), ExtResource("j3")])
+land_sounds = Array[AudioStream]([ExtResource("l1"), ExtResource("l2"), ExtResource("l3")])
 steps = Array[AudioStream]([ExtResource("fs1"), ExtResource("fs2"), ExtResource("fs3"), ExtResource("fs4"), ExtResource("fs5"), ExtResource("fs6"), ExtResource("fs7"), ExtResource("fs8")])
 
 [node name="LeanPivot" type="Node3D" parent="."]
@@ -112,6 +122,8 @@ script = ExtResource("3_vm")
 
 [node name="Weapons" type="Node3D" parent="LeanPivot/Head/Camera3D/Viewmodel"]
 script = ExtResource("4_wm")
+equip_sound = ExtResource("snd_equip")
+aim_sound = ExtResource("snd_aim")
 loadout = Array[ExtResource("9_wd")]([ExtResource("8_smg")])
 grenade_scene = ExtResource("13_gren")
 
