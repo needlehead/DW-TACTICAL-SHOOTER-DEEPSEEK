@@ -1,7 +1,7 @@
 class_name ReverbProbe
 extends Node
-## Room-aware gun reverb. A few times a second, cast rays around the listener (the player's eyes) to judge
-## how enclosed the space is and how far the walls are, then steer the reverb on the "Guns" bus:
+## Room-aware reverb for world sounds (guns, footsteps). A few times a second, cast rays around the listener (the player's eyes) to judge
+## how enclosed the space is and how far the walls are, then steer the reverb on the "World" bus:
 ## small closed rooms -> short, wet ring; open ground -> drier, with a slapback echo off distant walls.
 
 @export var update_interval := 0.15
@@ -19,7 +19,7 @@ var _reverb: AudioEffectReverb
 
 
 func _ready() -> void:
-	var bus := AudioServer.get_bus_index(&"Guns")
+	var bus := AudioServer.get_bus_index(&"World")
 	if bus >= 0 and AudioServer.get_bus_effect_count(bus) > 0:
 		_reverb = AudioServer.get_bus_effect(bus, 0) as AudioEffectReverb
 

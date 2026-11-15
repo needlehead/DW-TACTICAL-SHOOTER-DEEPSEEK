@@ -83,9 +83,9 @@ Killed while prone: `dead_prone_sprite`, and the view tilts by `dead_prone_roll`
 `Portrait` (HUDLayer, bottom-left) shows `full` / `hurt` / `low` / `dead` by health; thresholds `hurt_below` (0.66) and
 `low_below` (0.33) are fractions of max health. Frames can be full-screen renders: each is cropped to its visible pixels.
 
-## Gun reverb
+## Reverb
 
-Gun sounds (player and dummies) play on the `Guns` bus (`default_bus_layout.tres`), which has a reverb. `ReverbProbe`
+Gun sounds (player and dummies) and footsteps play on the `World` bus (`default_bus_layout.tres`), which has a reverb. `ReverbProbe`
 (on the Player) casts rays around the listener a few times a second and steers it from the space you're in: tight rooms
 get a short, wet ring; open ground gets a drier sound with a delayed echo off distant walls. No zones to place, so it works
 in any map. Tuning (wet range, ray length, what counts as a near wall, update rate) is on the `ReverbProbe` node.

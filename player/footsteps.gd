@@ -10,6 +10,7 @@ var _audio: AudioStreamPlayer3D
 
 func _ready() -> void:
 	_audio = AudioStreamPlayer3D.new()
+	_audio.bus = &"World"  # room-aware reverb, same as gunfire
 	add_child(_audio)
 	(get_parent() as Player).footstep.connect(_on_footstep)
 

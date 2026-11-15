@@ -129,7 +129,7 @@ func _shoot(player: Player) -> void:
 	if weapon.fire_sound:
 		if _audio == null:
 			_audio = AudioStreamPlayer3D.new()
-			_audio.bus = &"Guns"
+			_audio.bus = &"World"
 			add_child(_audio)
 			_audio.stream = weapon.fire_sound
 			_audio.volume_db = weapon.fire_volume_db

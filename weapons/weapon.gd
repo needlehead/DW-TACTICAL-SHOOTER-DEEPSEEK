@@ -151,7 +151,7 @@ func _play_fire_sound() -> void:
 		return
 	if _fire_audio == null:
 		_fire_audio = AudioStreamPlayer3D.new()
-		_fire_audio.bus = &"Guns"
+		_fire_audio.bus = &"World"
 		_fire_audio.max_polyphony = 8  # each shot's tail rings under the next
 		add_child(_fire_audio)
 	_fire_audio.stream = data.fire_sound
