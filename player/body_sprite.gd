@@ -6,6 +6,7 @@ extends TextureRect
 @export var idle_sprite: Texture2D
 @export var walk_sprites: Array[Texture2D] = []
 @export var dead_sprite: Texture2D
+@export var dead_prone_sprite: Texture2D  ## used when killed while prone; empty falls back to dead_sprite
 @export var crouch_idle_sprite: Texture2D  ## crouched frames; empty falls back to the standing ones
 @export var crouch_walk_sprites: Array[Texture2D] = []
 @export var frame_pitch := -80.0  ## look pitch (degrees) the frames were rendered at; fully in view there
@@ -29,7 +30,7 @@ func _process(delta: float) -> void:
 	size = vp
 	pivot_offset = Vector2(vp.x * 0.5, vp.y)
 	if not player.alive:
-		texture = dead_sprite
+		texture = dead_prone_sprite if player.stance == Player.Stance.PRONE and dead_prone_sprite else dead_sprite
 		position = Vector2.ZERO
 		scale = Vector2.ONE  # death frame stays full size
 		visible = texture != null
