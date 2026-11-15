@@ -30,6 +30,7 @@
 [ext_resource type="Script" path="res://ui/hud.gd" id="12_hud"]
 [ext_resource type="PackedScene" path="res://weapons/grenade.tscn" id="13_gren"]
 [ext_resource type="Script" path="res://ui/debug_panel.gd" id="14_debug"]
+[ext_resource type="Script" path="res://ui/viewmodel_editor.gd" id="24_vmedit"]
 [ext_resource type="Script" path="res://player/sprite_viewmodel.gd" id="15_sprite"]
 [ext_resource type="Script" path="res://player/muzzle_smoke.gd" id="16_smoke"]
 [ext_resource type="Script" path="res://ui/bodycam.gd" id="17_bodycam"]
@@ -246,3 +247,6 @@ mouse_filter = 2
 script = ExtResource("21_phone")
 frame = ExtResource("ph_frame")
 outfit_sprite = ExtResource("ph_outfit")
+
+[node name="ViewmodelEditor" type="Control" parent="HUDLayer"]
+script = ExtResource("24_vmedit")

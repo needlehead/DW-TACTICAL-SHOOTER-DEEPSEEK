@@ -39,6 +39,7 @@ If you edit `killhouse.tscn` by hand instead, select `NavigationRegion3D` and cl
 | Debug panel and live tuning | F1 (frees the mouse) |
 | Phone (status: vitals, outfit, weapon, mags) | Hold Tab |
 | Debug HUD (weapon/HP text, exact ammo, portrait) | F2 |
+| Viewmodel editor: drag the gun (hip), the sight box (aimed frame) or the muzzle point; Save writes the .tres | F4 |
 | Bodycam effect on/off | F3 |
 | Release / capture mouse | Esc |
 

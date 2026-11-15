@@ -123,6 +123,14 @@ func _runtime_checks() -> void:
 	var rifle := player.weapons.weapons[1]
 	_check(rifle.data.display_name == "Radian Rifle" and rifle.data.scope_magnification > 0.0 and rifle.current_sprite(1.0) == rifle.data.aim_sprites[-1],
 		"rifle in slot 2, scoped, last aim frame when fully aimed")
+	var ed := player.get_node("HUDLayer/ViewmodelEditor") as ViewmodelEditor
+	var before := ed.data().sprite_offset
+	ed.toggle()
+	ed.nudge(Vector2(0.01, 0.0))
+	var moved := ed.data().sprite_offset.is_equal_approx(before + Vector2(0.01, 0.0))
+	ed.revert()
+	_check(moved and ed.data().sprite_offset == before, "viewmodel editor: nudge moves the gun, revert restores")
+	ed.toggle()
 	var amb := get_node("/root/Ambience")
 	var all: Array[String] = ["a", "b", "c"]
 	var pass1: Array[String] = amb.shuffled(all, "a")
