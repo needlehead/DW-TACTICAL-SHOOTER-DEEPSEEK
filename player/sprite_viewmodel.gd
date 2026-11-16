@@ -29,6 +29,10 @@ extends TextureRect
 ## Guns without a shoot frame: the idle frame is shoved back by each shot instead (screen heights right/down, radians).
 @export var fire_shove := Vector2(0.008, 0.025)
 @export var fire_shove_rot := 0.012
+## Passive hand shake: a small, quick tremor on everything held (gun and tablet), even standing still.
+@export var shake_amount := 0.005  ## screen heights
+@export var shake_roll := 0.004  ## radians (gun only)
+@export var shake_speed := 1.4  ## tremor rate
 @export var flash_light := 1.2  ## how brightly an unsuppressed shot lights the gun sprite
 @export var flash_light_time := 0.07  ## seconds the light takes to fade
 @export var lean_roll := 0.1  ## radians the gun cants into a full lean (hip only: aimed, the sights stay lined up)
@@ -37,6 +41,7 @@ extends TextureRect
 @export var ads_shift := Vector2(-0.1, -0.03)
 
 var _blur := ShaderMaterial.new()
+var _shake := FastNoiseLite.new()
 var _sprint_t := 0.0  # own slower, eased sprint blend for the pose swap
 var _holo := HoloSight.new()
 var _scope := ScopeView.new()
@@ -65,7 +70,13 @@ func hand_offset(k: float, with_freeaim := true) -> Vector2:
 	var fa := Vector2(deg_to_rad(player.freeaim.x), deg_to_rad(player.freeaim.y)) * freeaim_scale if with_freeaim else Vector2.ZERO
 	return Vector2(
 		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - fa.x,
-		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k
+		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k + shake(0.0) * shake_amount * k
+
+
+## Hand tremor at channel offset ch: smooth noise, -1..1 per axis; calmer while aiming down sights.
+func shake(ch: float) -> Vector2:
+	var t := Time.get_ticks_msec() / 1000.0 * shake_speed * 60.0
+	return Vector2(_shake.get_noise_2d(t, ch), _shake.get_noise_2d(t, ch + 100.0)) * (1.0 - 0.6 * player.ads_blend)
 
 
 ## 1 right after a shot fading to 0 over shoot_frame_time, for guns that fire on the idle frame (no shoot frame).
@@ -131,7 +142,7 @@ func _process(delta: float) -> void:
 	var rest_aim := vp * 0.5 - (base + d.sprite_offset * k)  # sprite-local point that sits on screen centre at rest
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
-	rotation = player.lean * lean_roll * (1.0 - player.ads_blend) + kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0) + fire_shove_rot * shove
+	rotation = shake(300.0).x * shake_roll + player.lean * lean_roll * (1.0 - player.ads_blend) + kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0) + fire_shove_rot * shove
 	# Where the barrel points: the rest point carried by the sprite's motion; aiming pulls it onto the sights (centre).
 	player.viewmodel_aim = (get_transform() * rest_aim).lerp(vp * 0.5, player.ads_blend)
 

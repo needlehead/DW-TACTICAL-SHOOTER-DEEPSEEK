@@ -15,6 +15,12 @@ enum Stance { STAND, CROUCH, PRONE }
 @export var deadzone_deg := 3.0  ## hip-fire freeaim radius; the gun moves inside it before the view turns
 @export var max_pitch := 88.0
 
+## Handheld camera noise (always on, like a third-person follow cam): slow, smooth drift of the view.
+@export_group("Camera noise")
+@export var cam_noise_deg := Vector3(0.6, 0.7, 0.4)  ## pitch, yaw, roll amplitude at rest
+@export var cam_noise_speed := 0.45  ## drift rate; higher = busier
+@export var cam_noise_moving := 1.8  ## amplitude multiplier at full sprint speed
+@export var cam_noise_ads := 0.35  ## amplitude multiplier while aiming down sights
 @export_group("Movement")
 @export var walk_speed := 3.2
 @export var sprint_speed := 5.6
@@ -73,6 +79,7 @@ var eye_height := 1.65
 var spawn_transform: Transform3D
 
 var _stride := 0.0
+var _cam_noise := FastNoiseLite.new()  # simplex, default frequency: 60 samples ~ one slow wander
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready var collision: CollisionShape3D = $Collision
@@ -176,6 +183,15 @@ func aim_basis() -> Basis:
 
 
 ## The view rotated by freeaim only: for things that follow your head rather than the gun (wall check, throws).
+## Camera drift (radians) at time t: three smooth noise channels, louder on the move, quieter when aiming.
+func camera_noise(t: float) -> Vector3:
+	var move := clampf(horizontal_speed() / sprint_speed, 0.0, 1.0)
+	var k := lerpf(1.0, cam_noise_moving, move) * lerpf(1.0, cam_noise_ads, ads_blend)
+	var n := Vector3(_cam_noise.get_noise_2d(t * cam_noise_speed * 60.0, 0.0), _cam_noise.get_noise_2d(t * cam_noise_speed * 60.0, 100.0),
+		_cam_noise.get_noise_2d(t * cam_noise_speed * 60.0, 200.0))
+	return Vector3(deg_to_rad(cam_noise_deg.x * n.x), deg_to_rad(cam_noise_deg.y * n.y), deg_to_rad(cam_noise_deg.z * n.z)) * k if alive else Vector3.ZERO
+
+
 func freeaim_basis() -> Basis:
 	return camera.global_basis * Basis.from_euler(Vector3(deg_to_rad(freeaim.y), deg_to_rad(freeaim.x), 0.0))
 
@@ -195,6 +211,7 @@ func _process(delta: float) -> void:
 	var roll_target := dead_prone_roll if stance == Stance.PRONE else 0.0
 	death_roll = 0.0 if alive else move_toward(death_roll, roll_target, dead_prone_roll / 0.7 * delta)  # eases in over 0.7 s
 	head.rotation.z = deg_to_rad(death_roll)
+	camera.rotation = camera_noise(Time.get_ticks_msec() / 1000.0)
 
 	var eye_target := eye_heights[stance] if alive else dead_eye_height
 	eye_height = move_toward(eye_height, eye_target, stance_change_speed * delta)
