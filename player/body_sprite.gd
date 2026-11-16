@@ -7,6 +7,7 @@ extends TextureRect
 @export var walk_sprites: Array[Texture2D] = []
 @export var dead_sprite: Texture2D
 @export var dead_prone_sprite: Texture2D  ## used when killed while prone; empty falls back to dead_sprite
+@export var dead_prone_pivot := Vector2(0.875, 0.667)  ## tilt centre for the prone death frame (0-1 of the screen)
 @export var crouch_idle_sprite: Texture2D  ## crouched frames; empty falls back to the standing ones
 @export var crouch_walk_sprites: Array[Texture2D] = []
 @export var frame_pitch := -80.0  ## look pitch (degrees) the frames were rendered at; fully in view there
@@ -33,10 +34,11 @@ func _process(delta: float) -> void:
 		texture = dead_prone_sprite if player.stance == Player.Stance.PRONE and dead_prone_sprite else dead_sprite
 		position = Vector2.ZERO
 		scale = Vector2.ONE  # death frame stays full size
-		# Prone death: the arms lie on the floor, so they tilt on screen with the world (overscale hides the corners).
-		pivot_offset = vp * 0.5
+		# Prone death: the arms lie on the floor, so they tilt on screen with the world. The tilt pivots near the
+		# right hand so it stays in view, and the overscale keeps the arms' cut-off ends (left edge, bottom) off screen.
+		pivot_offset = vp * dead_prone_pivot
 		rotation = deg_to_rad(player.death_roll)
-		scale = Vector2.ONE * (1.0 + absf(rotation) * 0.6)
+		scale = Vector2.ONE * (1.0 + absf(rotation) * 1.5)
 		visible = texture != null
 		return
 	# Angle above the render pitch -> screen distance the body drops (linear in FOV is close enough here).
