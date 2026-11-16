@@ -232,7 +232,8 @@ recovering 0.8 s after you stop (slower while walking). While it's low:
 - the aim wobbles with your breathing: a slow figure-8 of the view (so it moves the sights and where shots go), wider
   and quicker the more tired you are; crouching and going prone steady it; there is a tiny breathing sway even rested;
 - the gun lags further behind your mouse movement;
-- the breathing stays loud and quickens until you've recovered.
+- the breathing stays loud until you've recovered;
+- the screen edges drain of colour and darken (tunnel vision), pulsing with each breath (`FatigueFX` in the HUD).
 Settings: the "Stamina" group on the Player.
 
 Crawling (moving while prone) with a gun that has a sprint pose (the Radian) carries it in that pose with a slower,

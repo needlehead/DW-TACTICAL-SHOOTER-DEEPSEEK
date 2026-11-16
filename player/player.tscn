@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://player/footsteps.gd" id="2_steps"]
 [ext_resource type="Script" path="res://ui/damage_feedback.gd" id="27_dmgfx"]
+[ext_resource type="Script" path="res://ui/fatigue_fx.gd" id="28_fatigue"]
 [ext_resource type="Script" path="res://player/muzzle_flash.gd" id="26_flash"]
 [ext_resource type="Script" path="res://player/weapon_lights.gd" id="27_lights"]
 [ext_resource type="Script" path="res://player/player_voice.gd" id="25_voice"]
@@ -234,6 +235,9 @@ script = ExtResource("17_bodycam")
 
 [node name="HUDLayer" type="CanvasLayer" parent="."]
 layer = 3
+
+[node name="FatigueFX" type="ColorRect" parent="HUDLayer"]
+script = ExtResource("28_fatigue")
 
 [node name="DamageFeedback" type="ColorRect" parent="HUDLayer"]
 script = ExtResource("27_dmgfx")

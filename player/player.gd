@@ -276,6 +276,11 @@ func _update_stamina(delta: float) -> void:
 	fatigue = pow(1.0 - stamina, 1.5)
 
 
+## Breathing cycle phase (radians): the aim wobble and the low-stamina screen pulse follow it.
+func breath_phase() -> float:
+	return _breath_t
+
+
 ## Aim wobble amplitude (degrees) for the current stamina and stance.
 func sway_amplitude() -> Vector2:
 	return (breath_sway_deg + fatigue_sway_deg * fatigue) * stance_sway_mult[stance]
