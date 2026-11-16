@@ -86,5 +86,6 @@ muzzle_uv = Vector2(0.55, 0.434)
 muzzle_behind = true
 laser = true
 laser_color = Color(0.15, 1, 0.25, 1)
+ir_illuminator = true
 laser_uv = Vector2(0.545, 0.455)
 flashlight = true

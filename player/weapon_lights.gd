@@ -1,15 +1,19 @@
 class_name WeaponLights
 extends Control
-## Gun attachments (see WeaponData "Attachments"): a laser sight and a weapon flashlight.
-## Laser: a dot in the world where the shots go (the same ray as hip fire, Player.aim_basis()), with a tiny glow
-## on the surface, and a 2D beam from the emitter on the sprite to the dot. Like a real laser the beam only
-## shows in low light: its strength follows how dark SpriteShadow has made the hands.
+## Gun attachments (see WeaponData "Attachments"): laser sight, weapon flashlight and IR illuminator.
+## Laser: a crisp dot in the world where the shots go (the same ray as hip fire, Player.aim_basis()) and a 2D beam
+## from the emitter on the sprite to the dot, in any light. IR mode (dot and beam) only shows through night vision.
 ## Flashlight: a shadowed spotlight from just below the eye, pointing where the gun points.
+## IR illuminator: a wide flood light the same way; IR is invisible to the eye, so it only shines while the night
+## vision is on.
 
 const IR_COLOR := Color(0.9, 1.0, 0.9)  ## IR shows as bright white-green through the tubes
 const DOT_SIZE := 0.015  ## dot quad size; fixed on screen, so this is a fraction of the view height
 @export var beam_width := 3.0  ## pixels at the emitter (1080p); thins to a hair at the dot
-@export var beam_strength := 0.7  ## beam alpha in full darkness
+@export var beam_strength := 0.6  ## beam alpha (any light)
+@export var ir_energy := 3.0  ## IR illuminator
+@export var ir_range := 45.0
+@export var ir_angle := 32.0  ## wider than the flashlight: a flood, not a spot
 @export var light_energy := 6.0
 @export var light_range := 40.0
 @export var light_angle := 24.0  ## spot half-angle, degrees
@@ -18,8 +22,8 @@ const DOT_SIZE := 0.015  ## dot quad size; fixed on screen, so this is a fractio
 
 var dot_visible := false
 var _dot := MeshInstance3D.new()
-var _dot_glow := OmniLight3D.new()
 var _light := SpotLight3D.new()
+var _ir := SpotLight3D.new()
 var _beam_from := Vector2.ZERO
 var _beam_to := Vector2.ZERO
 var _beam_alpha := 0.0
@@ -38,9 +42,9 @@ func _ready() -> void:
 	mat.shader = preload("res://player/unshaded_add.gdshader")  # the beam is light: additive, never shaded
 	material = mat
 
-	var g := Gradient.new()
-	g.set_color(0, Color(1, 1, 1, 1))
-	g.set_color(1, Color(1, 1, 1, 0))
+	var g := Gradient.new()  # solid core, short soft edge: a crisp dot, no halo
+	g.offsets = PackedFloat32Array([0.0, 0.45, 0.7])
+	g.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)])
 	var tex := GradientTexture2D.new()
 	tex.gradient = g
 	tex.fill = GradientTexture2D.FILL_RADIAL
@@ -59,14 +63,14 @@ func _ready() -> void:
 	_dot.mesh = quad
 	_dot.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_dot.top_level = true
-	_dot_glow.omni_range = 0.3
-	_dot_glow.light_energy = 0.35
-	_dot_glow.top_level = true
 	_light.top_level = true
 	_light.shadow_enabled = true
 	_light.light_color = Color(1.0, 0.96, 0.88)
 	_light.spot_angle_attenuation = 1.6
-	for n: Node3D in [_dot, _dot_glow, _light]:
+	_ir.top_level = true
+	_ir.shadow_enabled = true
+	_ir.spot_angle_attenuation = 1.2
+	for n: Node3D in [_dot, _light, _ir]:
 		n.visible = false
 		player.add_child.call_deferred(n)
 
@@ -88,6 +92,12 @@ func _process(_delta: float) -> void:
 		_light.spot_angle = light_angle
 		# Just below and right of the eye: close enough to read as the gun's light, far enough to cast visible shadows.
 		_light.global_transform = Transform3D(aim, cam.global_position + cam.global_basis * Vector3(0.12, -0.15, 0.0))
+	_ir.visible = shown and d.ir_illuminator and w.ir_on and nv.on
+	if _ir.visible:
+		_ir.light_energy = ir_energy
+		_ir.spot_range = ir_range
+		_ir.spot_angle = ir_angle
+		_ir.global_transform = Transform3D(aim, cam.global_position + cam.global_basis * Vector3(0.1, -0.12, 0.0))
 
 	var ir := w.laser_mode == 2
 	# Off while the gun is lowered for sprinting; an IR laser only shows through night vision.
@@ -104,27 +114,19 @@ func _process(_delta: float) -> void:
 		if dot_visible:
 			var p: Vector3 = hit.position + hit.normal * 0.01
 			_dot.global_position = p
-			_dot_glow.global_position = hit.position + hit.normal * 0.08
-			_dot_glow.light_color = laser_color
 			(_dot.mesh.surface_get_material(0) as StandardMaterial3D).albedo_color = laser_color
-			# Beam only from the hip frames (the emitter's place on the aimed frames isn't known) and only in the dark.
+			# Beam only from the hip frames (the emitter's place on the aimed frames isn't known).
 			var hip := sprite.texture == d.idle_sprite or sprite.texture == d.shoot_sprite
 			if hip and not cam.is_position_behind(p):
 				_beam_from = sprite.get_global_transform() * (d.laser_uv * sprite.size)
 				_beam_to = cam.unproject_position(p)
-				_beam_alpha = 1.0 if nv.on else beam_strength * darkness()  # the tubes see the beam in any light
+				_beam_alpha = 1.0 if nv.on else beam_strength
 				_beam_color = laser_color
 	_dot.visible = dot_visible
-	_dot_glow.visible = dot_visible
 	visible = _beam_alpha > 0.01
 	if visible:
 		(material as ShaderMaterial).set_shader_parameter("undo_tint", shade.undo_tint())
 		queue_redraw()
-
-
-## 0 in sunlight .. 1 pitch dark, read from how much SpriteShadow is darkening the hands.
-func darkness() -> float:
-	return clampf(1.0 - shade.color.get_luminance(), 0.0, 1.0)
 
 
 func _draw() -> void:

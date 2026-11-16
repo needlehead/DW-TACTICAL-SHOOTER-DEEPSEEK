@@ -96,10 +96,11 @@ const AUTO := 4
 @export var muzzle_behind := false  ## flash drawn behind the gun sprite (the muzzle points away, hidden by the gun)
 
 @export_group("Attachments")
-@export var laser := false  ## laser sight: a dot where the shots go, a beam you see in the dark (toggle L)
+@export var laser := false  ## laser sight: a dot where the shots go and a beam (L cycles visible / IR / off)
 @export var laser_color := Color(1.0, 0.08, 0.05)
 @export var laser_uv := Vector2(0.5, 0.5)  ## laser emitter on the idle/shoot frame (0-1); the beam starts here
 @export var flashlight := false  ## weapon light (toggle T)
+@export var ir_illuminator := false  ## IR flood light, seen only through night vision (toggle I)
 
 @export_group("Viewmodel")
 @export var vm_size := Vector3(0.06, 0.09, 0.7)

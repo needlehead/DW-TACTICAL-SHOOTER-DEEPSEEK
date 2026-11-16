@@ -151,6 +151,9 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("toggle_flashlight") and current.data.flashlight:
 			current.light_on = not current.light_on
 			Game.toast("LIGHT " + ("ON" if current.light_on else "OFF"))
+		if Input.is_action_just_pressed("toggle_ir_illuminator") and current.data.ir_illuminator:
+			current.ir_on = not current.ir_on
+			Game.toast("IR ILLUMINATOR " + ("ON" if current.ir_on else "OFF") + " (night vision only)")
 		if Input.is_action_just_pressed("reload") and state == State.READY:
 			current.start_reload()
 		if Input.is_action_just_pressed("grenade"):

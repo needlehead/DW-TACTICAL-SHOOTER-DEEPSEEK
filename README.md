@@ -220,7 +220,7 @@ pick them up. **N** then flips them down: the gun lowers, Kei brings the goggles
   flash, lit doorways);
 - the gun up close goes soft, and a magnified scope shows an amplified but blurry picture: use a laser or the red dot.
 
-**L** now cycles the laser **visible → IR → off**. The IR laser is invisible to the naked eye and shows (dot and beam,
+**L** cycles the laser **visible → IR → off**; **I** toggles the IR illuminator (a wide flood that only shows through the goggles). The IR laser is invisible to the naked eye and shows (dot and beam,
 in any light) only through the goggles. The tablet's Gear page lists the goggles once picked up. F5 puts them back on
 the stand. Settings: `NightVision` (in the player: frame timing, `exposure`, `hand_fill`) and `ui/night_vision.gdshader`
 (`gain`, `phosphor`, `bloom`, `honeycomb`, `shimmer`, tube size and spacing); `gun_defocus` and `scope_blur` on `NightVision`.
