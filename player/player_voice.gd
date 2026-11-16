@@ -50,9 +50,9 @@ func _say(clips: Array[AudioStream]) -> void:
 	_voice.play()
 
 
-## Breathing loudness 0..1: only from sprinting.
+## Breathing loudness 0..1: swells while sprinting and stays heavy until stamina recovers.
 func breath_target() -> float:
-	return exertion if player.alive else 0.0
+	return maxf(exertion, player.fatigue) if player.alive else 0.0
 
 
 func _process(delta: float) -> void:
@@ -61,3 +61,4 @@ func _process(delta: float) -> void:
 	_breath_level = move_toward(_breath_level, breath_target(), delta * (4.0 if not player.alive else 1.0))
 	# Squared fade sounds even to the ear: no audible "cut" as the level reaches zero.
 	_breath.volume_db = linear_to_db(maxf(_breath_level * _breath_level, 0.0001)) + breath_db
+	_breath.pitch_scale = lerpf(1.0, 1.2, player.fatigue)  # quicker breaths when winded

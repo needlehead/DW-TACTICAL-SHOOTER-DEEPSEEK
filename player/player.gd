@@ -21,6 +21,18 @@ enum Stance { STAND, CROUCH, PRONE }
 @export var cam_noise_speed := 0.45  ## drift rate; higher = busier
 @export var cam_noise_moving := 1.8  ## amplitude multiplier at full sprint speed
 @export var cam_noise_ads := 0.35  ## amplitude multiplier while aiming down sights
+## Sprinting drains stamina; low stamina makes the aim wobble with heavy breathing and the gun sway more,
+## until it recovers.
+@export_group("Stamina")
+@export var stamina_drain := 0.11  ## per second while sprinting (~9 s from full)
+@export var stamina_regen := 0.16  ## per second once rested (~6 s back to full)
+@export var stamina_regen_delay := 0.8  ## seconds after sprinting before it starts coming back
+@export var stamina_regen_moving := 0.6  ## recovery multiplier while walking
+@export var stamina_resprint := 0.3  ## after running dry, no sprinting until stamina is back to this
+@export var breath_sway_deg := Vector2(0.1, 0.14)  ## aim wobble from breathing when rested (yaw, pitch)
+@export var fatigue_sway_deg := Vector2(1.4, 0.9)  ## extra aim wobble at empty stamina
+@export var fatigue_look_sway := 1.5  ## gun look-sway multiplier added at empty stamina
+@export var stance_sway_mult := PackedFloat32Array([1.0, 0.7, 0.4])  ## stand, crouch, prone: braced is steadier
 @export_group("Movement")
 @export var walk_speed := 3.2
 @export var sprint_speed := 5.6
@@ -63,6 +75,14 @@ var lean := 0.0
 var ads_blend := 0.0
 var sprint_blend := 0.0
 var is_sprinting := false
+var is_crawling := false  ## prone and moving with a gun that has a sprint pose (it's carried the same way)
+var stamina := 1.0
+var fatigue := 0.0  ## 0 rested .. 1 empty (curved so the effects build up as stamina runs low)
+var aim_wobble := Vector2.ZERO  ## degrees (yaw, pitch) added to the view: breathing / fatigue sway
+var _since_sprint := 99.0
+var _winded := false
+var _breath_t := 0.0
+var _wobble_k := 1.0  ## wobble fades out while sprinting / dead and back in after
 var sprint_recovery := 0.0  ## seconds until the gun can fire after sprinting
 var freeaim := Vector2.ZERO  ## degrees (yaw, pitch) of the gun relative to the view
 var look_delta := Vector2.ZERO  ## accumulated look input, consumed by the viewmodel for sway
@@ -217,12 +237,13 @@ func _process(delta: float) -> void:
 		recoil_target = recoil_target.move_toward(Vector2.ZERO, recoil_recovery * delta)
 	recoil = recoil.lerp(recoil_target, minf(1.0, 30.0 * delta))
 	_apply_look(Vector2.ZERO)  # re-clamps freeaim as the ADS deadzone shrinks
-	rotation.y = deg_to_rad(look_yaw + recoil.x)
+	_update_wobble(delta)
+	rotation.y = deg_to_rad(look_yaw + recoil.x + aim_wobble.x)
 	# Death camera: eases from the live look to the death view's pitch / yaw / roll (dead or the F4 preview).
 	death_t = move_toward(death_t, 1.0, delta / maxf(death_view.camera_time, 0.01)) if shows_death() else 0.0
 	var e := smoothstep(0.0, 1.0, death_t)
 	var dv := "prone_" if death_prone() else "stand_"
-	var live_pitch := clampf(look_pitch + recoil.y, -max_pitch, max_pitch)
+	var live_pitch := clampf(look_pitch + recoil.y + aim_wobble.y, -max_pitch, max_pitch)
 	var dead_pitch := lerpf(death_view.get(dv + "pitch"), live_pitch, death_view.get(dv + "keep_look"))
 	head.rotation.x = deg_to_rad(lerpf(live_pitch, dead_pitch, e))
 	head.rotation.y = deg_to_rad(float(death_view.get(dv + "yaw")) * e)
@@ -239,16 +260,49 @@ func _process(delta: float) -> void:
 	weapon_camera.fov = 60.0 / lerpf(1.0, ads_zoom, ads_blend * 0.3)
 
 
+func _update_stamina(delta: float) -> void:
+	if is_sprinting:
+		stamina = maxf(stamina - stamina_drain * delta, 0.0)
+		_since_sprint = 0.0
+		if stamina <= 0.0:
+			_winded = true
+	else:
+		_since_sprint += delta
+		if _since_sprint > stamina_regen_delay:
+			var k := stamina_regen_moving if horizontal_speed() > 0.5 else 1.0
+			stamina = minf(stamina + stamina_regen * k * delta, 1.0)
+	if _winded and stamina >= stamina_resprint:
+		_winded = false
+	fatigue = pow(1.0 - stamina, 1.5)
+
+
+## Aim wobble amplitude (degrees) for the current stamina and stance.
+func sway_amplitude() -> Vector2:
+	return (breath_sway_deg + fatigue_sway_deg * fatigue) * stance_sway_mult[stance]
+
+
+## Breathing moves the aim in a slow figure-8; faster and wider when winded. Off while sprinting (the gun is down).
+func _update_wobble(delta: float) -> void:
+	_wobble_k = move_toward(_wobble_k, 0.0 if is_sprinting or not alive else 1.0, delta * 2.0)
+	_breath_t += delta * TAU * lerpf(0.3, 0.85, fatigue)  # breaths per second
+	var a := sway_amplitude() * _wobble_k
+	aim_wobble = Vector2(sin(_breath_t * 0.5) * a.x, sin(_breath_t) * a.y)
+
+
 func _physics_process(delta: float) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back") if controls_active() else Vector2.ZERO
 	var wants_ads := controls_active() and Input.is_action_pressed("ads")
-	is_sprinting = controls_active() and Input.is_action_pressed("sprint") and input.y < -0.5 and is_on_floor() and not wants_ads
+	is_sprinting = controls_active() and Input.is_action_pressed("sprint") and input.y < -0.5 and is_on_floor() and not wants_ads \
+		and not _winded and stamina > 0.0
 	if is_sprinting and stance != Stance.STAND and not _set_stance(Stance.STAND):
 		is_sprinting = false
-	sprint_recovery = sprint_to_fire if is_sprinting else maxf(sprint_recovery - delta, 0.0)
-	var ads_target := 1.0 if wants_ads and not is_sprinting and not ads_blocked else 0.0
+	is_crawling = controls_active() and stance == Stance.PRONE and is_on_floor() and input.length() > 0.2 \
+		and weapons.current.data.sprint_sprite != null
+	_update_stamina(delta)
+	sprint_recovery = sprint_to_fire if is_sprinting or is_crawling else maxf(sprint_recovery - delta, 0.0)
+	var ads_target := 1.0 if wants_ads and not is_sprinting and not is_crawling and not ads_blocked else 0.0
 	ads_blend = move_toward(ads_blend, ads_target, delta / maxf(ads_time, 0.01))
-	sprint_blend = move_toward(sprint_blend, 1.0 if is_sprinting else 0.0, delta * 5.0)
+	sprint_blend = move_toward(sprint_blend, 1.0 if is_sprinting or is_crawling else 0.0, delta * 5.0)
 
 	if is_on_floor():
 		var wish := global_basis * Vector3(input.x, 0.0, input.y) * _target_speed()

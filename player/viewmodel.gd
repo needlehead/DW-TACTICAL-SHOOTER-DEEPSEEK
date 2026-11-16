@@ -7,6 +7,8 @@ extends Node3D
 @export var inertia := 0.012  ## metres of lag per m/s of velocity
 @export var bob_amount := 0.012
 @export var kick_return := 14.0
+@export var crawl_bob_rate := 3.5  ## crawling: a slow, deep bob (radians of bob phase per second)
+@export var crawl_bob_amp := 1.4
 @export var wall_check_extra := 0.15  ## added to gun length for the wall probe
 
 # Pose components, also read by the 2D sprite viewmodel.
@@ -42,16 +44,21 @@ func _process(delta: float) -> void:
 	var ads := player.ads_blend
 	var still := 1.0 - 0.8 * ads
 
-	sway = sway.lerp(-player.look_delta * deg_to_rad(sway_amount) * still, minf(1.0, sway_smooth * delta))
+	var tired := 1.0 + player.fatigue_look_sway * player.fatigue  # low stamina: the gun lags further behind the look
+	sway = sway.lerp(-player.look_delta * deg_to_rad(sway_amount) * still * tired, minf(1.0, sway_smooth * delta))
 	player.look_delta = Vector2.ZERO
 
 	var local_vel := player.global_basis.inverse() * player.velocity
 	inertia_offset = inertia_offset.lerp(-local_vel * inertia * still, minf(1.0, 6.0 * delta))
 
 	var hs := player.horizontal_speed()
-	if player.is_on_floor():
+	var bob_k := minf(hs / 3.0, 1.6)
+	if player.is_crawling:
+		_bob_t += delta * crawl_bob_rate
+		bob_k = crawl_bob_amp * clampf(hs / 0.5, 0.0, 1.0)
+	elif player.is_on_floor():
 		_bob_t += delta * hs * 2.4
-	bob = Vector3(sin(_bob_t) * bob_amount, absf(cos(_bob_t)) * bob_amount, 0.0) * minf(hs / 3.0, 1.6) * (1.0 - 0.85 * ads)
+	bob = Vector3(sin(_bob_t) * bob_amount, absf(cos(_bob_t)) * bob_amount, 0.0) * bob_k * (1.0 - 0.85 * ads)
 
 	kick_pos = kick_pos.lerp(Vector3.ZERO, minf(1.0, kick_return * delta))
 	kick_rot = kick_rot.lerp(Vector3.ZERO, minf(1.0, kick_return * delta))

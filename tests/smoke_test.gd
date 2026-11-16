@@ -112,6 +112,8 @@ func _runtime_checks() -> void:
 
 	var player := level.get_node("Player") as Player
 	player.cam_noise_deg = Vector3.ZERO  # scripted shots below need a steady view and gun
+	player.breath_sway_deg = Vector2.ZERO
+	player.fatigue_sway_deg = Vector2.ZERO
 	player.get_node("ViewmodelLayer/SpriteViewmodel").set("shake_amount", 0.0)
 	player.get_node("ViewmodelLayer/SpriteViewmodel").set("shake_roll", 0.0)
 	var target := level.get_node("Dummies/Range0") as Dummy
@@ -272,6 +274,24 @@ func _runtime_checks() -> void:
 	player.eye_height = player.eye_heights[player.stance]
 	player.death_roll = 0.0
 	_check(stand_rolled, "standing death has its own view roll")
+	# Stamina: recovers after a rest; low stamina means a much bigger aim wobble.
+	var bs := player.breath_sway_deg
+	var fs := player.fatigue_sway_deg
+	player.breath_sway_deg = Vector2(0.1, 0.14)
+	player.fatigue_sway_deg = Vector2(1.4, 0.9)
+	player.stamina = 1.0
+	player._update_stamina(0.0)
+	var rested := player.sway_amplitude()
+	player.stamina = 0.0
+	player._update_stamina(0.0)
+	var tired := player.sway_amplitude()
+	player._since_sprint = 99.0
+	player._update_stamina(1.0)
+	_check(tired.x > rested.x * 5.0 and player.stamina > 0.0, "stamina: empty = big aim wobble; it recovers after a rest")
+	player.stamina = 1.0
+	player._update_stamina(0.0)
+	player.breath_sway_deg = bs
+	player.fatigue_sway_deg = fs
 	# Night vision: pick up, flip down (gun lowers, hands, tubes on, world amplified), IR laser only through it.
 	var nv := player.get_node("ViewmodelLayer/NightVision") as NightVision
 	var pickup := level.get_node("NVGPickup") as NVGPickup

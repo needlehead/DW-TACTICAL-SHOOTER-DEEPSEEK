@@ -114,7 +114,7 @@ func phone_raise() -> float:
 
 
 func can_fire() -> bool:
-	return state == State.READY and phone_blend == 0.0 and gear_lower == 0.0 and player.controls_active() and not player.is_sprinting \
+	return state == State.READY and phone_blend == 0.0 and gear_lower == 0.0 and player.controls_active() and not player.is_sprinting and not player.is_crawling \
 		and player.sprint_recovery <= 0.0 and player.wall_block < 0.6
 
 

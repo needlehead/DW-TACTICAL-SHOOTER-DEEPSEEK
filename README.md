@@ -224,3 +224,16 @@ pick them up. **N** then flips them down: the gun lowers, Kei brings the goggles
 in any light) only through the goggles. The tablet's Gear page lists the goggles once picked up. F5 puts them back on
 the stand. Settings: `NightVision` (in the player: frame timing, `exposure`, `hand_fill`) and `ui/night_vision.gdshader`
 (`gain`, `phosphor`, `bloom`, `honeycomb`, `shimmer`, tube size and spacing); `gun_defocus` and `scope_blur` on `NightVision`.
+
+## Stamina
+
+Sprinting drains stamina (about 9 s from full); run it dry and you can't sprint again until it is back to 30%. It starts
+recovering 0.8 s after you stop (slower while walking). While it's low:
+- the aim wobbles with your breathing: a slow figure-8 of the view (so it moves the sights and where shots go), wider
+  and quicker the more tired you are; crouching and going prone steady it; there is a tiny breathing sway even rested;
+- the gun lags further behind your mouse movement;
+- the breathing stays loud and quickens until you've recovered.
+Settings: the "Stamina" group on the Player.
+
+Crawling (moving while prone) with a gun that has a sprint pose (the Radian) carries it in that pose with a slower,
+deeper bob, and eases back to the prone idle when you stop. You can't fire or aim while crawling.
