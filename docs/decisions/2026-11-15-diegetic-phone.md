@@ -9,7 +9,7 @@
 | Input | Tab toggles (was hold), always opens on Status; Q/E or wheel flip pages (Q/E lean when closed); damage, sprint, fire or ADS closes it | Pages need a free hand; auto-close keeps the risk | gamepad support is added |
 | Mag info | Estimate for the loaded mag (Full / Nearly full / Half / Nearly empty / Empty) + spare mag count | Fits "check your mags" | mag-check-by-feel is added |
 | Outfit | Heroine name (Kei Fujiwara), outfit name ("Heavy Metal") and the outfit render | Provided by the artist | multiple heroines/outfits exist |
-| Phone art | `newtablet.png` frame (replaced `diegeticuitest.png`, whose arm was cut off when swaying); screen contents rendered to a SubViewport mapped onto the screen quad | Screen gets the bodycam lens like the world | the phone is re-rendered at another angle (update `screen_quad`) |
+| Phone art | `tablet/tablet.png` two-handed frame (replaced the one-handed `newtablet.png`, which replaced `diegeticuitest.png`); screen contents rendered to a SubViewport mapped onto the screen quad | Screen gets the bodycam lens like the world | the phone is re-rendered at another angle (update `screen_quad`) |
 
 ## Open / deferred
 - Wrist device alternative — not built; the phone frame is the only device.
