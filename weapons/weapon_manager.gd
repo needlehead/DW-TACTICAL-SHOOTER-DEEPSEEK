@@ -24,6 +24,7 @@ var player: Player
 
 var grenades := 0
 var phone_blend := 0.0  ## 0 = gun up, 0.5 = gun down, 1 = phone fully raised
+var gear_lower := 0.0  ## 0..1 gun lowered for a hands action (NightVision flipping the goggles)
 var phone_forced := false  ## viewmodel editor's Tablet mode keeps the phone raised
 ## Tab toggles the phone; damage, sprinting, firing or aiming closes it. While open, Q/E or the wheel flip pages.
 var phone_open := false
@@ -113,14 +114,14 @@ func phone_raise() -> float:
 
 
 func can_fire() -> bool:
-	return state == State.READY and phone_blend == 0.0 and player.controls_active() and not player.is_sprinting \
+	return state == State.READY and phone_blend == 0.0 and gear_lower == 0.0 and player.controls_active() and not player.is_sprinting \
 		and player.sprint_recovery <= 0.0 and player.wall_block < 0.6
 
 
 func _process(delta: float) -> void:
 	var active := player.controls_active()
 	if active and Input.is_action_just_pressed("phone"):
-		phone_open = not phone_open and state == State.READY and not current.is_reloading()
+		phone_open = not phone_open and state == State.READY and not current.is_reloading() and gear_lower == 0.0
 		phone_page = 0
 	if not active or player.is_sprinting or Input.is_action_just_pressed("fire") or Input.is_action_just_pressed("ads"):
 		phone_open = false
@@ -136,7 +137,7 @@ func _process(delta: float) -> void:
 		_play_foley(equip_sound)  # gun coming back up after the phone
 	if active and Input.is_action_just_pressed("ads") and not player.ads_blocked and not player.is_sprinting:
 		_play_foley(aim_sound)
-	if active and phone_blend == 0.0:
+	if active and phone_blend == 0.0 and gear_lower == 0.0:
 		for i in weapons.size():
 			if Input.is_action_just_pressed("weapon_%d" % (i + 1)):
 				select(i)
@@ -145,8 +146,8 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("alt_sight"):
 			current.toggle_canted()
 		if Input.is_action_just_pressed("toggle_laser") and current.data.laser:
-			current.laser_on = not current.laser_on
-			Game.toast("LASER " + ("ON" if current.laser_on else "OFF"))
+			current.laser_mode = (current.laser_mode + 1) % 3  # visible -> IR -> off
+			Game.toast(["LASER OFF", "LASER VISIBLE", "LASER IR (night vision only)"][current.laser_mode])
 		if Input.is_action_just_pressed("toggle_flashlight") and current.data.flashlight:
 			current.light_on = not current.light_on
 			Game.toast("LIGHT " + ("ON" if current.light_on else "OFF"))
@@ -165,7 +166,7 @@ func _process(delta: float) -> void:
 			if switch_phase <= 0.0:
 				state = State.READY
 	# Pushed every frame so live-tuned values apply immediately.
-	player.ads_blocked = state != State.READY or current.is_reloading() or phone_blend > 0.0
+	player.ads_blocked = state != State.READY or current.is_reloading() or phone_blend > 0.0 or gear_lower > 0.0
 	player.ads_time = current.data.ads_time
 	player.ads_zoom = current.data.ads_zoom
 	player.sprint_to_fire = current.data.sprint_to_fire_time

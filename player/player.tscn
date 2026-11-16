@@ -58,6 +58,19 @@
 [ext_resource type="Script" path="res://ui/portrait.gd" id="20_portrait"]
 [ext_resource type="Script" path="res://player/phone.gd" id="21_phone"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/tablet/tablet.png" id="ph_frame"]
+[ext_resource type="Script" path="res://player/night_vision.gd" id="nvg_script"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (1).png" id="nvg_1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (2).png" id="nvg_2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (3).png" id="nvg_3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (4).png" id="nvg_4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (5).png" id="nvg_5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (6).png" id="nvg_6"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (7).png" id="nvg_7"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (8).png" id="nvg_8"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (9).png" id="nvg_9"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (10).png" id="nvg_10"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (11).png" id="nvg_11"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvision (12).png" id="nvg_12"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/outfit1.png" id="ph_outfit"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitfull.png" id="p_full"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/portraitdamage.png" id="p_damage"]
@@ -203,6 +216,12 @@ shape = SubResource("head")
 [node name="PostFXLayer" type="CanvasLayer" parent="."]
 layer = 2
 
+[node name="NightVisionFX" type="ColorRect" parent="PostFXLayer"]
+mouse_filter = 2
+
+[node name="NVGBackBuffer" type="BackBufferCopy" parent="PostFXLayer"]
+copy_mode = 2
+
 [node name="Bodycam" type="ColorRect" parent="PostFXLayer"]
 material = SubResource("bodycam_mat")
 anchors_preset = 15
@@ -277,6 +296,11 @@ mouse_filter = 2
 script = ExtResource("21_phone")
 frame = ExtResource("ph_frame")
 outfit_sprite = ExtResource("ph_outfit")
+
+[node name="NightVision" type="TextureRect" parent="ViewmodelLayer"]
+mouse_filter = 2
+script = ExtResource("nvg_script")
+frames = Array[Texture2D]([ExtResource("nvg_1"), ExtResource("nvg_2"), ExtResource("nvg_3"), ExtResource("nvg_4"), ExtResource("nvg_5"), ExtResource("nvg_6"), ExtResource("nvg_7"), ExtResource("nvg_8"), ExtResource("nvg_9"), ExtResource("nvg_10"), ExtResource("nvg_11"), ExtResource("nvg_12")])
 
 [node name="ViewmodelEditor" type="Control" parent="HUDLayer"]
 script = ExtResource("24_vmedit")

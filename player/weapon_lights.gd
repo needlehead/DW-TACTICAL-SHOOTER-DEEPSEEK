@@ -6,6 +6,7 @@ extends Control
 ## shows in low light: its strength follows how dark SpriteShadow has made the hands.
 ## Flashlight: a shadowed spotlight from just below the eye, pointing where the gun points.
 
+const IR_COLOR := Color(0.9, 1.0, 0.9)  ## IR shows as bright white-green through the tubes
 const DOT_SIZE := 0.015  ## dot quad size; fixed on screen, so this is a fraction of the view height
 @export var beam_width := 3.0  ## pixels at the emitter (1080p); thins to a hair at the dot
 @export var beam_strength := 0.7  ## beam alpha in full darkness
@@ -22,10 +23,12 @@ var _light := SpotLight3D.new()
 var _beam_from := Vector2.ZERO
 var _beam_to := Vector2.ZERO
 var _beam_alpha := 0.0
+var _beam_color := Color.WHITE
 
 @onready var player: Player = owner
 @onready var sprite: TextureRect = $"../SpriteViewmodel"
 @onready var shade: SpriteShadow = $"../SpriteShadow"
+@onready var nv: NightVision = $"../NightVision"
 
 
 func _ready() -> void:
@@ -86,7 +89,10 @@ func _process(_delta: float) -> void:
 		# Just below and right of the eye: close enough to read as the gun's light, far enough to cast visible shadows.
 		_light.global_transform = Transform3D(aim, cam.global_position + cam.global_basis * Vector3(0.12, -0.15, 0.0))
 
-	dot_visible = shown and d.laser and w.laser_on and player.sprint_blend < 0.5  # off while the gun is lowered for sprinting
+	var ir := w.laser_mode == 2
+	# Off while the gun is lowered for sprinting; an IR laser only shows through night vision.
+	dot_visible = shown and d.laser and w.laser_mode > 0 and (not ir or nv.on) and player.sprint_blend < 0.5
+	var laser_color := IR_COLOR if ir else d.laser_color
 	_beam_alpha = 0.0
 	if dot_visible:
 		var from := cam.global_position
@@ -99,14 +105,15 @@ func _process(_delta: float) -> void:
 			var p: Vector3 = hit.position + hit.normal * 0.01
 			_dot.global_position = p
 			_dot_glow.global_position = hit.position + hit.normal * 0.08
-			_dot_glow.light_color = d.laser_color
-			(_dot.mesh.surface_get_material(0) as StandardMaterial3D).albedo_color = d.laser_color
+			_dot_glow.light_color = laser_color
+			(_dot.mesh.surface_get_material(0) as StandardMaterial3D).albedo_color = laser_color
 			# Beam only from the hip frames (the emitter's place on the aimed frames isn't known) and only in the dark.
 			var hip := sprite.texture == d.idle_sprite or sprite.texture == d.shoot_sprite
 			if hip and not cam.is_position_behind(p):
 				_beam_from = sprite.get_global_transform() * (d.laser_uv * sprite.size)
 				_beam_to = cam.unproject_position(p)
-				_beam_alpha = beam_strength * darkness()
+				_beam_alpha = 1.0 if nv.on else beam_strength * darkness()  # the tubes see the beam in any light
+				_beam_color = laser_color
 	_dot.visible = dot_visible
 	_dot_glow.visible = dot_visible
 	visible = _beam_alpha > 0.01
@@ -121,7 +128,7 @@ func darkness() -> float:
 
 
 func _draw() -> void:
-	var c: Color = player.weapons.current.data.laser_color
+	var c := _beam_color
 	var dir := (_beam_to - _beam_from).normalized()
 	var side := Vector2(-dir.y, dir.x) * beam_width * 0.5 * get_viewport_rect().size.y / 1080.0
 	draw_polygon(PackedVector2Array([_beam_from + side, _beam_to, _beam_from - side]),

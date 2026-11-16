@@ -272,6 +272,34 @@ func _runtime_checks() -> void:
 	player.eye_height = player.eye_heights[player.stance]
 	player.death_roll = 0.0
 	_check(stand_rolled, "standing death has its own view roll")
+	# Night vision: pick up, flip down (gun lowers, hands, tubes on, world amplified), IR laser only through it.
+	var nv := player.get_node("ViewmodelLayer/NightVision") as NightVision
+	var pickup := level.get_node("NVGPickup") as NVGPickup
+	var no_nvg := not nv.toggle()
+	pickup.interact(player)
+	var flipped := nv.toggle()
+	nv._process(nv.lower_time * 0.5)
+	var gun_down := player.weapons.gear_lower > 0.0 and not player.weapons.can_fire()
+	for i in 20:
+		nv._process(0.06)
+	var amplified := nv.on and player.camera.attributes != null and player.camera.attributes.exposure_multiplier > 1.0
+	var w2 := player.weapons.current
+	var wl := player.get_node("ViewmodelLayer/WeaponLights")
+	var mode_was := w2.laser_mode
+	w2.laser_mode = 2
+	wl._process(0.016)
+	var ir_seen: bool = wl.dot_visible or not w2.data.laser
+	nv.toggle()
+	for i in 20:
+		nv._process(0.06)
+	wl._process(0.016)
+	var ir_hidden: bool = not wl.dot_visible
+	w2.laser_mode = mode_was
+	_check(no_nvg and not pickup.visible and flipped and gun_down and amplified and not nv.on and player.weapons.gear_lower == 0.0,
+		"night vision: needs the pickup, flips down with the gun lowered, amplifies, flips back up")
+	_check(ir_seen and ir_hidden, "IR laser only shows through night vision")
+	pickup.reset()
+	nv.reset()
 	var blast_target := level.get_node("Dummies/Range1") as Dummy
 	var g := (load("res://weapons/grenade.tscn") as PackedScene).instantiate() as Grenade
 	g.thrower = player

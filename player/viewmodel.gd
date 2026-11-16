@@ -58,7 +58,7 @@ func _process(delta: float) -> void:
 	reload_blend = move_toward(reload_blend, 1.0 if manager.current.is_reloading() else 0.0, delta * 4.0)
 	_update_wall_block(d, delta)
 
-	lower = maxf(maxf(player.wall_block, manager.switch_phase), manager.phone_gun_lower())
+	lower = maxf(maxf(maxf(player.wall_block, manager.switch_phase), manager.phone_gun_lower()), manager.gear_lower)
 	var sprint := player.sprint_blend
 	var pose := d.hip_offset.lerp(Vector3(0.0, 0.0, -d.ads_distance), ads)
 	position = pose + bob + inertia_offset + kick_pos \

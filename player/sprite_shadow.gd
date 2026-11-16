@@ -34,6 +34,9 @@ func _process(delta: float) -> void:
 	var w := player.weapons.current if player.weapons else null
 	if w and w.data.flashlight and w.light_on and player.alive:
 		target = Color(maxf(target.r, flashlight_fill.r), maxf(target.g, flashlight_fill.g), maxf(target.b, flashlight_fill.b))
+	var nv := player.get_node_or_null("ViewmodelLayer/NightVision") as NightVision
+	if nv and nv.on:
+		target = Color(maxf(target.r, nv.hand_fill.r), maxf(target.g, nv.hand_fill.g), maxf(target.b, nv.hand_fill.b))
 	color = color.lerp(target, 1.0 - exp(-fade_speed * delta))
 
 

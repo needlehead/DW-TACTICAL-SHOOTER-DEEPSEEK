@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://maps/nvg_pickup.gd" id="1_pick"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/NVG/nightvisionitem.png" id="2_item"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_stand"]
+size = Vector3(0.5, 0.95, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_stand"]
+size = Vector3(0.5, 0.8, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_stand"]
+albedo_color = Color(0.22, 0.23, 0.25, 1)
+roughness = 0.8
+
+[node name="NVGPickup" type="StaticBody3D"]
+script = ExtResource("1_pick")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
+shape = SubResource("BoxShape3D_stand")
+
+[node name="Stand" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("BoxMesh_stand")
+surface_material_override/0 = SubResource("Mat_stand")
+
+[node name="Goggles" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+pixel_size = 0.0003
+billboard = 2
+texture = ExtResource("2_item")
+region_enabled = true
+region_rect = Rect2(898, 577, 872, 408)
+
+[node name="Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+pixel_size = 0.003
+billboard = 1
+text = "NIGHT VISION  [F]"
+font_size = 40
+outline_size = 10

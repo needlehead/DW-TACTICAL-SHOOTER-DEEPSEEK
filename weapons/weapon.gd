@@ -20,7 +20,7 @@ var empty_reload := false
 var since_mode_switch := 99.0
 var canted := false  ## canted sight selected (only if the weapon has one)
 var cant_t := 0.0  ## 0 main sight .. 1 canted; eases toward `canted` so switching while aimed rolls through
-var laser_on := true  ## only matters if data.laser
+var laser_mode := 1  ## 0 off, 1 visible, 2 IR (seen only through night vision); only matters if data.laser
 var light_on := false  ## only matters if data.flashlight
 var _fire_audio: AudioStreamPlayer3D
 var player: Player

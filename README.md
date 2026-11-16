@@ -208,3 +208,19 @@ Render layer 2 holds the viewmodel, which is drawn by its own camera in a transp
 - The player has only head and torso hitboxes.
 - Burst mode has no extra delay between bursts.
 - No magazine check yet. It is optional and planned.
+
+## Night vision
+
+A pair of PVS-15-style goggles sits on a stand next to the spawn ("NIGHT VISION [F]"): look at it and press **F** to
+pick them up. **N** then flips them down: the gun lowers, Kei brings the goggles to her eyes, and the tubes come on
+(N again flips them up, in reverse). Through the tubes:
+- two round fields of view with dark housing around them, instead of a full-screen filter;
+- light is amplified (the camera's exposure is raised), so the low-light room reads; in daylight everything washes out;
+- green-white phosphor, grain and scintillation, a little softness, and bloom around bright lights (flashlight, muzzle
+  flash, lit doorways);
+- magnified scopes stay dark through them (the scope renders with its own camera), so use a laser or the red dot.
+
+**L** now cycles the laser **visible → IR → off**. The IR laser is invisible to the naked eye and shows (dot and beam,
+in any light) only through the goggles. The tablet's Gear page lists the goggles once picked up. F5 puts them back on
+the stand. Settings: `NightVision` (in the player: frame timing, `exposure`, `hand_fill`) and `ui/night_vision.gdshader`
+(`gain`, `phosphor`, `bloom`, `grain`, tube size and spacing).

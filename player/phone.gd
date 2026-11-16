@@ -312,6 +312,8 @@ func _draw_gear() -> void:
 	y += 4.0
 	_field(16, y, "AMMO TYPE", null)
 	_field(248, y, "GRENADES", "FRAG ×%d" % manager.grenades)
+	var nv := player.get_node("ViewmodelLayer/NightVision") as NightVision
+	_field(16, y + 62, "NIGHT VISION", ("PVS-15  ·  " + ("ON" if nv.on else "OFF")) if nv.owned else null)
 
 	var view := Rect2(484, 64, 220, 306)
 	_screen.draw_rect(view, c.panel)

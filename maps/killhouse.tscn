@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://ai/dummy.tscn" id="3_mncj7"]
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="6_78idy"]
 [ext_resource type="PackedScene" path="res://maps/dark_area.tscn" id="7_dark"]
+[ext_resource type="PackedScene" path="res://maps/nvg_pickup.tscn" id="8_nvg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_w33og"]
 
@@ -735,6 +736,9 @@ body_color = Color(0.55, 0.35, 0.75, 1)
 
 [node name="DarkArea" parent="." instance=ExtResource("7_dark")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 18)
+
+[node name="NVGPickup" parent="." instance=ExtResource("8_nvg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 10.5)
 
 [node name="Player" parent="." unique_id=759163239 instance=ExtResource("6_78idy")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.05, 12.5)
