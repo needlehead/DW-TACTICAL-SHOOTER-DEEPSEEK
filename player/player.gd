@@ -223,7 +223,7 @@ func _process(delta: float) -> void:
 	var e := smoothstep(0.0, 1.0, death_t)
 	var dv := "prone_" if death_prone() else "stand_"
 	var live_pitch := clampf(look_pitch + recoil.y, -max_pitch, max_pitch)
-	var dead_pitch := lerpf(death_view.get(dv + "pitch"), live_pitch, death_view.keep_look)
+	var dead_pitch := lerpf(death_view.get(dv + "pitch"), live_pitch, death_view.get(dv + "keep_look"))
 	head.rotation.x = deg_to_rad(lerpf(live_pitch, dead_pitch, e))
 	head.rotation.y = deg_to_rad(float(death_view.get(dv + "yaw")) * e)
 	death_roll = float(death_view.get(dv + "roll")) * e

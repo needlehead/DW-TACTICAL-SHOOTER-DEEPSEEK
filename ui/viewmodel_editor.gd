@@ -23,7 +23,7 @@ const HELP := [
 	"Drag the green box over the sight glass; corner handle or wheel resizes. Canted switches to the canted sight.",
 	"Click the barrel end on screen: muzzle flash, smoke and laser come from here.",
 	"Drag to move the tablet, wheel = closer / further. Arrows nudge.",
-	"Camera: pitch / yaw / roll of the dead view, keep_look (1 = keep where she was looking), height, settle time. Frame: drag moves it, wheel scales, right-drag moves its tilt centre (yellow). [ ] roll, PgUp / PgDn height.",
+	"Camera: pitch / yaw / roll of this death, its keep_look (1 = keep where she was looking), height, settle time. Frame: drag moves it, wheel scales, right-drag moves its tilt centre (yellow). [ ] roll, PgUp / PgDn height.",
 ]
 const DIM := Color(0.62, 0.68, 0.78)
 
@@ -261,8 +261,9 @@ func _remember_view() -> void:
 	var v := death_view()
 	if not _originals.has(v):
 		_originals[v] = {}
-		for p in ["eye_height", "camera_time", "keep_look", "stand_pitch", "stand_yaw", "stand_roll", "stand_offset",
-				"stand_scale", "stand_pivot", "prone_pitch", "prone_yaw", "prone_roll", "prone_offset", "prone_scale", "prone_pivot"]:
+		for p in ["eye_height", "camera_time", "stand_pitch", "stand_yaw", "stand_keep_look", "stand_roll", "stand_offset",
+				"stand_scale", "stand_pivot", "prone_pitch", "prone_yaw", "prone_keep_look", "prone_roll", "prone_offset",
+				"prone_scale", "prone_pivot"]:
 			_originals[v][p] = v.get(p)
 
 
@@ -296,7 +297,7 @@ func _field_specs() -> Array:
 	var v := death_view()
 	var p := "prone_" if dead_prone else "stand_"
 	return [[p + "pitch", v, p + "pitch", 1.0], [p + "yaw", v, p + "yaw", 1.0], [p + "roll", v, p + "roll", 0.5],
-		["keep_look", v, "keep_look", 0.05], ["eye_height", v, "eye_height", 0.01], ["camera_time", v, "camera_time", 0.05],
+		[p + "keep_look", v, p + "keep_look", 0.05], ["eye_height", v, "eye_height", 0.01], ["camera_time", v, "camera_time", 0.05],
 		[p + "offset", v, p + "offset", 0.001], [p + "scale", v, p + "scale", 0.01], [p + "pivot", v, p + "pivot", 0.005]]
 
 

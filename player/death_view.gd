@@ -6,16 +6,17 @@ extends Resource
 
 @export var eye_height := 0.25  ## camera height (m) once dead
 @export var camera_time := 0.7  ## seconds the camera takes to settle into the death view (pitch, yaw, roll)
-## 0 = the camera turns to the death pitch below whatever she was looking at; 1 = it keeps her last look pitch.
-@export_range(0.0, 1.0) var keep_look := 0.0
 @export var stand_pitch := -60.0  ## degrees the dead camera looks up (+) / down (-) when killed standing / crouched
 @export var stand_yaw := 0.0  ## degrees the dead camera turns right (-) / left (+) from where she faced
+## 0 = the camera turns to stand_pitch whatever she was looking at; 1 = it keeps her last look pitch.
+@export_range(0.0, 1.0) var stand_keep_look := 0.0
 @export var stand_roll := 0.0  ## degrees the view tilts when killed standing / crouched
 @export var stand_offset := Vector2.ZERO  ## death frame shift, screen heights
 @export var stand_scale := 1.0  ## at full tilt
 @export var stand_pivot := Vector2(0.5, 0.5)  ## tilt and scale centre, 0-1 of the screen
 @export var prone_pitch := -10.0
 @export var prone_yaw := 0.0
+@export_range(0.0, 1.0) var prone_keep_look := 0.0
 @export var prone_roll := 14.0  ## degrees the view tilts when killed while prone
 @export var prone_offset := Vector2.ZERO
 @export var prone_scale := 1.37  ## at full tilt; overscale keeps the arms' cut-off ends off screen
