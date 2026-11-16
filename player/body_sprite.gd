@@ -31,21 +31,17 @@ func _process(delta: float) -> void:
 	pivot_offset = Vector2(vp.x * 0.5, vp.y)
 	if player.shows_death():
 		var v := player.death_view
-		if player.death_prone() and dead_prone_sprite:
-			texture = dead_prone_sprite
-			# The arms lie on the floor, so they tilt on screen with the world, around a point near the right hand;
-			# the overscale (eased in with the tilt) keeps the arms' cut-off ends off screen.
-			pivot_offset = vp * v.prone_pivot
-			rotation = deg_to_rad(player.death_roll)
-			var tilt := clampf(player.death_roll / v.prone_roll, 0.0, 1.0) if v.prone_roll != 0.0 else 1.0
-			scale = Vector2.ONE * lerpf(1.0, v.prone_scale, tilt)
-			position = v.prone_offset * vp.y
-		else:
-			texture = dead_sprite
-			pivot_offset = vp * 0.5
-			rotation = 0.0
-			scale = Vector2.ONE * v.stand_scale
-			position = v.stand_offset * vp.y
+		var prone := player.death_prone() and dead_prone_sprite != null
+		texture = dead_prone_sprite if prone else dead_sprite
+		var p := "prone_" if prone else "stand_"
+		# The body lies on the floor, so the frame tilts on screen with the world, around its pivot; the overscale
+		# (eased in with the tilt) keeps the frame's cut-off edges off screen.
+		var roll: float = v.get(p + "roll")
+		var tilt := clampf(player.death_roll / roll, 0.0, 1.0) if roll != 0.0 else 1.0
+		pivot_offset = vp * (v.get(p + "pivot") as Vector2)
+		rotation = deg_to_rad(player.death_roll)
+		scale = Vector2.ONE * lerpf(1.0, v.get(p + "scale"), tilt)
+		position = (v.get(p + "offset") as Vector2) * vp.y
 		visible = texture != null
 		return
 	# Angle above the render pitch -> screen distance the body drops (linear in FOV is close enough here).

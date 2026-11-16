@@ -1,12 +1,15 @@
 class_name DeathView
 extends Resource
 ## How death looks (edited live with F4 -> Dead, saved to death_view.tres): the camera on the floor and the
-## first-person death frames. "Prone" is the frame and tilt used when killed while prone.
+## first-person death frames. "Stand" is a death while standing or crouched, "prone" one while prone. Each has
+## its own view roll; the death frame tilts with the view around its pivot (the body lies on the floor).
 
 @export var eye_height := 0.25  ## camera height (m) once dead
-@export var prone_roll := 14.0  ## degrees the view tilts when killed while prone; the prone frame tilts with it
+@export var stand_roll := 0.0  ## degrees the view tilts when killed standing / crouched
 @export var stand_offset := Vector2.ZERO  ## death frame shift, screen heights
-@export var stand_scale := 1.0
+@export var stand_scale := 1.0  ## at full tilt
+@export var stand_pivot := Vector2(0.5, 0.5)  ## tilt and scale centre, 0-1 of the screen
+@export var prone_roll := 14.0  ## degrees the view tilts when killed while prone
 @export var prone_offset := Vector2.ZERO
 @export var prone_scale := 1.37  ## at full tilt; overscale keeps the arms' cut-off ends off screen
 @export var prone_pivot := Vector2(0.875, 0.667)  ## tilt and scale centre, 0-1 of the screen (near the right hand)

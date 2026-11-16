@@ -73,7 +73,7 @@ var since_shot := 99.0
 var look_yaw := 0.0
 var look_pitch := 0.0
 var viewmodel_aim := Vector2.INF  ## screen point the 2D gun's barrel points at (set by SpriteViewmodel); INF = none
-var death_roll := 0.0  ## current view roll in degrees (prone death)
+var death_roll := 0.0  ## current view roll in degrees once dead (DeathView stand_roll / prone_roll)
 var preview_death := 0  ## F4 -> Dead shows the death view while alive: 1 standing, 2 prone
 var eye_height := 1.65
 var spawn_transform: Transform3D
@@ -218,8 +218,8 @@ func _process(delta: float) -> void:
 	_apply_look(Vector2.ZERO)  # re-clamps freeaim as the ADS deadzone shrinks
 	rotation.y = deg_to_rad(look_yaw + recoil.x)
 	head.rotation.x = deg_to_rad(clampf(look_pitch + recoil.y, -max_pitch, max_pitch))
-	var roll_target := death_view.prone_roll if death_prone() else 0.0
-	death_roll = move_toward(death_roll, roll_target, maxf(absf(death_view.prone_roll), 1.0) / 0.7 * delta) if shows_death() else 0.0  # eases in over 0.7 s
+	var roll_target := death_view.prone_roll if death_prone() else death_view.stand_roll
+	death_roll = move_toward(death_roll, roll_target, maxf(absf(roll_target), 1.0) / 0.7 * delta) if shows_death() else 0.0  # eases in over 0.7 s
 	head.rotation.z = deg_to_rad(death_roll)
 	camera.rotation = camera_noise(Time.get_ticks_msec() / 1000.0)
 

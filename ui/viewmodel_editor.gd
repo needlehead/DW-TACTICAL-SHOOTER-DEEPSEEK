@@ -9,7 +9,7 @@ extends Control
 ##   Muzzle - the idle frame fills the screen; click the barrel end to set muzzle_uv (suppressor smoke origin).
 ##   Tablet - raises the phone; drag to move it, mouse wheel to bring it closer / further (phone_layout.tres).
 ##   Dead   - shows the death view while alive (Standing / Prone button picks which): drag moves the death frame,
-##            wheel scales it, right-drag moves the prone tilt centre, [ ] tilt the prone view,
+##            wheel scales it, right-drag moves its tilt centre, [ ] tilt (roll) the view,
 ##            PgUp / PgDn camera height (death_view.tres).
 ## Save writes the edited resource; Revert restores what it had when the editor opened.
 
@@ -23,7 +23,7 @@ const HELP := [
 	"Drag the green box over the sight glass; corner handle or wheel resizes. Canted switches to the canted sight.",
 	"Click the barrel end on screen: muzzle flash, smoke and laser come from here.",
 	"Drag to move the tablet, wheel = closer / further. Arrows nudge.",
-	"Drag moves the death frame, wheel scales it, right-drag moves the prone tilt centre (yellow). [ ] tilt, PgUp / PgDn camera height.",
+	"Drag moves the death frame, wheel scales it, right-drag moves its tilt centre (yellow). [ ] roll the view, PgUp / PgDn camera height.",
 ]
 const DIM := Color(0.62, 0.68, 0.78)
 
@@ -261,7 +261,8 @@ func _remember_view() -> void:
 	var v := death_view()
 	if not _originals.has(v):
 		_originals[v] = {}
-		for p in ["eye_height", "prone_roll", "stand_offset", "stand_scale", "prone_offset", "prone_scale", "prone_pivot"]:
+		for p in ["eye_height", "stand_roll", "stand_offset", "stand_scale", "stand_pivot",
+				"prone_roll", "prone_offset", "prone_scale", "prone_pivot"]:
 			_originals[v][p] = v.get(p)
 
 
@@ -294,12 +295,8 @@ func _field_specs() -> Array:
 			return [["hold_offset", layout(), "hold_offset", 0.001], ["hold_scale", layout(), "hold_scale", 0.01]]
 	var v := death_view()
 	var p := "prone_" if dead_prone else "stand_"
-	var specs := [[p + "offset", v, p + "offset", 0.001], [p + "scale", v, p + "scale", 0.01]]
-	if dead_prone:
-		specs.append(["prone_pivot", v, "prone_pivot", 0.005])
-	specs.append(["prone_roll", v, "prone_roll", 0.5])
-	specs.append(["eye_height", v, "eye_height", 0.01])
-	return specs
+	return [[p + "roll", v, p + "roll", 0.5], [p + "offset", v, p + "offset", 0.001], [p + "scale", v, p + "scale", 0.01],
+		[p + "pivot", v, p + "pivot", 0.005], ["eye_height", v, "eye_height", 0.01]]
 
 
 func _rebuild_fields() -> void:
@@ -377,8 +374,8 @@ func _input(event: InputEvent) -> void:
 		var v := death_view()
 		var big := 5.0 if k.shift_pressed else 1.0
 		match k.keycode:
-			KEY_BRACKETLEFT: v.prone_roll -= 0.5 * big
-			KEY_BRACKETRIGHT: v.prone_roll += 0.5 * big
+			KEY_BRACKETLEFT: _set_dead("roll", _dead("roll") - 0.5 * big)
+			KEY_BRACKETRIGHT: _set_dead("roll", _dead("roll") + 0.5 * big)
 			KEY_PAGEUP: v.eye_height += 0.02 * big
 			KEY_PAGEDOWN: v.eye_height = maxf(0.05, v.eye_height - 0.02 * big)
 		get_viewport().set_input_as_handled()
@@ -402,7 +399,7 @@ func _gui_input(event: InputEvent) -> void:
 			else:
 				_drag = "move"
 		elif mode == Mode.DEAD and mb.button_index == MOUSE_BUTTON_RIGHT:
-			_drag = "pivot" if mb.pressed and dead_prone else ""
+			_drag = "pivot" if mb.pressed else ""
 		elif mode == Mode.DEAD and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			_set_dead("scale", _dead("scale") * (1.02 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.02))
 		elif mode == Mode.TABLET and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
@@ -421,7 +418,7 @@ func _gui_input(event: InputEvent) -> void:
 				layout().hold_offset += rel / vp.y
 			Mode.DEAD:
 				if _drag == "pivot":
-					death_view().prone_pivot += rel / vp
+					_set_dead("pivot", _dead("pivot") + rel / vp)
 				else:
 					_set_dead("offset", _dead("offset") + rel / vp.y)
 			Mode.SIGHT:
@@ -460,11 +457,10 @@ func _draw() -> void:
 	var d := data()
 	var c := vp * 0.5
 	if mode == Mode.DEAD:
-		if dead_prone:
-			var p := death_view().prone_pivot * vp
-			draw_arc(p, 10.0, 0.0, TAU, 24, Color(1, 0.8, 0.2), 2.0)
-			draw_line(p - Vector2(16, 0), p + Vector2(16, 0), Color(1, 0.8, 0.2), 1.0)
-			draw_line(p - Vector2(0, 16), p + Vector2(0, 16), Color(1, 0.8, 0.2), 1.0)
+		var p: Vector2 = _dead("pivot") * vp
+		draw_arc(p, 10.0, 0.0, TAU, 24, Color(1, 0.8, 0.2), 2.0)
+		draw_line(p - Vector2(16, 0), p + Vector2(16, 0), Color(1, 0.8, 0.2), 1.0)
+		draw_line(p - Vector2(0, 16), p + Vector2(0, 16), Color(1, 0.8, 0.2), 1.0)
 		return
 	if mode == Mode.HIP or mode == Mode.TABLET:
 		draw_line(c - Vector2(12, 0), c + Vector2(12, 0), Color(1, 1, 1, 0.7), 1.0)

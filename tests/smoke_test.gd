@@ -111,6 +111,9 @@ func _runtime_checks() -> void:
 	_check(patrol.global_position.distance_to(start) > 1.0, "patrol dummy moves along its route")
 
 	var player := level.get_node("Player") as Player
+	player.cam_noise_deg = Vector3.ZERO  # scripted shots below need a steady view and gun
+	player.get_node("ViewmodelLayer/SpriteViewmodel").set("shake_amount", 0.0)
+	player.get_node("ViewmodelLayer/SpriteViewmodel").set("shake_roll", 0.0)
 	var target := level.get_node("Dummies/Range0") as Dummy
 	var d := target.global_position + Vector3.UP * 1.17 - player.camera.global_position
 	player.look_yaw = rad_to_deg(atan2(-d.x, -d.z))
@@ -252,6 +255,23 @@ func _runtime_checks() -> void:
 	w.data.hip_spread = hip
 	var taken := pen_target.health.max_health - pen_target.health.current
 	_check(taken > 0.0 and taken < w.data.damage * 0.9, "penetration hit for reduced damage: %.1f" % taken)
+	var ed2 := player.get_node("HUDLayer/ViewmodelEditor") as ViewmodelEditor
+	var was_open := ed2.visible
+	if not was_open:
+		ed2.toggle()
+	ed2.dead_prone = false
+	ed2.set_mode(ViewmodelEditor.Mode.DEAD)  # standing death preview
+	var sr := player.death_view.stand_roll
+	player.death_view.stand_roll = 9.0
+	player._process(1.0)  # one long step: the roll eases in over 0.7 s
+	var stand_rolled := is_equal_approx(player.death_roll, 9.0) and not player.death_prone()
+	player.death_view.stand_roll = sr
+	ed2.set_mode(ViewmodelEditor.Mode.HIP)
+	if not was_open:
+		ed2.toggle()
+	player.eye_height = player.eye_heights[player.stance]
+	player.death_roll = 0.0
+	_check(stand_rolled, "standing death has its own view roll")
 	var blast_target := level.get_node("Dummies/Range1") as Dummy
 	var g := (load("res://weapons/grenade.tscn") as PackedScene).instantiate() as Grenade
 	g.thrower = player
