@@ -38,6 +38,9 @@ func follow(player: Player) -> void:
 	_cam.global_transform = Transform3D(player.aim_basis(), player.camera.global_position)
 	_cam.fov = player.base_fov / magnification
 	_cam.cull_mask = player.camera.cull_mask  # world only, never the viewmodel layer
+	_cam.attributes = player.camera.attributes  # amplified with the night vision, like the main view
+	var nv := player.get_node("ViewmodelLayer/NightVision") as NightVision
+	_mat.set_shader_parameter("blur", nv.scope_blur * nv.strength() if nv else 0.0)
 	var centre := get_global_transform() * (size * 0.5)
 	var eye := (get_viewport_rect().size * 0.5 - centre) / (size.x * 0.5)
 	_mat.set_shader_parameter("eye_offset", eye * SHADOW_GAIN)

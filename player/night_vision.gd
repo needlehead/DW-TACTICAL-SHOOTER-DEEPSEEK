@@ -4,8 +4,8 @@ extends TextureRect
 ## the hands bring the goggles to the eyes (frames, reversed to take them off) and the tubes come on.
 ## Through the tubes (ui/night_vision.gdshader): two round fields of view, light amplified (the camera's exposure is
 ## raised, so dark rooms read and daylight washes out), green-white phosphor, grain, bloom around bright lights.
-## Magnified scopes stay dark through them (the scope renders with its own, unamplified camera); IR lasers only
-## show through them (WeaponLights).
+## Close and magnified things can't be focused through the tubes: the gun sprite goes soft (gun_defocus) and a
+## magnified scope shows an amplified but blurry picture (scope_blur). IR lasers only show through them (WeaponLights).
 
 @export var frames: Array[Texture2D] = []  ## hands bringing the goggles to the eyes, first to last
 @export var lower_time := 0.2  ## gun down before the hands come up, and back up after
@@ -13,6 +13,8 @@ extends TextureRect
 @export var exposure := 3.0  ## world light amplification while on
 @export var power_time := 0.35  ## tubes fading up after they come on
 @export var hand_fill := Color(0.55, 0.55, 0.55)  ## through the tubes the hands lift to at least this (SpriteShadow)
+@export var gun_defocus := 0.004  ## blur radius on the gun sprite, frame heights
+@export var scope_blur := 0.025  ## blur radius in a magnified scope's lens (fraction of the lens)
 
 var owned := false
 var on := false  ## tubes active
@@ -58,6 +60,11 @@ func toggle() -> bool:
 	if not _putting_on:
 		set_on(false)  # grabbing the goggles takes them off the eyes at once
 	return true
+
+
+## 0..1: how far the tubes have powered up (effects fade in with it).
+func strength() -> float:
+	return _strength
 
 
 func busy() -> bool:

@@ -216,11 +216,11 @@ pick them up. **N** then flips them down: the gun lowers, Kei brings the goggles
 (N again flips them up, in reverse). Through the tubes:
 - two round fields of view with dark housing around them, instead of a full-screen filter;
 - light is amplified (the camera's exposure is raised), so the low-light room reads; in daylight everything washes out;
-- green-white phosphor, grain and scintillation, a little softness, and bloom around bright lights (flashlight, muzzle
+- green-white phosphor with a faint honeycomb (the tube's fibre plate) and a slow shimmer, a little softness, and bloom around bright lights (flashlight, muzzle
   flash, lit doorways);
-- magnified scopes stay dark through them (the scope renders with its own camera), so use a laser or the red dot.
+- the gun up close goes soft, and a magnified scope shows an amplified but blurry picture: use a laser or the red dot.
 
 **L** now cycles the laser **visible → IR → off**. The IR laser is invisible to the naked eye and shows (dot and beam,
 in any light) only through the goggles. The tablet's Gear page lists the goggles once picked up. F5 puts them back on
 the stand. Settings: `NightVision` (in the player: frame timing, `exposure`, `hand_fill`) and `ui/night_vision.gdshader`
-(`gain`, `phosphor`, `bloom`, `grain`, tube size and spacing).
+(`gain`, `phosphor`, `bloom`, `honeycomb`, `shimmer`, tube size and spacing); `gun_defocus` and `scope_blur` on `NightVision`.

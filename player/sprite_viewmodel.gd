@@ -160,6 +160,8 @@ func _process(delta: float) -> void:
 	_blur.set_shader_parameter("flash_uv", d.muzzle_uv)
 	_blur.set_shader_parameter("flash_radius", 0.45 if hip else 3.0)
 	_blur.set_shader_parameter("aspect", aspect)
+	var nv := player.get_node("ViewmodelLayer/NightVision") as NightVision
+	_blur.set_shader_parameter("defocus", nv.gun_defocus * nv.strength() if nv else 0.0)
 
 	var aimed: bool = window.has_area() and not frames.is_empty() and texture == frames.back()
 	var dot_size := d.canted_dot_size if w.using_canted() else d.reticle_size
