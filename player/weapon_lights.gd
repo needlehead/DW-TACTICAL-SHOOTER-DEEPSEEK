@@ -12,6 +12,8 @@ const DOT_SIZE := 0.015  ## dot quad size; fixed on screen, so this is a fractio
 @export var light_energy := 6.0
 @export var light_range := 40.0
 @export var light_angle := 24.0  ## spot half-angle, degrees
+## Guns with a sprint pose point away while sprinting, and so do their light and laser: degrees (right, up).
+@export var sprint_aside := Vector2(-45.0, -20.0)
 
 var dot_visible := false
 var _dot := MeshInstance3D.new()
@@ -72,6 +74,9 @@ func _process(_delta: float) -> void:
 	var shown := player.alive and sprite.visible
 	var cam := player.camera
 	var aim := player.aim_basis()
+	if d.sprint_sprite:
+		var s := player.sprint_blend
+		aim = Basis(cam.global_basis.y, deg_to_rad(-sprint_aside.x) * s) * aim * Basis(Vector3.RIGHT, deg_to_rad(sprint_aside.y) * s)
 
 	_light.visible = shown and d.flashlight and w.light_on
 	if _light.visible:
