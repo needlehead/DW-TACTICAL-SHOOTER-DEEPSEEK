@@ -29,7 +29,7 @@ extends TextureRect
 ## Guns without a shoot frame: the idle frame is shoved back by each shot instead (screen heights right/down, radians).
 @export var fire_shove := Vector2(0.008, 0.025)
 @export var fire_shove_rot := 0.012
-## Passive hand shake: a small, quick tremor on everything held (gun and tablet), even standing still.
+## Passive hand shake: a small, quick tremor on the gun, even standing still (the tablet stays steady).
 @export var shake_amount := 0.005  ## screen heights
 @export var shake_roll := 0.004  ## radians (gun only)
 @export var shake_speed := 1.4  ## tremor rate
@@ -63,14 +63,14 @@ func _ready() -> void:
 
 ## Sway, bob, inertia (and the gun's freeaim) as a screen offset (pixels); anything held in the hands uses it.
 ## The phone passes with_freeaim = false: the aim deadzone belongs to the gun, not the off hand.
-func hand_offset(k: float, with_freeaim := true) -> Vector2:
+func hand_offset(k: float, with_freeaim := true, with_shake := true) -> Vector2:
 	var sway: Vector2 = viewmodel.sway
 	var bob: Vector3 = viewmodel.bob
 	var inertia: Vector3 = viewmodel.inertia_offset
 	var fa := Vector2(deg_to_rad(player.freeaim.x), deg_to_rad(player.freeaim.y)) * freeaim_scale if with_freeaim else Vector2.ZERO
 	return Vector2(
 		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - fa.x,
-		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k + shake(0.0) * shake_amount * k
+		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k + (shake(0.0) * shake_amount * k if with_shake else Vector2.ZERO)
 
 
 ## Hand tremor at channel offset ch: smooth noise, -1..1 per axis; calmer while aiming down sights.

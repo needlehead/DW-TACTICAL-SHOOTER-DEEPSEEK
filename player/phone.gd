@@ -146,7 +146,7 @@ func _process(delta: float) -> void:
 	var vp := get_viewport_rect().size
 	size = vp * (1.0 + overscan)
 	var e := 1.0 - pow(1.0 - t, 3.0)  # ease out: quick lift, gentle settle
-	var sway: Vector2 = hands.hand_offset(vp.y, false) * sway_amount
+	var sway: Vector2 = hands.hand_offset(vp.y, false, false) * sway_amount
 	var press := sin(PI * _flip)  # 0 -> 1 -> 0 over the page change
 	position = Vector2(-vp.x * overscan * 0.5, 0.0) + layout.hold_offset * vp.y + sway + Vector2(0.0, ((1.0 - e) * raise_drop + press * press_dip) * vp.y)
 	pivot_offset = Vector2(size.x * 0.5, size.y)  # held in both hands: scale and tilt around the bottom centre
