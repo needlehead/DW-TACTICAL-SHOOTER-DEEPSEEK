@@ -7,15 +7,19 @@ extends Control
 ##            (drag the corner handle or mouse wheel to resize, arrows nudge, Shift = bigger steps).
 ##   Muzzle - the idle frame fills the screen; click the barrel end to set muzzle_uv (suppressor smoke origin).
 ##   Tablet - raises the phone; drag to move it, mouse wheel to bring it closer / further (phone_layout.tres).
+##   Dead   - shows the death view while alive (Standing / Prone button picks which): drag moves the death frame,
+##            wheel scales it, right-drag moves the prone tilt centre, [ ] tilt the prone view,
+##            PgUp / PgDn camera height (death_view.tres).
 ## Save writes the weapon's .tres; Revert restores what it had when the editor opened.
 
-enum Mode { HIP, SIGHT, MUZZLE, TABLET }
+enum Mode { HIP, SIGHT, MUZZLE, TABLET, DEAD }
 
 const STEP := 0.001  ## arrow-key nudge (fraction of screen); Shift x10
 const HANDLE := 14.0  ## corner handle size in pixels
 
 var mode := Mode.HIP
-var _drag := ""  # "", "move" or "resize"
+var _drag := ""  # "", "move", "resize" or "pivot"
+var dead_prone := false  ## Dead mode previews the prone death
 var _originals := {}  # WeaponData -> {property: value}
 var _info: Label
 var _mode_buttons: Array[Button] = []
@@ -34,12 +38,15 @@ func _ready() -> void:
 	panel.add_child(col)
 	var bar := HBoxContainer.new()
 	col.add_child(bar)
-	for m: int in [Mode.HIP, Mode.SIGHT, Mode.MUZZLE, Mode.TABLET]:
-		var b := _button(bar, ["Hip", "Sight", "Muzzle", "Tablet"][m], set_mode.bind(m))
+	for m: int in [Mode.HIP, Mode.SIGHT, Mode.MUZZLE, Mode.TABLET, Mode.DEAD]:
+		var b := _button(bar, ["Hip", "Sight", "Muzzle", "Tablet", "Dead"][m], set_mode.bind(m))
 		b.toggle_mode = true
 		_mode_buttons.append(b)
 	_button(bar, "Next weapon", _next_weapon)
 	_button(bar, "Canted", func() -> void: player.weapons.current.toggle_canted())
+	_button(bar, "Standing / Prone", func() -> void:
+		dead_prone = not dead_prone
+		_sync_preview())
 	_button(bar, "Save", save)
 	_button(bar, "Revert", revert)
 	_button(bar, "Close (F4)", toggle)
@@ -66,9 +73,25 @@ func toggle() -> void:
 	visible = not visible
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if visible else Input.MOUSE_MODE_CAPTURED
 	player.weapons.phone_forced = visible and mode == Mode.TABLET
+	_sync_preview()
 	if visible:
 		_remember(data())
 		_remember_layout()
+		_remember_view()
+
+
+func death_view() -> DeathView:
+	return player.death_view
+
+
+func _sync_preview() -> void:
+	if player.weapons:  # null during _ready
+		player.preview_death = (2 if dead_prone else 1) if visible and mode == Mode.DEAD else 0
+
+
+## The resource the current mode edits (what Save and Revert act on).
+func _target() -> Resource:
+	return layout() if mode == Mode.TABLET else death_view() if mode == Mode.DEAD else data()
 
 
 func layout() -> PhoneLayout:
@@ -99,6 +122,7 @@ func set_mode(m: int) -> void:
 		player.weapons.phone_forced = visible and m == Mode.TABLET
 	for i in _mode_buttons.size():
 		_mode_buttons[i].button_pressed = i == m
+	_sync_preview()
 
 
 ## Arrow-key nudge (dir in screen fractions); also the entry point tests use.
@@ -113,20 +137,32 @@ func nudge(dir: Vector2) -> void:
 			d.muzzle_uv += dir
 		Mode.TABLET:
 			layout().hold_offset += dir
+		Mode.DEAD:
+			_set_dead("offset", _dead("offset") + dir)
+
+
+## The previewed death frame's settings: prone_* or stand_*.
+func _dead(prop: String) -> Variant:
+	return death_view().get(("prone_" if dead_prone else "stand_") + prop)
+
+
+func _set_dead(prop: String, value: Variant) -> void:
+	death_view().set(("prone_" if dead_prone else "stand_") + prop, value)
 
 
 func save() -> void:
-	var res: Resource = layout() if mode == Mode.TABLET else data()
+	var res := _target()
 	var err := ResourceSaver.save(res)
 	Game.toast(("Saved " + res.resource_path.get_file()) if err == OK else "Save failed (%s)" % error_string(err))
 	if err == OK:
 		_originals.erase(res)
 		_remember(data())
 		_remember_layout()
+		_remember_view()
 
 
 func revert() -> void:
-	var res: Resource = layout() if mode == Mode.TABLET else data()
+	var res := _target()
 	for p: String in _originals.get(res, {}):
 		res.set(p, _originals[res][p])
 
@@ -135,6 +171,14 @@ func _remember_layout() -> void:
 	var l := layout()
 	if not _originals.has(l):
 		_originals[l] = {"hold_scale": l.hold_scale, "hold_offset": l.hold_offset}
+
+
+func _remember_view() -> void:
+	var v := death_view()
+	if not _originals.has(v):
+		_originals[v] = {}
+		for p in ["eye_height", "prone_roll", "stand_offset", "stand_scale", "prone_offset", "prone_scale", "prone_pivot"]:
+			_originals[v][p] = v.get(p)
 
 
 func _remember(d: WeaponData) -> void:
@@ -159,6 +203,15 @@ func _input(event: InputEvent) -> void:
 	if dirs.has(k.keycode):
 		nudge(dirs[k.keycode] * step)
 		get_viewport().set_input_as_handled()
+	elif mode == Mode.DEAD and k.keycode in [KEY_BRACKETLEFT, KEY_BRACKETRIGHT, KEY_PAGEUP, KEY_PAGEDOWN]:
+		var v := death_view()
+		var big := 5.0 if k.shift_pressed else 1.0
+		match k.keycode:
+			KEY_BRACKETLEFT: v.prone_roll -= 0.5 * big
+			KEY_BRACKETRIGHT: v.prone_roll += 0.5 * big
+			KEY_PAGEUP: v.eye_height += 0.02 * big
+			KEY_PAGEDOWN: v.eye_height = maxf(0.05, v.eye_height - 0.02 * big)
+		get_viewport().set_input_as_handled()
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -169,12 +222,18 @@ func _gui_input(event: InputEvent) -> void:
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			if not mb.pressed:
 				_drag = ""
+			elif mode == Mode.DEAD:
+				_drag = "move"
 			elif mode == Mode.MUZZLE:
 				d.muzzle_uv = mb.position / vp
 			elif mode == Mode.SIGHT and mb.position.distance_to(_window().end * vp) < HANDLE * 1.5:
 				_drag = "resize"
 			else:
 				_drag = "move"
+		elif mode == Mode.DEAD and mb.button_index == MOUSE_BUTTON_RIGHT:
+			_drag = "pivot" if mb.pressed and dead_prone else ""
+		elif mode == Mode.DEAD and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			_set_dead("scale", _dead("scale") * (1.02 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.02))
 		elif mode == Mode.TABLET and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			layout().hold_scale *= 1.02 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.02
 		elif mode == Mode.SIGHT and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
@@ -189,6 +248,11 @@ func _gui_input(event: InputEvent) -> void:
 				d.sprite_offset += rel / vp.y
 			Mode.TABLET:
 				layout().hold_offset += rel / vp.y
+			Mode.DEAD:
+				if _drag == "pivot":
+					death_view().prone_pivot += rel / vp
+				else:
+					_set_dead("offset", _dead("offset") + rel / vp.y)
 			Mode.SIGHT:
 				if _drag == "resize":
 					_set_window(Rect2(_window().position, (_window().size + rel / vp).max(Vector2(0.005, 0.005))))
@@ -201,6 +265,16 @@ func _process(_delta: float) -> void:
 	if not visible:
 		return
 	var d := data()
+	if mode == Mode.DEAD:
+		var v := death_view()
+		var which := "prone" if dead_prone else "stand"
+		_info.text = ("Dead: %s  (%s)\n%s_offset = %s   %s_scale = %.3f%s\neye_height = %.2f   prone_roll = %.1f\n"
+			+ "Drag moves the frame, wheel scales it%s. [ ] tilt, PgUp/PgDn camera height, arrows nudge, Shift = bigger.") % [
+			which.to_upper(), v.resource_path.get_file(), which, _dead("offset"), which, _dead("scale"),
+			("   prone_pivot = %s" % v.prone_pivot) if dead_prone else "", v.eye_height, v.prone_roll,
+			", right-drag moves the tilt centre" if dead_prone else ""]
+		queue_redraw()
+		return
 	if mode == Mode.TABLET:
 		var l := layout()
 		_info.text = "Tablet  (%s)\nhold_offset = %s\nhold_scale = %.3f\nDrag to move, wheel = closer / further. Arrows nudge, Shift = x10." % [
@@ -217,6 +291,13 @@ func _draw() -> void:
 	var vp := get_viewport_rect().size
 	var d := data()
 	var c := vp * 0.5
+	if mode == Mode.DEAD:
+		if dead_prone:
+			var p := death_view().prone_pivot * vp
+			draw_arc(p, 10.0, 0.0, TAU, 24, Color(1, 0.8, 0.2), 2.0)
+			draw_line(p - Vector2(16, 0), p + Vector2(16, 0), Color(1, 0.8, 0.2), 1.0)
+			draw_line(p - Vector2(0, 16), p + Vector2(0, 16), Color(1, 0.8, 0.2), 1.0)
+		return
 	if mode == Mode.HIP or mode == Mode.TABLET:
 		draw_line(c - Vector2(12, 0), c + Vector2(12, 0), Color(1, 1, 1, 0.7), 1.0)
 		draw_line(c - Vector2(0, 12), c + Vector2(0, 12), Color(1, 1, 1, 0.7), 1.0)

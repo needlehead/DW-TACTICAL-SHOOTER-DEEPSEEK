@@ -35,8 +35,7 @@ enum Stance { STAND, CROUCH, PRONE }
 
 @export_group("Stance")  # arrays are indexed by Stance
 @export var eye_heights := PackedFloat32Array([1.65, 1.1, 0.35])
-@export var dead_eye_height := 0.25  ## camera drops to the floor on death
-@export var dead_prone_roll := 14.0  ## degrees the view tilts when killed while prone
+@export var death_view: DeathView = preload("res://player/death_view.tres")  ## camera height, prone tilt, death frames (F4 -> Dead)
 @export var capsule_heights := PackedFloat32Array([1.8, 1.25, 0.6])
 @export var stance_spread_mult := PackedFloat32Array([1.0, 0.75, 0.5])
 @export var stance_recoil_mult := PackedFloat32Array([1.0, 0.8, 0.6])
@@ -75,6 +74,7 @@ var look_yaw := 0.0
 var look_pitch := 0.0
 var viewmodel_aim := Vector2.INF  ## screen point the 2D gun's barrel points at (set by SpriteViewmodel); INF = none
 var death_roll := 0.0  ## current view roll in degrees (prone death)
+var preview_death := 0  ## F4 -> Dead shows the death view while alive: 1 standing, 2 prone
 var eye_height := 1.65
 var spawn_transform: Transform3D
 
@@ -192,6 +192,16 @@ func camera_noise(t: float) -> Vector3:
 	return Vector3(deg_to_rad(cam_noise_deg.x * n.x), deg_to_rad(cam_noise_deg.y * n.y), deg_to_rad(cam_noise_deg.z * n.z)) * k if alive else Vector3.ZERO
 
 
+## Dead, or previewing death in the F4 editor.
+func shows_death() -> bool:
+	return not alive or preview_death > 0
+
+
+## The prone death (frame and tilt) applies: killed while prone, or the editor's prone preview.
+func death_prone() -> bool:
+	return preview_death == 2 if preview_death > 0 else stance == Stance.PRONE
+
+
 func freeaim_basis() -> Basis:
 	return camera.global_basis * Basis.from_euler(Vector3(deg_to_rad(freeaim.y), deg_to_rad(freeaim.x), 0.0))
 
@@ -208,12 +218,12 @@ func _process(delta: float) -> void:
 	_apply_look(Vector2.ZERO)  # re-clamps freeaim as the ADS deadzone shrinks
 	rotation.y = deg_to_rad(look_yaw + recoil.x)
 	head.rotation.x = deg_to_rad(clampf(look_pitch + recoil.y, -max_pitch, max_pitch))
-	var roll_target := dead_prone_roll if stance == Stance.PRONE else 0.0
-	death_roll = 0.0 if alive else move_toward(death_roll, roll_target, dead_prone_roll / 0.7 * delta)  # eases in over 0.7 s
+	var roll_target := death_view.prone_roll if death_prone() else 0.0
+	death_roll = move_toward(death_roll, roll_target, maxf(absf(death_view.prone_roll), 1.0) / 0.7 * delta) if shows_death() else 0.0  # eases in over 0.7 s
 	head.rotation.z = deg_to_rad(death_roll)
 	camera.rotation = camera_noise(Time.get_ticks_msec() / 1000.0)
 
-	var eye_target := eye_heights[stance] if alive else dead_eye_height
+	var eye_target := death_view.eye_height if shows_death() else eye_heights[stance]
 	eye_height = move_toward(eye_height, eye_target, stance_change_speed * delta)
 	lean_pivot.position.y = eye_height * 0.5
 	head.position.y = eye_height * 0.5

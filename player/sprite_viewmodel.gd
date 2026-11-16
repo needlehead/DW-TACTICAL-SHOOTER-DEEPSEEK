@@ -100,7 +100,7 @@ func _process(delta: float) -> void:
 	var w := player.weapons.current
 	_sprint_t = move_toward(_sprint_t, 1.0 if player.is_sprinting else 0.0, delta / sprint_swap_time)
 	texture = w.current_sprite(player.ads_blend, _sprint_t)
-	visible = texture != null and player.alive
+	visible = texture != null and player.alive and player.preview_death == 0
 	if not visible:
 		player.viewmodel_aim = Vector2.INF
 		return

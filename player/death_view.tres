@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="DeathView" format=3]
+
+[ext_resource type="Script" path="res://player/death_view.gd" id="1_dv"]
+
+[resource]
+script = ExtResource("1_dv")

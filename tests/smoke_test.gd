@@ -155,7 +155,17 @@ func _runtime_checks() -> void:
 	var tablet_moved := ed.layout().hold_offset.is_equal_approx(hold + Vector2(0.0, 0.02)) and player.weapons.phone_forced
 	ed.revert()
 	_check(tablet_moved and ed.layout().hold_offset == hold, "viewmodel editor: tablet mode raises the phone, nudges and reverts")
+	ed.dead_prone = true
+	ed.set_mode(ViewmodelEditor.Mode.DEAD)
+	var po := player.death_view.prone_offset
+	ed.nudge(Vector2(0.0, 0.03))
+	var dead_ok := player.preview_death == 2 and player.shows_death() and player.death_prone() \
+		and player.death_view.prone_offset.is_equal_approx(po + Vector2(0.0, 0.03))
+	ed.revert()
+	ed.dead_prone = false
+	_check(dead_ok and player.death_view.prone_offset == po, "viewmodel editor: dead mode previews the prone death, nudges and reverts")
 	ed.set_mode(ViewmodelEditor.Mode.HIP)
+	_check(player.preview_death == 0, "viewmodel editor: leaving dead mode ends the preview")
 	ed.nudge(Vector2(0.01, 0.0))
 	var moved := ed.data().sprite_offset.is_equal_approx(before + Vector2(0.01, 0.0))
 	ed.revert()
