@@ -29,6 +29,7 @@ const DANGER := Color(1.0, 0.3, 0.25)
 @export_range(0.0, 1.0) var outfit_split := 0.51  ## where the front view ends and the back begins (0-1 across)
 @export var outfit_turn_time := 0.3
 @export var screen_size := Vector2i(720, 500)
+@export var screen_supersample := 2.0  ## the screen renders at this many times its on-screen size, then is filtered down
 @export var map_scale := 8.0  ## Objective map: pixels per metre
 @export var flip_time := 0.2  ## page change: the new page slides in from the flip side and fades up
 @export var flip_slide := 80.0  ## pixels the new page travels
@@ -79,7 +80,7 @@ func _ready() -> void:
 	_poly.texture = _vp.get_texture()
 	_poly.uv = PackedVector2Array([Vector2.ZERO, Vector2(screen_size.x, 0), Vector2(screen_size), Vector2(0, screen_size.y)])
 	var mat := ShaderMaterial.new()
-	mat.shader = preload("res://player/unshaded.gdshader")  # the screen is backlit: it never darkens in shade or the dark
+	mat.shader = preload("res://player/tablet_screen.gdshader")  # backlit (never darkens) and filtered down from the supersampled render
 	_poly.material = mat
 	_poly.antialiased = true  # smooth screen edges as the tablet sways and tilts
 	add_child(_poly)
@@ -170,12 +171,13 @@ func _process(delta: float) -> void:
 	lens.set_shader_parameter("view_size", vp)
 
 
-## Render the screen at about the size it appears, so text and lines stay sharp instead of being shrunk from
-## 720x500 without mipmaps (which skips pixels and looks jagged). The pages still lay out in screen_size units.
+## Render the screen at screen_supersample x the size it appears; tablet_screen.gdshader averages it down, so text
+## is crisp and smooth (a plain shrink without mipmaps skips pixels and looks jagged). Pages still lay out in
+## screen_size units.
 func _match_resolution(pts: PackedVector2Array) -> void:
 	var px := get_screen_transform().get_scale()
 	var shown := Vector2(pts[0].distance_to(pts[1]) * px.x, pts[0].distance_to(pts[3]) * px.y)
-	var k := clampf(maxf(shown.x / screen_size.x, shown.y / screen_size.y), 0.25, 2.0)
+	var k := clampf(maxf(shown.x / screen_size.x, shown.y / screen_size.y) * screen_supersample, 0.25, 3.0)
 	if absf(k - _screen.scale.x) < 0.04 * _screen.scale.x:  # sway changes it a little every frame; resize on real changes
 		return
 	var res := Vector2i((Vector2(screen_size) * k).ceil())

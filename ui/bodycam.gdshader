@@ -60,7 +60,7 @@ void fragment() {
 	// Unsharp mask: cheap cameras over-sharpen.
 	vec3 blur = (texture(screen_tex, uv + vec2(px.x, 0.0) * 1.5).rgb + texture(screen_tex, uv - vec2(px.x, 0.0) * 1.5).rgb
 		+ texture(screen_tex, uv + vec2(0.0, px.y) * 1.5).rgb + texture(screen_tex, uv - vec2(0.0, px.y) * 1.5).rgb) * 0.25;
-	col += (col - blur) * sharpen;
+	col += (col - blur) * sharpen * (1.0 - m);  // the tablet screen is already crisp: oversharpening only rings its text
 
 	// Grade brightness only, keeping each pixel's colour ratios, with a soft shoulder: per-channel contrast clipped
 	// light skin's red first and washed it out to pale peach.
@@ -76,7 +76,7 @@ void fragment() {
 
 	float edge = dot(SCREEN_UV - 0.5, SCREEN_UV - 0.5) * 2.0;  // 0 centre, 1 corner
 	col *= 1.0 - vignette * smoothstep(0.25, 1.0, edge);
-	col += (hash(SCREEN_UV * 1000.0 + fract(TIME * 7.13)) - 0.5) * grain;
+	col += (hash(SCREEN_UV * 1000.0 + fract(TIME * 7.13)) - 0.5) * grain * (1.0 - 0.7 * m);  // less noise over the tablet
 
 	COLOR = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
