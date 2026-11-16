@@ -3,6 +3,8 @@
 | Decision | Choice | Why | Revisit when |
 |---|---|---|---|
 | Interactivity | Read-only, 4 pages: Status, Objective, Run, Gear; flipping is free, only raising costs time | No outfit/inventory system to act on yet | outfits or gear become switchable |
+| Look | Matches the design mockup (`docs/ui_mockup/`): Barlow fonts, palette derived from one `heroine_color` per heroine; condition keeps yellow/red warnings | One hex per new heroine, tablet stays on-brand | heroines need hand-tuned palettes |
+| Gear outfit | Front view; R turns it (squash-flip) to the back | Shows the whole outfit without shrinking two views side by side | outfits get more angles |
 | Unbuilt systems | Their fields are on the pages already, as a dim dash | Layout settled before the systems exist | each system lands |
 | Gun while phone is up | Gun lowers first, then phone rises; no firing/ADS/reload/switching; fire or ADS cancels | Checking status is a real risk, Insurgency-style commitment | it feels too punishing in playtests |
 | Regular HUD | Diegetic by default: weapon/HP/frags text and portrait hidden; F2 shows them (debug) | Immersion, but keep a testing escape hatch | shipping (decide whether F2 stays) |

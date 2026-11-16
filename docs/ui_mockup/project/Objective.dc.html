@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tablet: Objective</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#93A3BC}a:hover{color:#E8ECF2}
+</style>
+</helmet>
+<div style="width: 720px; height: 500px; box-sizing: border-box; background: {{c.ground}}; font-family: Barlow, sans-serif; color: {{c.text}}; display: flex; flex-direction: column">
+  <div style="height: 48px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; background: {{c.header}}; display: flex; align-items: center; gap: 16px">
+    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0.04em; width: 168px">KEI FUJIWARA</span>
+    <div style="display: flex; align-items: center; gap: 4px; flex-grow: 1; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.08em">
+      <span style="color: {{c.dim}}; font-size: 13px; padding-right: 6px">Q</span>
+      <span style="padding: 5px 9px; color: {{c.dim}}">STATUS</span>
+      <span style="padding: 5px 9px; background: {{c.main}}; color: {{c.onMain}}">OBJECTIVE</span>
+      <span style="padding: 5px 9px; color: {{c.dim}}">RUN</span>
+      <span style="padding: 5px 9px; color: {{c.dim}}">GEAR</span>
+      <span style="color: {{c.dim}}; font-size: 13px; padding-left: 6px">E</span>
+    </div>
+    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 22px; color: {{c.dim}}; font-variant-numeric: tabular-nums">12:14</span>
+  </div>
+  <div style="flex-grow: 1; box-sizing: border-box; padding: 16px; display: flex; gap: 16px">
+    <svg role="img" aria-label="Map around Kei: 13 targets up, 3 down" width="330" height="420" viewBox="0 0 330 420" style="flex-shrink: 0; background: rgba(0,0,0,0.35)">
+      <circle cx="165" cy="294" r="80" fill="none" stroke="{{c.dim}}" stroke-opacity="0.25"></circle>
+      <circle cx="165" cy="294" r="160" fill="none" stroke="{{c.dim}}" stroke-opacity="0.25"></circle>
+      <g fill="#FF5A4E">
+        <circle cx="160" cy="90" r="5"></circle><circle cx="120" cy="162" r="5"></circle><circle cx="182" cy="185" r="5"></circle>
+        <circle cx="60" cy="235" r="5"></circle><circle cx="250" cy="236" r="5"></circle><circle cx="96" cy="330" r="5"></circle>
+        <circle cx="210" cy="320" r="5"></circle><circle cx="140" cy="300" r="5"></circle><circle cx="285" cy="140" r="5"></circle>
+        <circle cx="35" cy="120" r="5"></circle><circle cx="230" cy="370" r="5"></circle><circle cx="300" cy="300" r="5"></circle>
+        <circle cx="110" cy="390" r="5"></circle>
+      </g>
+      <g stroke="{{c.dim}}" stroke-width="2">
+        <path d="M195 125 l10 10 M205 125 l-10 10"></path><path d="M75 285 l10 10 M85 285 l-10 10"></path><path d="M255 175 l10 10 M265 175 l-10 10"></path>
+      </g>
+      <polygon points="165,282 173,302 157,302" fill="{{c.accent}}"></polygon>
+    </svg>
+    <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 18px">
+      <div><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">OBJECTIVE</p><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; letter-spacing: 0.03em">CLEAR THE KILLHOUSE</p></div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em"><span style="color: {{c.dim}}">TARGETS DOWN</span><span style="font-variant-numeric: tabular-nums">3 / 16</span></div>
+        <div style="height: 12px; background: rgba(0,0,0,0.45)"><div style="width: 19%; height: 12px; background: {{c.accent}}"></div></div>
+      </div>
+      <div><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">CAPTURE</p><p style="margin: 0; font-weight: 600; font-size: 22px; color: {{c.dash}}">—</p></div>
+      <div><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">CACHES LEFT</p><p style="margin: 0; font-weight: 600; font-size: 22px; color: {{c.dash}}">—</p></div>
+      <div><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">CHECKPOINT</p><p style="margin: 0; font-weight: 600; font-size: 22px; color: {{c.dash}}">—</p></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"heroine":{"editor":"color","default":"#529364","section":"Heroine","options":["#529364","#B8564A","#4F78B8","#B58A2E"]},"$preview":{"width":720,"height":500}}'>
+// Heroine theme: every tablet colour comes from the heroine's main colour, so a new heroine only needs one hex.
+class Component extends DCLogic {
+  renderVals() {
+    function rgb(h) { h = String(h).replace('#', ''); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16) || 0; }); }
+    function mix(a, b, t) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }); }
+    function css(c, a) { return a === undefined ? 'rgb(' + c.join(',') + ')' : 'rgba(' + c.join(',') + ',' + a + ')'; }
+    function lum(c) { return c.reduce(function (s, v, i) { v /= 255; v = v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); return s + v * [0.2126, 0.7152, 0.0722][i]; }, 0); }
+    function theme(hex) {
+      var m = rgb(hex), K = [0, 0, 0], W = [255, 255, 255];
+      var ground = mix(m, K, 0.87), dim = mix(m, W, 0.55);
+      return {
+        main: css(m), ground: css(ground), header: css(mix(m, K, 0.76)), panel: css(mix(m, K, 0.8)),
+        text: css(mix(m, W, 0.92)), soft: css(mix(m, W, 0.72)), dim: css(dim), dash: css(mix(dim, ground, 0.35)),
+        accent: css(mix(m, W, 0.25)), onMain: lum(m) > 0.18 ? css(mix(m, K, 0.9)) : '#FFFFFF',
+        card: css(m, 0.24), card2: css(m, 0.08), line: css(m, 0.35)
+      };
+    }
+    return { c: theme(this.props.heroine ?? '#529364') };
+  }
+}
+</script>
+</body>
+</html>

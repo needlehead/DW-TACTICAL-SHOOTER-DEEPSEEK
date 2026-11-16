@@ -1,0 +1,81 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Gear.dc.html": {
+      "h": 500,
+      "title": "Tablet: Gear",
+      "w": 720,
+      "x": 2400,
+      "y": 1280,
+      "is_interactive": true
+    },
+    "Main.dc.html": {
+      "h": 900,
+      "title": "Main menu (1600×900)",
+      "w": 1600,
+      "x": 0,
+      "y": 0
+    },
+    "Objective.dc.html": {
+      "h": 500,
+      "title": "Tablet: Objective",
+      "w": 720,
+      "x": 800,
+      "y": 1280
+    },
+    "Run.dc.html": {
+      "h": 500,
+      "title": "Tablet: Run",
+      "w": 720,
+      "x": 1600,
+      "y": 1280
+    },
+    "Status.dc.html": {
+      "h": 500,
+      "title": "Tablet: Status",
+      "w": 720,
+      "x": 0,
+      "y": 1280
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-16T12:30:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "noteOrder": [
+    "tabletTitle",
+    "constraints"
+  ],
+  "notes": {
+    "constraints": {
+      "fill": "blue",
+      "size": 24,
+      "text": "How these are seen in game\n\n• The menu runs at 1600×900; Kei on the right is the looping Koikatsu idle.\n• Tablet pages are drawn at 720×500 and shown small, at an angle, through the bodycam (grain, lens bend), so keep text bold and high-contrast.\n• A dash means the system isn't in the game yet (capture, caches, checkpoint, credits, threat, carried items, ammo type).\n• Q / E or the mouse wheel flip pages; the tab highlight slides.",
+      "w": 440,
+      "x": 1700,
+      "y": 0
+    },
+    "tabletTitle": {
+      "kind": "title1",
+      "maxW": 3120,
+      "text": "Tablet pages: the device screen at its real size, 720×500",
+      "w": 240,
+      "x": 0,
+      "y": 1020
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Status.dc.html",
+    "Objective.dc.html",
+    "Run.dc.html",
+    "Gear.dc.html"
+  ],
+  "pages": [],
+  "title": "Menu and Tablet UI"
+}

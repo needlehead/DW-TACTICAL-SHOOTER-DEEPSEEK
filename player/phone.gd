@@ -4,8 +4,13 @@ extends TextureRect
 ## The screen is drawn into a SubViewport and mapped onto the phone's screen quad in the frame, so it
 ## sways and gets the bodycam lens with everything else. Read-only pages, flipped with Q/E or the wheel:
 ## Status, Objective, Run, Gear. Fields for systems the game doesn't have yet show a dim dash.
+## Layout, fonts and the heroine-colour palette follow the design mockup in docs/ui_mockup.
 
 const PAGES := ["STATUS", "OBJECTIVE", "RUN", "GEAR"]
+const HEADER_H := 48.0
+const ENEMY := Color("#FF5A4E")
+const CAUTION := Color(1.0, 0.8, 0.2)
+const DANGER := Color(1.0, 0.3, 0.25)
 
 @export var frame: Texture2D
 ## Screen corners on the frame (0-1 UV): top-left, top-right, bottom-right, bottom-left.
@@ -14,11 +19,15 @@ const PAGES := ["STATUS", "OBJECTIVE", "RUN", "GEAR"]
 @export var sway_amount := 1.0  ## 1 = moves exactly like the gun (sway, walk bob, inertia)
 @export var sway_tilt := 0.6  ## radians of tilt per screen height of sideways sway
 @export var overscan := 0.06  ## extra size so sway never shows the frame's cut-off edges
-## Hold position and size (scaled around the arm's exit corner, which stays off-screen); F4 -> Tablet edits it.
+## Hold position and size (scaled around the bottom centre); F4 -> Tablet edits it.
 @export var layout: PhoneLayout = preload("res://player/phone_layout.tres")
 @export var heroine_name := "KEI FUJIWARA"
+## The heroine's colour: the whole screen's palette (background, header, tab, labels, accents) is derived from it.
+@export var heroine_color := Color("#529364")
 @export var outfit_name := "HEAVY METAL"
-@export var outfit_sprite: Texture2D
+@export var outfit_sprite: Texture2D  ## front and back views side by side; Gear shows one, R turns it
+@export_range(0.0, 1.0) var outfit_split := 0.51  ## where the front view ends and the back begins (0-1 across)
+@export var outfit_turn_time := 0.3
 @export var screen_size := Vector2i(720, 500)
 @export var map_scale := 8.0  ## Objective map: pixels per metre
 @export var flip_time := 0.2  ## page change: the new page slides in from the flip side and fades up
@@ -27,19 +36,25 @@ const PAGES := ["STATUS", "OBJECTIVE", "RUN", "GEAR"]
 @export var press_dip := 0.012  ## screen heights
 @export var press_tilt := 0.025  ## radians
 
-const BG := Color(0.04, 0.07, 0.13)
-const DIM := Color(0.55, 0.65, 0.8)
-const TEXT := Color(0.92, 0.95, 1.0)
-
+var c := {}  ## palette, from theme(heroine_color)
 var _vp := SubViewport.new()
 var _screen := Control.new()
 var _poly := Polygon2D.new()
-var _outfit: AtlasTexture
+var _outfit_front: AtlasTexture
+var _outfit_back: AtlasTexture
+var _back := false  ## Gear: showing the outfit's back
+var _turn := 1.0  ## 0..1 through the outfit turn
 var _run_start := 0.0  ## Run page clock; restarts on level reset
 var _page := 0  ## page being drawn (follows manager.phone_page)
 var _from_page := 0
 var _flip := 1.0  ## 0..1 through the page change
 var _flip_dir := 1
+# Barlow, as in the design: condensed for labels, tabs and titles, regular width for values.
+var _f_label := _font("res://fonts/BarlowCondensed-SemiBold.ttf", 2)
+var _f_tab := _font("res://fonts/BarlowCondensed-SemiBold.ttf", 1)
+var _f_title := _font("res://fonts/BarlowCondensed-Bold.ttf", 1)
+var _f_value := _font("res://fonts/Barlow-SemiBold.ttf", 0)
+var _f_soft := _font("res://fonts/Barlow-Medium.ttf", 0)
 
 @onready var player: Player = owner
 @onready var manager: WeaponManager = owner.get_node("LeanPivot/Head/Camera3D/Viewmodel/Weapons")
@@ -67,10 +82,40 @@ func _ready() -> void:
 	mat.shader = preload("res://player/unshaded.gdshader")  # the screen is backlit: it never darkens in shade or the dark
 	_poly.material = mat
 	add_child(_poly)
+	c = theme(heroine_color)
 	if outfit_sprite:
-		_outfit = AtlasTexture.new()
-		_outfit.atlas = outfit_sprite
-		_outfit.region = Rect2(outfit_sprite.get_image().get_used_rect())
+		var img := outfit_sprite.get_image()
+		var split := int(img.get_width() * outfit_split)
+		_outfit_front = _crop(img, Rect2i(0, 0, split, img.get_height()))
+		_outfit_back = _crop(img, Rect2i(split, 0, img.get_width() - split, img.get_height()))
+
+
+func _crop(img: Image, area: Rect2i) -> AtlasTexture:
+	var a := AtlasTexture.new()
+	a.atlas = outfit_sprite
+	var used := img.get_region(area).get_used_rect()
+	a.region = Rect2(used.position + area.position, used.size)
+	return a
+
+
+static func _font(path: String, spacing: int) -> FontVariation:
+	var f := FontVariation.new()
+	f.base_font = load(path)
+	f.spacing_glyph = spacing
+	return f
+
+
+## The screen's palette from one heroine colour (same recipe as the design mockup).
+static func theme(main: Color) -> Dictionary:
+	var ground := main.lerp(Color.BLACK, 0.87)
+	var dim := main.lerp(Color.WHITE, 0.55)
+	return {
+		"main": main, "ground": ground, "header": main.lerp(Color.BLACK, 0.76), "panel": main.lerp(Color.BLACK, 0.8),
+		"text": main.lerp(Color.WHITE, 0.92), "soft": main.lerp(Color.WHITE, 0.72), "dim": dim, "dash": dim.lerp(ground, 0.35),
+		"accent": main.lerp(Color.WHITE, 0.25),
+		"on_main": main.lerp(Color.BLACK, 0.9) if main.srgb_to_linear().get_luminance() > 0.18 else Color.WHITE,
+		"card": Color(main, 0.24), "card2": Color(main, 0.08), "line": Color(main, 0.35),
+	}
 
 
 func reset() -> void:
@@ -86,6 +131,13 @@ func _process(delta: float) -> void:
 		_page = manager.phone_page
 		_flip = 0.0 if visible else 1.0  # reset to Status while put away: no animation
 	_flip = minf(_flip + delta / maxf(flip_time, 0.01), 1.0)
+	if visible and manager.phone_open and _page == 3 and Input.is_action_just_pressed("reload"):  # R turns the outfit
+		_back = not _back
+		_turn = 0.0
+		manager.click()
+	elif not visible:
+		_back = false  # opens on the front again
+	_turn = minf(_turn + delta / maxf(outfit_turn_time, 0.01), 1.0)
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if visible else SubViewport.UPDATE_DISABLED
 	var lens := (owner.get_node("PostFXLayer/Bodycam") as ColorRect).material as ShaderMaterial
 	lens.set_shader_parameter("tablet_on", visible)
@@ -118,81 +170,72 @@ func _process(delta: float) -> void:
 
 func _draw_screen() -> void:
 	var s := Vector2(screen_size)
-	var font := ThemeDB.fallback_font
-	_screen.draw_rect(Rect2(Vector2.ZERO, s), BG)
+	_screen.draw_rect(Rect2(Vector2.ZERO, s), c.ground)
 	# Page first, so the header covers it while it slides; ease-out, then fade up from the background.
 	var e := 1.0 - pow(1.0 - _flip, 3.0)
 	_screen.draw_set_transform(Vector2(_flip_dir * (1.0 - e) * flip_slide, 0.0))
 	[_draw_status, _draw_objective, _draw_run, _draw_gear][_page].call()
 	_screen.draw_set_transform(Vector2.ZERO)
 	if e < 1.0:
-		_screen.draw_rect(Rect2(0, 44, s.x, s.y - 44), Color(BG, 1.0 - e))
-	_screen.draw_rect(Rect2(0, 0, s.x, 44), Color(0.08, 0.13, 0.24))
-	_screen.draw_string(font, Vector2(16, 31), heroine_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, TEXT)
-	_screen.draw_string(font, Vector2(0, 31), Time.get_time_string_from_system().left(5), HORIZONTAL_ALIGNMENT_RIGHT, s.x - 16, 24, DIM)
-	# Page tabs: the highlight slides from the old tab to the new one; Q/E hints at the ends.
-	var x := 236.0
+		_screen.draw_rect(Rect2(0, HEADER_H, s.x, s.y - HEADER_H), Color(c.ground, 1.0 - e))
+	# Header: name, page tabs (the highlight slides from the old tab to the new one, Q/E at the ends), clock.
+	_screen.draw_rect(Rect2(0, 0, s.x, HEADER_H), c.header)
+	var mid := HEADER_H * 0.5
+	_mid(16, mid, heroine_name, _f_title, 22, c.text)
+	_mid(0, mid, Time.get_time_string_from_system().left(5), _f_tab, 22, c.dim, s.x - 16, HORIZONTAL_ALIGNMENT_RIGHT)
+	var x := 200.0
+	_mid(x, mid, "Q", _f_tab, 13, c.dim)
+	x += _w("Q", _f_tab, 13) + 10.0
 	var tabs: Array[Rect2] = []
 	for i in PAGES.size():
-		var wpx := font.get_string_size(PAGES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
-		tabs.append(Rect2(x - 6, 8, wpx + 12, 28))
-		x += wpx + 18.0
+		var tw := _w(PAGES[i], _f_tab, 16) + 18.0
+		tabs.append(Rect2(x, mid - 13, tw, 26))
+		x += tw + 4.0
 	var a := tabs[_from_page]
 	var b := tabs[_page]
-	_screen.draw_rect(Rect2(a.position.lerp(b.position, e), a.size.lerp(b.size, e)), Color(0.2, 0.35, 0.6))
-	_screen.draw_string(font, Vector2(236.0 - 26.0, 29), "Q", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, DIM)
+	_screen.draw_rect(Rect2(a.position.lerp(b.position, e), a.size.lerp(b.size, e)), c.main)
 	for i in PAGES.size():
-		_screen.draw_string(font, tabs[i].position + Vector2(6, 20), PAGES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 16, TEXT if i == _page else DIM)
-	_screen.draw_string(font, Vector2(x - 4, 29), "E", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, DIM)
+		_mid(tabs[i].position.x + 9, mid, PAGES[i], _f_tab, 16, c.on_main if i == _page else c.dim)
+	_mid(x + 6, mid, "E", _f_tab, 13, c.dim)
 
 
+## Status: face, condition and heart monitor on the left; the weapon and ammo as tiles filling the right.
 func _draw_status() -> void:
-	var s := Vector2(screen_size)
-	var font := ThemeDB.fallback_font
-	# Condition: health face, status word and a sweeping heart monitor (faster and redder as health drops).
 	var h := player.health
 	var f := clampf(h.current / h.max_health, 0.0, 1.0)
+	var tier := 0 if f > 0.66 else 1 if f > 0.33 else 2
+	var col: Color = [c.accent, CAUTION, DANGER][tier]  # the condition keeps its warning colours for every heroine
+	var now := Time.get_ticks_msec() / 1000.0
+	var row := 378.0  # condition line, between the face and the monitor
+	var face_box := Rect2(16, 62, 250, row - 10 - 62)
+	_screen.draw_rect(face_box, c.panel)
 	var face: Texture2D = portrait.face()
 	if face:
-		_fit(face, Rect2(16, 56, 200, 290))
-	var tier := 0 if f > 0.66 else 1 if f > 0.33 else 2
-	var col: Color = [Color(0.3, 0.95, 0.45), Color(1.0, 0.8, 0.2), Color(1.0, 0.25, 0.2)][tier]
-	var now := Time.get_ticks_msec() / 1000.0
-	_screen.draw_string(font, Vector2(16, 368), "CONDITION", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, DIM)
+		_cover_top(face, face_box)
+	var base := row + _f_title.get_ascent(32)
+	_screen.draw_string(_f_label, Vector2(16, base), "CONDITION", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, c.dim)
 	if tier < 2 or fmod(now, 0.8) < 0.55:  # DANGER blinks
-		_screen.draw_string(font, Vector2(16, 398), ["FINE", "CAUTION", "DANGER"][tier], HORIZONTAL_ALIGNMENT_LEFT, -1, 28, col)
-	_draw_ecg(Rect2(16, 408, 200, 70), col, [70.0, 100.0, 140.0][tier], now)
+		_screen.draw_string(_f_title, Vector2(16, base), ["FINE", "CAUTION", "DANGER"][tier], HORIZONTAL_ALIGNMENT_RIGHT, 250, 32, col)
+	_draw_ecg(Rect2(16, 420, 250, 64), col, [70.0, 100.0, 140.0][tier], now)
 
-	# Outfit.
-	if _outfit:
-		_fit(_outfit, Rect2(232, 56, 230, 360))
-	_screen.draw_string(font, Vector2(232, 440), "OUTFIT", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
-	_screen.draw_string(font, Vector2(232, 470), outfit_name, HORIZONTAL_ALIGNMENT_LEFT, 230, 24, TEXT)
-
-	# Loadout.
 	var w := player.weapons.current
-	var rows := [
-		["WEAPON", w.data.display_name],
-		["MODE", WeaponData.mode_name(w.mode)],
-		["MAG", w.mag_estimate()],
-		["SPARE MAGS", str(w.spare.size())],
-		["FRAGS", str(player.weapons.grenades)],
-	]
-	var y := 80.0
-	for r: Array in rows:
-		_screen.draw_string(font, Vector2(478, y), r[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
-		_screen.draw_string(font, Vector2(478, y + 30), r[1], HORIZONTAL_ALIGNMENT_LEFT, s.x - 494, 24, TEXT)
-		y += 78.0
+	var cw := (422.0 - 8.0) / 2.0
+	var rh := (422.0 - 16.0) / 3.0
+	_tile(Rect2(282, 62, 422, rh), "WEAPON", w.data.display_name.to_upper(), _f_title, 34, c.card)
+	var cells := [["MODE", WeaponData.mode_name(w.mode)], ["MAG", w.mag_estimate()],
+		["SPARE MAGS", str(w.spare.size())], ["FRAGS", str(manager.grenades)]]
+	for i in cells.size():
+		var r := Rect2(282 + (i % 2) * (cw + 8.0), 62 + (1 + i / 2) * (rh + 8.0), cw, rh)
+		_tile(r, cells[i][0], cells[i][1], _f_value, 30, c.card2)
 
 
 ## Objective: heading-up map of the targets around Kei (she's the arrow, up is where she faces).
 func _draw_objective() -> void:
-	var font := ThemeDB.fallback_font
-	var box := Rect2(16, 56, 330, 428)
+	var box := Rect2(16, 64, 330, 420)
 	_screen.draw_rect(box, Color(0, 0, 0, 0.35))
 	var me := box.position + Vector2(box.size.x * 0.5, box.size.y * 0.7)
 	for r in [10.0, 20.0]:
-		_screen.draw_arc(me, r * map_scale, 0.0, TAU, 48, Color(DIM, 0.25), 1.0)
+		_screen.draw_arc(me, r * map_scale, 0.0, TAU, 48, Color(c.dim, 0.25), 1.0)
 	var fwd := -player.global_basis.z
 	var right := player.global_basis.x
 	var targets := dummies()
@@ -205,46 +248,74 @@ func _draw_objective() -> void:
 		if not box.grow(-6).has_point(p):
 			continue
 		if d.health.dead:
-			_screen.draw_line(p - Vector2(5, 5), p + Vector2(5, 5), DIM, 2.0)
-			_screen.draw_line(p - Vector2(5, -5), p + Vector2(5, -5), DIM, 2.0)
+			_screen.draw_line(p - Vector2(5, 5), p + Vector2(5, 5), c.dim, 2.0)
+			_screen.draw_line(p - Vector2(5, -5), p + Vector2(5, -5), c.dim, 2.0)
 		else:
-			_screen.draw_circle(p, 5.0, Color(1.0, 0.3, 0.25))
-	_screen.draw_colored_polygon(PackedVector2Array([me + Vector2(0, -10), me + Vector2(7, 8), me + Vector2(-7, 8)]), Color(0.3, 0.95, 0.45))
+			_screen.draw_circle(p, 5.0, ENEMY)
+	_screen.draw_colored_polygon(PackedVector2Array([me + Vector2(0, -12), me + Vector2(8, 8), me + Vector2(-8, 8)]), c.accent)
 
-	var col := 362.0
-	_field(col, 80, "OBJECTIVE", "CLEAR THE KILLHOUSE")
-	_screen.draw_string(font, Vector2(col, 158), "TARGETS DOWN", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
-	_screen.draw_string(font, Vector2(col, 158), "%d / %d" % [down, targets.size()], HORIZONTAL_ALIGNMENT_RIGHT, 342, 18, TEXT)
-	_bar(Rect2(col, 168, 342, 12), float(down) / maxf(targets.size(), 1))
-	_field(col, 230, "CAPTURE", null)
-	_field(col, 308, "CACHES LEFT", null)
-	_field(col, 386, "CHECKPOINT", null)
+	var x := 362.0
+	_t(x, 64, "OBJECTIVE", _f_label, 15, c.dim)
+	_t(x, 82, "CLEAR THE KILLHOUSE", _f_title, 28, c.text)
+	_t(x, 131, "TARGETS DOWN", _f_label, 15, c.dim)
+	_t(x, 131, "%d / %d" % [down, targets.size()], _f_label, 15, c.text, 342, HORIZONTAL_ALIGNMENT_RIGHT)
+	_bar(Rect2(x, 155, 342, 12), float(down) / maxf(targets.size(), 1))
+	_field(x, 185, "CAPTURE", null)
+	_field(x, 247, "CACHES LEFT", null)
+	_field(x, 309, "CHECKPOINT", null)
 
 
-## Run: money, what's carried, how long this run has gone, how hot it is.
+## Run: how long this run has gone (big), then money, threat and what's carried.
 func _draw_run() -> void:
 	var e := int(Time.get_ticks_msec() / 1000.0 - _run_start)
-	_field(16, 80, "ELAPSED", "%02d:%02d" % [e / 60, e % 60], 40)
-	_field(16, 190, "CREDITS", null)
-	_field(16, 268, "THREAT", null)
-	_field(362, 80, "CARRIED", null)
+	var base := 72.0 + _f_title.get_ascent(72)
+	_screen.draw_string(_f_label, Vector2(16, base), "ELAPSED", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, c.dim)
+	_screen.draw_string(_f_title, Vector2(16 + _w("ELAPSED", _f_label, 15) + 20, base), "%02d:%02d" % [e / 60, e % 60], HORIZONTAL_ALIGNMENT_LEFT, -1, 72, c.accent)
+	_screen.draw_rect(Rect2(16, base + 18, 688, 1), c.line)
+	_field(16, base + 36, "CREDITS", null)
+	_field(376, base + 36, "THREAT", null)
+	_field(16, base + 96, "CARRIED", null)
 
 
-## Gear: both guns, grenades, outfit.
+## Gear: both guns (the one in hand highlighted), ammo and grenades; the outfit, front or back (R turns it).
 func _draw_gear() -> void:
-	var y := 80.0
+	var y := 64.0
 	for w in manager.weapons:
+		var held := w == manager.current
+		_screen.draw_rect(Rect2(16, y, 448, 73), c.card if held else c.card2)
+		_t(28, y + 8, w.data.display_name.to_upper(), _f_title, 24, c.text)
+		if held:
+			_t(28, y + 13, "IN HAND", _f_label, 14, c.accent, 424, HORIZONTAL_ALIGNMENT_RIGHT)
 		var modes := PackedStringArray()
 		for m in w.data.modes():
 			modes.append(WeaponData.mode_name(m))
-		var title := ("> " if w == manager.current else "") + w.data.display_name
-		_field(16, y, title, "%s  |  %d spare mags" % ["/".join(modes), w.spare.size()])
-		y += 78.0
+		_t(28, y + 41, "%s  ·  %d spare mags" % [" / ".join(modes), w.spare.size()], _f_soft, 18, c.soft)
+		y += 73.0 + 14.0
+	y += 4.0
 	_field(16, y, "AMMO TYPE", null)
-	_field(16, y + 78.0, "GRENADES", "FRAG x%d" % manager.grenades)
-	if _outfit:
-		_fit(_outfit, Rect2(478, 56, 226, 360))
-	_field(478, 440, "OUTFIT", outfit_name)
+	_field(248, y, "GRENADES", "FRAG ×%d" % manager.grenades)
+
+	var view := Rect2(484, 64, 220, 306)
+	_screen.draw_rect(view, c.panel)
+	var showing_back := _back if _turn >= 0.5 else not _back  # sides swap edge-on, halfway through the turn
+	var tex: Texture2D = _outfit_back if showing_back else _outfit_front
+	if tex:
+		var sx := absf(cos(PI * _turn))  # squash to edge-on and back out: reads as turning around
+		_screen.draw_set_transform(Vector2(view.get_center().x * (1.0 - sx), 0.0), 0.0, Vector2(sx, 1.0))
+		_fit_bottom(tex, view)
+		_screen.draw_set_transform(Vector2.ZERO)
+	_t(492, 70, "BACK" if showing_back else "FRONT", _f_label, 14, c.dim)
+	var btn := Rect2(484, 378, 220, 44)
+	_screen.draw_rect(btn, c.card2)
+	_screen.draw_rect(btn, c.line, false, 1.0)
+	var key_w := _w("R", _f_tab, 16) + 14.0
+	var total := key_w + 10.0 + _w("ROTATE", _f_tab, 16)
+	var kx := btn.get_center().x - total * 0.5
+	_screen.draw_rect(Rect2(kx, btn.get_center().y - 11, key_w, 22), c.main)
+	_mid(kx + 7, btn.get_center().y, "R", _f_tab, 16, c.on_main)
+	_mid(kx + key_w + 10.0, btn.get_center().y, "ROTATE", _f_tab, 16, c.text)
+	_t(484, 430, "OUTFIT", _f_label, 15, c.dim)
+	_t(484, 448, outfit_name, _f_title, 26, c.text)
 
 
 ## Every Dummy in the level.
@@ -256,17 +327,37 @@ func dummies() -> Array[Dummy]:
 	return out
 
 
+## Text with its top at y (draw_string takes the baseline).
+func _t(x: float, y: float, text: String, f: Font, px: int, col: Color, width := -1.0, align := HORIZONTAL_ALIGNMENT_LEFT) -> void:
+	_screen.draw_string(f, Vector2(x, y + f.get_ascent(px)), text, align, width, px, col)
+
+
+## Text centred vertically on cy.
+func _mid(x: float, cy: float, text: String, f: Font, px: int, col: Color, width := -1.0, align := HORIZONTAL_ALIGNMENT_LEFT) -> void:
+	_screen.draw_string(f, Vector2(x, cy + (f.get_ascent(px) - f.get_descent(px)) * 0.5), text, align, width, px, col)
+
+
+func _w(text: String, f: Font, px: int) -> float:
+	return f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, px).x
+
+
 ## Label over a value; null = the system isn't in the game yet (dim dash).
-func _field(x: float, y: float, label: String, value: Variant, px := 24) -> void:
-	var font := ThemeDB.fallback_font
-	_screen.draw_string(font, Vector2(x, y), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
-	var text: String = "-" if value == null else str(value)
-	_screen.draw_string(font, Vector2(x, y + 30 + px - 24), text, HORIZONTAL_ALIGNMENT_LEFT, screen_size.x - x - 16, px, Color(DIM, 0.5) if value == null else TEXT)
+func _field(x: float, y: float, label: String, value: Variant) -> void:
+	_t(x, y, label, _f_label, 15, c.dim)
+	_t(x, y + 18, "—" if value == null else str(value), _f_value, 22, c.dash if value == null else c.text)
+
+
+## A tinted tile with a label over a value, the pair centred vertically.
+func _tile(r: Rect2, label: String, value: String, f: Font, px: int, bg: Color) -> void:
+	_screen.draw_rect(r, bg)
+	var y := r.position.y + (r.size.y - (18.0 + px * 1.1)) * 0.5
+	_t(r.position.x + 14, y, label, _f_label, 15, c.dim)
+	_t(r.position.x + 14, y + 18, value, f, px, c.text, r.size.x - 28)
 
 
 func _bar(box: Rect2, f: float) -> void:
-	_screen.draw_rect(box, Color(0, 0, 0, 0.4))
-	_screen.draw_rect(Rect2(box.position, Vector2(box.size.x * clampf(f, 0.0, 1.0), box.size.y)), Color(0.3, 0.95, 0.45))
+	_screen.draw_rect(box, Color(0, 0, 0, 0.45))
+	_screen.draw_rect(Rect2(box.position, Vector2(box.size.x * clampf(f, 0.0, 1.0), box.size.y)), c.accent)
 
 
 ## Heart monitor: the trace is drawn by a sweeping head and fades out behind it over one sweep.
@@ -306,8 +397,17 @@ static func ecg(phase: float) -> float:
 	return 0.0
 
 
-## Draw a texture as large as fits in the box, keeping aspect, centred.
-func _fit(tex: Texture2D, box: Rect2) -> void:
+## Draw a texture as large as fits in the box, keeping aspect, standing on the box's bottom edge.
+func _fit_bottom(tex: Texture2D, box: Rect2) -> void:
 	var ts := Vector2(tex.get_size())
 	var k := minf(box.size.x / ts.x, box.size.y / ts.y)
-	_screen.draw_texture_rect(tex, Rect2(box.position + (box.size - ts * k) * 0.5, ts * k), false)
+	var sz := ts * k
+	_screen.draw_texture_rect(tex, Rect2(box.position + Vector2((box.size.x - sz.x) * 0.5, box.size.y - sz.y), sz), false)
+
+
+## Fill the box with the texture (cropping the sides or the bottom), keeping its top edge.
+func _cover_top(tex: Texture2D, box: Rect2) -> void:
+	var ts := Vector2(tex.get_size())
+	var k := maxf(box.size.x / ts.x, box.size.y / ts.y)
+	var src := box.size / k
+	_screen.draw_texture_rect_region(tex, box, Rect2(Vector2((ts.x - src.x) * 0.5, 0.0), src))

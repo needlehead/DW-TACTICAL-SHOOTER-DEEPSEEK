@@ -146,8 +146,11 @@ It always opens on **Status**; **Q/E** or the **mouse wheel** flip pages while i
 - **Status:** health face and vitals, outfit, weapon and fire mode, a rough mag estimate, spare mags and frags.
 - **Objective:** heading-up map of the targets (red = up, grey X = down), targets-down progress.
 - **Run:** elapsed time (restarts on reset).
-- **Gear:** both guns with fire modes and spare mags, frags, outfit.
+- **Gear:** both guns with fire modes and spare mags (the one in hand highlighted), frags, and the outfit: front view,
+  **R** turns it to show the back.
 
+The screen's colours all come from one `heroine_color` on the Phone node (Kei: `#529364`); fonts are Barlow
+(`fonts/`, OFL). The layout follows the design mockup in `docs/ui_mockup/`.
 Fields for systems the game doesn't have yet (capture, caches, checkpoint, credits, threat, carried items, ammo type)
 show a dim dash. No firing, aiming or reloading while it's out; taking damage, sprinting, firing or aiming puts it away. Settings live on the `Phone` node in
 `player.tscn` (`heroine_name`, `outfit_name`, `outfit_sprite`, `screen_quad` for the screen corners on the frame) and

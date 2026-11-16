@@ -94,6 +94,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func flip_page(dir: int) -> void:
 	phone_page = posmod(phone_page + dir, Phone.PAGES.size())
+	click()
+
+
+## Device button click (page flip, outfit turn).
+func click() -> void:
 	_play_foley(page_sound)
 
 

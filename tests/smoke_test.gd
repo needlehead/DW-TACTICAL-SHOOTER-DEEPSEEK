@@ -175,6 +175,10 @@ func _runtime_checks() -> void:
 	var phone_script: GDScript = load("res://player/phone.gd")
 	_check(is_equal_approx(phone_script.ecg(0.20), 1.0) and phone_script.ecg(0.35) == 0.0 and phone_script.ecg(0.22) < 1.0,
 		"phone ECG: R spike peaks at 1, flat between beats")
+	var kei: Dictionary = phone_script.theme(Color("#529364"))
+	var dark: Dictionary = phone_script.theme(Color("#1E2A6E"))
+	_check(kei.on_main.get_luminance() < 0.2 and dark.on_main == Color.WHITE and kei.ground.get_luminance() < 0.1,
+		"tablet palette: dark text on a light heroine colour, white on a dark one, near-black background")
 	var fx := player.get_node("HUDLayer/DamageFeedback") as DamageFeedback
 	_check(fx.low_pulse(1.0, 0.0) == 0.0 and fx.low_pulse(0.1, 0.0) > 0.0, "damage feedback: heartbeat vignette only at low health")
 	var svm = player.get_node("ViewmodelLayer/SpriteViewmodel")

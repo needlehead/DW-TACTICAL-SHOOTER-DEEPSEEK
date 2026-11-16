@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Main menu</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#93A3BC}a:hover{color:#E8ECF2}
+</style>
+</helmet>
+<div style="width: 1600px; height: 900px; position: relative; overflow: hidden; background: radial-gradient(ellipse 70% 90% at 68% 42%, #1E2128 0%, #0B0D12 70%, #050608 100%); font-family: Barlow, sans-serif; color: #E8ECF2">
+  <img src="/_blob/00377db1dc81d6ca27bd66b749fc38bc" alt="Kei Fujiwara in the Heavy Metal outfit, holding a suppressed SMG" style="position: absolute; right: 150px; bottom: 0px; height: 860px; width: auto">
+  <div style="position: absolute; left: 112px; top: 0px; bottom: 0px; width: 520px; display: flex; flex-direction: column; justify-content: center; gap: 0px">
+    <p style="margin: 0 0 14px 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.24em; color: #93A3BC">UNIT 07 · KILLHOUSE</p>
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 84px; line-height: 0.95; letter-spacing: 0.02em">TACTICAL FPS</h1>
+    <p style="margin: 14px 0 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 20px; letter-spacing: 0.14em; color: {{accent}}">OPERATOR: KEI FUJIWARA</p>
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 56px; width: 300px">
+      <button type="button" style="height: 56px; padding: 0 24px; border: 0; border-radius: 2px; background: #E8ECF2; color: #0B0D12; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.12em; text-align: left; display: flex; align-items: center; justify-content: space-between; cursor: pointer">DEPLOY<span aria-hidden="true" style="font-size: 20px">›</span></button>
+      <button type="button" style="height: 56px; padding: 0 24px; border: 1px solid rgba(232,236,242,0.22); border-radius: 2px; background: rgba(232,236,242,0.04); color: #E8ECF2; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 26px; letter-spacing: 0.12em; text-align: left; cursor: pointer">QUIT</button>
+    </div>
+  </div>
+  <p style="position: absolute; left: 112px; bottom: 48px; margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 500; font-size: 15px; letter-spacing: 0.16em; color: #93A3BC">↑ ↓ SELECT    ENTER CONFIRM</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#45D27A","options":["#45D27A","#F2A93B","#5AA9FF","#E8ECF2"]},"$preview":{"width":1600,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#45D27A' };
+  }
+}
+</script>
+</body>
+</html>

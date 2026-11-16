@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tablet: Status</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#93A3BC}a:hover{color:#E8ECF2}
+</style>
+</helmet>
+<div style="width: 720px; height: 500px; box-sizing: border-box; background: {{c.ground}}; font-family: Barlow, sans-serif; color: {{c.text}}; display: flex; flex-direction: column">
+  <div style="height: 48px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; background: {{c.header}}; display: flex; align-items: center; gap: 16px">
+    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0.04em; width: 168px">KEI FUJIWARA</span>
+    <div style="display: flex; align-items: center; gap: 4px; flex-grow: 1; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: 0.08em">
+      <span style="color: {{c.dim}}; font-size: 13px; padding-right: 6px">Q</span>
+      <span style="padding: 5px 9px; background: {{c.main}}; color: {{c.onMain}}">STATUS</span>
+      <span style="padding: 5px 9px; color: {{c.dim}}">OBJECTIVE</span>
+      <span style="padding: 5px 9px; color: {{c.dim}}">RUN</span>
+      <span style="padding: 5px 9px; color: {{c.dim}}">GEAR</span>
+      <span style="color: {{c.dim}}; font-size: 13px; padding-left: 6px">E</span>
+    </div>
+    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 22px; color: {{c.dim}}; font-variant-numeric: tabular-nums">12:14</span>
+  </div>
+  <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 14px 16px 16px 16px; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 16px">
+    <div style="display: flex; flex-direction: column; gap: 10px; min-height: 0">
+      <img src="/_blob/97fe7575e6b4938649da9ab38993d571" alt="Kei, unhurt" style="width: 250px; flex: 1 1 0; min-height: 0; object-fit: cover; object-position: top; background: {{c.panel}}">
+      <div style="display: flex; align-items: baseline; justify-content: space-between">
+        <p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">CONDITION</p>
+        <p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 32px; line-height: 1; letter-spacing: 0.04em; color: {{c.accent}}">FINE</p>
+      </div>
+      <svg role="img" aria-label="Heart monitor, 70 beats per minute" width="250" height="64" viewBox="0 0 250 64" style="flex-shrink: 0; background: rgba(0,0,0,0.35)">
+        <polyline fill="none" stroke="{{c.accent}}" stroke-width="2" points="0,34 30,34 36,30 42,34 50,34 54,38 58,8 62,46 66,34 80,34 90,28 100,34 130,34 136,30 142,34 150,34 154,38 158,8 162,46 166,34 180,34 186,30 192,34 210,34 216,30 222,34 230,34"></polyline>
+        <circle cx="230" cy="34" r="3" fill="{{c.accent}}"></circle>
+      </svg>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 8px; min-height: 0">
+      <div style="flex: 1 1 0; min-height: 0; box-sizing: border-box; padding: 6px 14px; background: {{c.card}}; grid-column: 1 / span 2; display: flex; flex-direction: column; justify-content: center"><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">WEAPON</p><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.05; letter-spacing: 0.02em">SUPPRESSED SMG</p></div>
+      <div style="flex: 1 1 0; min-height: 0; box-sizing: border-box; padding: 6px 14px; background: {{c.card2}}; display: flex; flex-direction: column; justify-content: center"><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">MODE</p><p style="margin: 0; font-weight: 600; font-size: 30px; line-height: 1.1">AUTO</p></div>
+      <div style="flex: 1 1 0; min-height: 0; box-sizing: border-box; padding: 6px 14px; background: {{c.card2}}; display: flex; flex-direction: column; justify-content: center"><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">MAG</p><p style="margin: 0; font-weight: 600; font-size: 30px; line-height: 1.1">Full</p></div>
+      <div style="flex: 1 1 0; min-height: 0; box-sizing: border-box; padding: 6px 14px; background: {{c.card2}}; display: flex; flex-direction: column; justify-content: center"><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">SPARE MAGS</p><p style="margin: 0; font-weight: 600; font-size: 30px; line-height: 1.1">5</p></div>
+      <div style="flex: 1 1 0; min-height: 0; box-sizing: border-box; padding: 6px 14px; background: {{c.card2}}; display: flex; flex-direction: column; justify-content: center"><p style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 0.1em; color: {{c.dim}}">FRAGS</p><p style="margin: 0; font-weight: 600; font-size: 30px; line-height: 1.1">2</p></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"heroine":{"editor":"color","default":"#529364","section":"Heroine","options":["#529364","#B8564A","#4F78B8","#B58A2E"]},"$preview":{"width":720,"height":500}}'>
+// Heroine theme: every tablet colour comes from the heroine's main colour, so a new heroine only needs one hex.
+class Component extends DCLogic {
+  renderVals() {
+    function rgb(h) { h = String(h).replace('#', ''); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16) || 0; }); }
+    function mix(a, b, t) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }); }
+    function css(c, a) { return a === undefined ? 'rgb(' + c.join(',') + ')' : 'rgba(' + c.join(',') + ',' + a + ')'; }
+    function lum(c) { return c.reduce(function (s, v, i) { v /= 255; v = v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); return s + v * [0.2126, 0.7152, 0.0722][i]; }, 0); }
+    function theme(hex) {
+      var m = rgb(hex), K = [0, 0, 0], W = [255, 255, 255];
+      var ground = mix(m, K, 0.87), dim = mix(m, W, 0.55);
+      return {
+        main: css(m), ground: css(ground), header: css(mix(m, K, 0.76)), panel: css(mix(m, K, 0.8)),
+        text: css(mix(m, W, 0.92)), soft: css(mix(m, W, 0.72)), dim: css(dim), dash: css(mix(dim, ground, 0.35)),
+        accent: css(mix(m, W, 0.25)), onMain: lum(m) > 0.18 ? css(mix(m, K, 0.9)) : '#FFFFFF',
+        card: css(m, 0.24), card2: css(m, 0.08), line: css(m, 0.35)
+      };
+    }
+    return { c: theme(this.props.heroine ?? '#529364') };
+  }
+}
+</script>
+</body>
+</html>
