@@ -23,7 +23,7 @@ const HELP := [
 	"Drag the green box over the sight glass; corner handle or wheel resizes. Canted switches to the canted sight.",
 	"Click the barrel end on screen: muzzle flash, smoke and laser come from here.",
 	"Drag to move the tablet, wheel = closer / further. Arrows nudge.",
-	"Drag moves the death frame, wheel scales it, right-drag moves its tilt centre (yellow). [ ] roll the view, PgUp / PgDn camera height.",
+	"Camera: pitch / yaw / roll of the dead view, keep_look (1 = keep where she was looking), height, settle time. Frame: drag moves it, wheel scales, right-drag moves its tilt centre (yellow). [ ] roll, PgUp / PgDn height.",
 ]
 const DIM := Color(0.62, 0.68, 0.78)
 
@@ -261,8 +261,8 @@ func _remember_view() -> void:
 	var v := death_view()
 	if not _originals.has(v):
 		_originals[v] = {}
-		for p in ["eye_height", "stand_roll", "stand_offset", "stand_scale", "stand_pivot",
-				"prone_roll", "prone_offset", "prone_scale", "prone_pivot"]:
+		for p in ["eye_height", "camera_time", "keep_look", "stand_pitch", "stand_yaw", "stand_roll", "stand_offset",
+				"stand_scale", "stand_pivot", "prone_pitch", "prone_yaw", "prone_roll", "prone_offset", "prone_scale", "prone_pivot"]:
 			_originals[v][p] = v.get(p)
 
 
@@ -295,8 +295,9 @@ func _field_specs() -> Array:
 			return [["hold_offset", layout(), "hold_offset", 0.001], ["hold_scale", layout(), "hold_scale", 0.01]]
 	var v := death_view()
 	var p := "prone_" if dead_prone else "stand_"
-	return [[p + "roll", v, p + "roll", 0.5], [p + "offset", v, p + "offset", 0.001], [p + "scale", v, p + "scale", 0.01],
-		[p + "pivot", v, p + "pivot", 0.005], ["eye_height", v, "eye_height", 0.01]]
+	return [[p + "pitch", v, p + "pitch", 1.0], [p + "yaw", v, p + "yaw", 1.0], [p + "roll", v, p + "roll", 0.5],
+		["keep_look", v, "keep_look", 0.05], ["eye_height", v, "eye_height", 0.01], ["camera_time", v, "camera_time", 0.05],
+		[p + "offset", v, p + "offset", 0.001], [p + "scale", v, p + "scale", 0.01], [p + "pivot", v, p + "pivot", 0.005]]
 
 
 func _rebuild_fields() -> void:
@@ -432,6 +433,8 @@ func _gui_input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	if not visible:
 		return
+	position = Vector2.ZERO
+	size = get_viewport_rect().size  # anchors alone leave it 0x0 under a CanvasLayer, and then the screen gets no clicks
 	var weapon_mode := mode in [Mode.HIP, Mode.SIGHT, Mode.MUZZLE]
 	_next_button.visible = weapon_mode
 	_canted_button.visible = mode == Mode.SIGHT

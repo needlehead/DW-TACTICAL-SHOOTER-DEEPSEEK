@@ -82,7 +82,7 @@ Bullet impacts leave a decal, a dust burst tinted to the surface colour, and deb
 `BodySprite` (in `player.tscn` → ViewmodelLayer, behind the gun) shows full-screen frames of your own body, rendered looking down:
 `idle_sprite`, `walk_sprites` (looped by distance walked, `cycle_length` m per loop, reversed when backing up) and `dead_sprite`.
 It slides into view as you look down; `frame_pitch` is the look pitch the frames were rendered at, `body_scale` the frame size. Hidden while prone.
-Killed while prone: `dead_prone_sprite`. Each death (standing / prone) has its own view roll, and its frame tilts with it. The death view (camera height, tilt, both death frames' position and size, the prone tilt centre) lives in `player/death_view.tres`; edit it live with **F4 → Dead** (Standing / Prone picks which). Footstep clips are in `Footsteps.steps`.
+Killed while prone: `dead_prone_sprite`. Each death (standing / prone) has its own view roll, and its frame tilts with it. The death view (camera height, tilt, both death frames' position and size, tilt centres, the dead camera's pitch / yaw / roll, how much of her last look it keeps and how fast it settles) lives in `player/death_view.tres`; edit it live with **F4 → Dead** (Standing / Prone picks which). Footstep clips are in `Footsteps.steps`.
 `crouch_idle_sprite` / `crouch_walk_sprites` replace the standing frames while crouched.
 
 `Portrait` (HUDLayer, bottom-left) shows `full` / `hurt` / `low` / `dead` by health; thresholds `hurt_below` (0.66) and

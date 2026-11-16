@@ -74,6 +74,7 @@ var look_yaw := 0.0
 var look_pitch := 0.0
 var viewmodel_aim := Vector2.INF  ## screen point the 2D gun's barrel points at (set by SpriteViewmodel); INF = none
 var death_roll := 0.0  ## current view roll in degrees once dead (DeathView stand_roll / prone_roll)
+var death_t := 0.0  ## 0..1 into the death camera (DeathView.camera_time)
 var preview_death := 0  ## F4 -> Dead shows the death view while alive: 1 standing, 2 prone
 var eye_height := 1.65
 var spawn_transform: Transform3D
@@ -217,9 +218,15 @@ func _process(delta: float) -> void:
 	recoil = recoil.lerp(recoil_target, minf(1.0, 30.0 * delta))
 	_apply_look(Vector2.ZERO)  # re-clamps freeaim as the ADS deadzone shrinks
 	rotation.y = deg_to_rad(look_yaw + recoil.x)
-	head.rotation.x = deg_to_rad(clampf(look_pitch + recoil.y, -max_pitch, max_pitch))
-	var roll_target := death_view.prone_roll if death_prone() else death_view.stand_roll
-	death_roll = move_toward(death_roll, roll_target, maxf(absf(roll_target), 1.0) / 0.7 * delta) if shows_death() else 0.0  # eases in over 0.7 s
+	# Death camera: eases from the live look to the death view's pitch / yaw / roll (dead or the F4 preview).
+	death_t = move_toward(death_t, 1.0, delta / maxf(death_view.camera_time, 0.01)) if shows_death() else 0.0
+	var e := smoothstep(0.0, 1.0, death_t)
+	var dv := "prone_" if death_prone() else "stand_"
+	var live_pitch := clampf(look_pitch + recoil.y, -max_pitch, max_pitch)
+	var dead_pitch := lerpf(death_view.get(dv + "pitch"), live_pitch, death_view.keep_look)
+	head.rotation.x = deg_to_rad(lerpf(live_pitch, dead_pitch, e))
+	head.rotation.y = deg_to_rad(float(death_view.get(dv + "yaw")) * e)
+	death_roll = float(death_view.get(dv + "roll")) * e
 	head.rotation.z = deg_to_rad(death_roll)
 	camera.rotation = camera_noise(Time.get_ticks_msec() / 1000.0)
 
