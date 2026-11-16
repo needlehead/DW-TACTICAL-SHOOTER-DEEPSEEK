@@ -223,6 +223,12 @@ mouse_filter = 2
 [node name="NVGBackBuffer" type="BackBufferCopy" parent="PostFXLayer"]
 copy_mode = 2
 
+[node name="FatigueFX" type="ColorRect" parent="PostFXLayer"]
+script = ExtResource("28_fatigue")
+
+[node name="FatigueBackBuffer" type="BackBufferCopy" parent="PostFXLayer"]
+copy_mode = 2
+
 [node name="Bodycam" type="ColorRect" parent="PostFXLayer"]
 material = SubResource("bodycam_mat")
 anchors_preset = 15
@@ -235,9 +241,6 @@ script = ExtResource("17_bodycam")
 
 [node name="HUDLayer" type="CanvasLayer" parent="."]
 layer = 3
-
-[node name="FatigueFX" type="ColorRect" parent="HUDLayer"]
-script = ExtResource("28_fatigue")
 
 [node name="DamageFeedback" type="ColorRect" parent="HUDLayer"]
 script = ExtResource("27_dmgfx")
