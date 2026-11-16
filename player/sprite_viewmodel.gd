@@ -32,6 +32,7 @@ extends TextureRect
 @export var flash_light := 1.2  ## how brightly an unsuppressed shot lights the gun sprite
 @export var flash_light_time := 0.07  ## seconds the light takes to fade
 @export var lean_roll := 0.1  ## radians the gun cants into a full lean (hip only: aimed, the sights stay lined up)
+@export var lean_shift := 0.04  ## screen heights the gun slides toward the lean side (hip only)
 @export var ads_zoom := 0.12
 @export var ads_shift := Vector2(-0.1, -0.03)
 
@@ -115,6 +116,7 @@ func _process(delta: float) -> void:
 	var rl := reload_sway(w)
 	off += rl * k
 	var shove := shot_shove(w)
+	off.x += player.lean * lean_shift * k * (1.0 - player.ads_blend)
 	off += fire_shove * k * shove
 
 	size = vp * (1.0 + overscan)
