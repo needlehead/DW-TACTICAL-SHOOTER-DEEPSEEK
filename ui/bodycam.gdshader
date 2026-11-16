@@ -13,6 +13,15 @@ uniform float highlight_knee : hint_range(0.5, 1.0) = 0.75;  // brightness above
 uniform vec3 tint = vec3(0.98, 1.0, 1.02);
 uniform float vignette : hint_range(0.0, 1.0) = 0.55;
 uniform float grain : hint_range(0.0, 0.3) = 0.05;
+// The tablet (frame + hands) is kept free of colour fringing: Phone passes its frame texture and the screen -> frame
+// transform; where the frame is opaque, aberration is off. Everything else of the lens still applies to it.
+uniform bool tablet_on = false;
+uniform sampler2D tablet_tex : filter_linear, repeat_disable;
+uniform vec2 tablet_x = vec2(1.0, 0.0);  // inverse transform columns (viewport pixels -> frame local)
+uniform vec2 tablet_y = vec2(0.0, 1.0);
+uniform vec2 tablet_o = vec2(0.0);
+uniform vec2 tablet_size = vec2(1.0);
+uniform vec2 view_size = vec2(1.0);
 
 // Must match Bodycam.distort() in bodycam.gd (used to place HUD markers).
 vec2 distort(vec2 uv, float aspect) {
@@ -20,6 +29,14 @@ vec2 distort(vec2 uv, float aspect) {
 	vec2 da = d * vec2(aspect, 1.0);
 	float corner = (aspect * aspect + 1.0) * 0.25;
 	return 0.5 + d * (1.0 + distortion * dot(da, da)) / (1.0 + distortion * corner);
+}
+
+float tablet_mask(vec2 uv) {
+	if (!tablet_on) return 0.0;
+	vec2 p = uv * view_size;
+	vec2 f = (tablet_x * p.x + tablet_y * p.y + tablet_o) / tablet_size;
+	if (f.x < 0.0 || f.x > 1.0 || f.y < 0.0 || f.y > 1.0) return 0.0;
+	return texture(tablet_tex, f).a;
 }
 
 float hash(vec2 p) {
@@ -33,8 +50,12 @@ void fragment() {
 	vec2 from_c = uv - 0.5;
 
 	vec3 col = texture(screen_tex, uv).rgb;
-	col.r = texture(screen_tex, 0.5 + from_c * (1.0 + aberration)).r;
-	col.b = texture(screen_tex, 0.5 + from_c * (1.0 - aberration)).b;
+	// No split on the tablet, and none that would pull the tablet's colours out past its outline.
+	vec2 uv_r = 0.5 + from_c * (1.0 + aberration);
+	vec2 uv_b = 0.5 + from_c * (1.0 - aberration);
+	float m = tablet_mask(uv);
+	col.r = mix(texture(screen_tex, uv_r).r, col.r, max(m, tablet_mask(uv_r)));
+	col.b = mix(texture(screen_tex, uv_b).b, col.b, max(m, tablet_mask(uv_b)));
 
 	// Unsharp mask: cheap cameras over-sharpen.
 	vec3 blur = (texture(screen_tex, uv + vec2(px.x, 0.0) * 1.5).rgb + texture(screen_tex, uv - vec2(px.x, 0.0) * 1.5).rgb

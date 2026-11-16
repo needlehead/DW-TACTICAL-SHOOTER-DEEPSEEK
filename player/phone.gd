@@ -87,6 +87,8 @@ func _process(delta: float) -> void:
 		_flip = 0.0 if visible else 1.0  # reset to Status while put away: no animation
 	_flip = minf(_flip + delta / maxf(flip_time, 0.01), 1.0)
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if visible else SubViewport.UPDATE_DISABLED
+	var lens := (owner.get_node("PostFXLayer/Bodycam") as ColorRect).material as ShaderMaterial
+	lens.set_shader_parameter("tablet_on", visible)
 	if not visible:
 		return
 	var vp := get_viewport_rect().size
@@ -104,6 +106,14 @@ func _process(delta: float) -> void:
 	_poly.polygon = pts
 	(_poly.material as ShaderMaterial).set_shader_parameter("undo_tint", (owner.get_node("ViewmodelLayer/SpriteShadow") as SpriteShadow).undo_tint())
 	_screen.queue_redraw()
+	# Tell the bodycam where the tablet is, so it leaves its colour fringing off it.
+	var inv := get_global_transform().affine_inverse()
+	lens.set_shader_parameter("tablet_tex", frame)
+	lens.set_shader_parameter("tablet_x", inv.x)
+	lens.set_shader_parameter("tablet_y", inv.y)
+	lens.set_shader_parameter("tablet_o", inv.origin)
+	lens.set_shader_parameter("tablet_size", size)
+	lens.set_shader_parameter("view_size", vp)
 
 
 func _draw_screen() -> void:
