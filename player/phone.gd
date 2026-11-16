@@ -81,6 +81,7 @@ func _ready() -> void:
 	var mat := ShaderMaterial.new()
 	mat.shader = preload("res://player/unshaded.gdshader")  # the screen is backlit: it never darkens in shade or the dark
 	_poly.material = mat
+	_poly.antialiased = true  # smooth screen edges as the tablet sways and tilts
 	add_child(_poly)
 	c = theme(heroine_color)
 	if outfit_sprite:
@@ -156,6 +157,7 @@ func _process(delta: float) -> void:
 	for uv in screen_quad:
 		pts.append(uv * size)
 	_poly.polygon = pts
+	_match_resolution(pts)
 	(_poly.material as ShaderMaterial).set_shader_parameter("undo_tint", (owner.get_node("ViewmodelLayer/SpriteShadow") as SpriteShadow).undo_tint())
 	_screen.queue_redraw()
 	# Tell the bodycam where the tablet is, so it leaves its colour fringing off it.
@@ -166,6 +168,20 @@ func _process(delta: float) -> void:
 	lens.set_shader_parameter("tablet_o", inv.origin)
 	lens.set_shader_parameter("tablet_size", size)
 	lens.set_shader_parameter("view_size", vp)
+
+
+## Render the screen at about the size it appears, so text and lines stay sharp instead of being shrunk from
+## 720x500 without mipmaps (which skips pixels and looks jagged). The pages still lay out in screen_size units.
+func _match_resolution(pts: PackedVector2Array) -> void:
+	var px := get_screen_transform().get_scale()
+	var shown := Vector2(pts[0].distance_to(pts[1]) * px.x, pts[0].distance_to(pts[3]) * px.y)
+	var k := clampf(maxf(shown.x / screen_size.x, shown.y / screen_size.y), 0.25, 2.0)
+	if absf(k - _screen.scale.x) < 0.04 * _screen.scale.x:  # sway changes it a little every frame; resize on real changes
+		return
+	var res := Vector2i((Vector2(screen_size) * k).ceil())
+	_vp.size = res
+	_screen.scale = Vector2(k, k)
+	_poly.uv = PackedVector2Array([Vector2.ZERO, Vector2(res.x, 0), Vector2(res), Vector2(0, res.y)])
 
 
 func _draw_screen() -> void:
