@@ -26,6 +26,9 @@ extends TextureRect
 ## the stance change smoothly. Values are at full prone; crouch gets about 40% of them.
 @export var low_stance_zoom := 0.14
 @export var low_stance_shift := Vector2(-0.04, 0.02)  ## screen heights (x left/right, y down)
+## Guns without a shoot frame: the idle frame is shoved back by each shot instead (screen heights right/down, radians).
+@export var fire_shove := Vector2(0.008, 0.025)
+@export var fire_shove_rot := 0.012
 @export var flash_light := 1.2  ## how brightly an unsuppressed shot lights the gun sprite
 @export var flash_light_time := 0.07  ## seconds the light takes to fade
 @export var ads_zoom := 0.12
@@ -61,6 +64,13 @@ func hand_offset(k: float, with_freeaim := true) -> Vector2:
 	return Vector2(
 		-sway.x * sway_scale + bob.x * bob_scale + inertia.x * inertia_scale - fa.x,
 		-sway.y * sway_scale - bob.y * bob_scale - inertia.y * inertia_scale - fa.y) * k
+
+
+## 1 right after a shot fading to 0 over shoot_frame_time, for guns that fire on the idle frame (no shoot frame).
+func shot_shove(w: Weapon) -> float:
+	if w.data.shoot_sprite or texture != w.data.idle_sprite:
+		return 0.0
+	return maxf(0.0, 1.0 - w.since_shot / w.data.shoot_frame_time)
 
 
 ## Reload hand motion as a screen offset (screen heights). Eased in and out (zero slope at both ends) so the
@@ -103,6 +113,8 @@ func _process(delta: float) -> void:
 	off += mode_switch_drop * k * flick
 	var rl := reload_sway(w)
 	off += rl * k
+	var shove := shot_shove(w)
+	off += fire_shove * k * shove
 
 	size = vp * (1.0 + overscan)
 	var base := Vector2(-vp.x * overscan * 0.5, 0.0)  # overscan hangs below the screen
@@ -116,11 +128,11 @@ func _process(delta: float) -> void:
 	var rest_aim := vp * 0.5 - (base + d.sprite_offset * k)  # sprite-local point that sits on screen centre at rest
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
-	rotation = kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0)
+	rotation = kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0) + fire_shove_rot * shove
 	# Where the barrel points: the rest point carried by the sprite's motion; aiming pulls it onto the sights (centre).
 	player.viewmodel_aim = (get_transform() * rest_aim).lerp(vp * 0.5, player.ads_blend)
 
-	var shooting := texture == d.shoot_sprite and d.shoot_blur > 0.0
+	var shooting := (texture == d.shoot_sprite or shove > 0.0) and d.shoot_blur > 0.0
 	var fade := 1.0 - w.since_shot / d.shoot_frame_time if shooting else 0.0
 	# Angle in image space (counter-clockwise from +x); UV y points down and is scaled by the frame aspect.
 	var a := deg_to_rad(d.shoot_blur_angle)

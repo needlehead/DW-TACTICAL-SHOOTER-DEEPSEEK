@@ -93,6 +93,7 @@ const AUTO := 4
 @export var shoot_blur_angle := -34.0  ## degrees, Paint.NET convention: 0 = horizontal, negative = down-right
 @export var muzzle_uv := Vector2(0.5, 0.5)  ## muzzle position on the idle/shoot frame (0-1); smoke spawns here
 @export var suppressed := false  ## muzzle smoke instead of flash light
+@export var muzzle_behind := false  ## flash drawn behind the gun sprite (the muzzle points away, hidden by the gun)
 
 @export_group("Attachments")
 @export var laser := false  ## laser sight: a dot where the shots go, a beam you see in the dark (toggle L)

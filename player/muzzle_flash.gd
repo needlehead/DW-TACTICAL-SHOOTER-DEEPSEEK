@@ -42,6 +42,7 @@ func _on_fired(w: Weapon) -> void:
 	if w.data.suppressed or not sprite.visible or not _at_hip(w):
 		return
 	_t = 0.0
+	z_index = -1 if w.data.muzzle_behind else 0  # -1: under the gun sprite, so the gun hides the flash
 	_radius = randf_range(size_range.x, size_range.y)
 	_spin = randf() * TAU
 	_lengths.resize(spikes)

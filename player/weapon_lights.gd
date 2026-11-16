@@ -86,7 +86,7 @@ func _process(_delta: float) -> void:
 		# Just below and right of the eye: close enough to read as the gun's light, far enough to cast visible shadows.
 		_light.global_transform = Transform3D(aim, cam.global_position + cam.global_basis * Vector3(0.12, -0.15, 0.0))
 
-	dot_visible = shown and d.laser and w.laser_on
+	dot_visible = shown and d.laser and w.laser_on and player.sprint_blend < 0.5  # off while the gun is lowered for sprinting
 	_beam_alpha = 0.0
 	if dot_visible:
 		var from := cam.global_position
