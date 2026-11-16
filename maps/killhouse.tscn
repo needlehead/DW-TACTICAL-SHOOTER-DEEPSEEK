@@ -1,12 +1,9 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dxyc4k2cxj6cg"]
 
 [ext_resource type="PackedScene" path="res://maps/door.tscn" id="1_5pou3"]
-[ext_resource type="Script" path="res://maps/door.gd" id="2_immnm"]
 [ext_resource type="PackedScene" path="res://ai/dummy.tscn" id="3_mncj7"]
-[ext_resource type="Script" path="res://ai/dummy.gd" id="4_vuqpj"]
-[ext_resource type="Resource" path="res://weapons/data/smg.tres" id="5_g5x3w"]
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="6_78idy"]
-[ext_resource type="Script" path="res://player/player.gd" id="7_krsat"]
+[ext_resource type="PackedScene" path="res://maps/dark_area.tscn" id="7_dark"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_w33og"]
 
@@ -649,166 +646,98 @@ font_size = 64
 
 [node name="Doors" type="Node3D" parent="." unique_id=996583647]
 
-[node name="Door" type="AnimatableBody3D" parent="Doors" unique_id=497340516 instance=ExtResource("1_5pou3")]
+[node name="Door" parent="Doors" unique_id=497340516 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, 1.25)
-collision_layer = 9
-collision_mask = 0
-script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@2" type="AnimatableBody3D" parent="Doors" unique_id=1639956668 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@2" parent="Doors" unique_id=1639956668 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 1.25)
-collision_layer = 9
-collision_mask = 0
-script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@3" type="AnimatableBody3D" parent="Doors" unique_id=18892773 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@3" parent="Doors" unique_id=18892773 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -1.25)
-collision_layer = 9
-collision_mask = 0
-script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@4" type="AnimatableBody3D" parent="Doors" unique_id=1359804456 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@4" parent="Doors" unique_id=1359804456 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, -1.25)
-collision_layer = 9
-collision_mask = 0
-script = ExtResource("2_immnm")
 
-[node name="@AnimatableBody3D@5" type="AnimatableBody3D" parent="Doors" unique_id=1898470006 instance=ExtResource("1_5pou3")]
+[node name="@AnimatableBody3D@5" parent="Doors" unique_id=1898470006 instance=ExtResource("1_5pou3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, -9)
-collision_layer = 9
-collision_mask = 0
-script = ExtResource("2_immnm")
 
 [node name="Dummies" type="Node3D" parent="." unique_id=728357150]
 
-[node name="Range0" type="CharacterBody3D" parent="Dummies" unique_id=2032691872 instance=ExtResource("3_mncj7")]
+[node name="Range0" parent="Dummies" unique_id=2032691872 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 24)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
 shoots_back = false
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range1" type="CharacterBody3D" parent="Dummies" unique_id=8485948 instance=ExtResource("3_mncj7")]
+[node name="Range1" parent="Dummies" unique_id=8485948 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 39)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
 shoots_back = false
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range2" type="CharacterBody3D" parent="Dummies" unique_id=1755494783 instance=ExtResource("3_mncj7")]
+[node name="Range2" parent="Dummies" unique_id=1755494783 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 64)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
 shoots_back = false
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range3" type="CharacterBody3D" parent="Dummies" unique_id=195582094 instance=ExtResource("3_mncj7")]
+[node name="Range3" parent="Dummies" unique_id=195582094 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 114)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
 shoots_back = false
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Range4" type="CharacterBody3D" parent="Dummies" unique_id=544868895 instance=ExtResource("3_mncj7")]
+[node name="Range4" parent="Dummies" unique_id=544868895 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 29)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
 shoots_back = false
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.55, 0.5, 1)
 
-[node name="Room5" type="CharacterBody3D" parent="Dummies" unique_id=1602121593 instance=ExtResource("3_mncj7")]
+[node name="Room5" parent="Dummies" unique_id=1602121593 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -6)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room6" type="CharacterBody3D" parent="Dummies" unique_id=2037225424 instance=ExtResource("3_mncj7")]
+[node name="Room6" parent="Dummies" unique_id=2037225424 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -6)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room7" type="CharacterBody3D" parent="Dummies" unique_id=695712405 instance=ExtResource("3_mncj7")]
+[node name="Room7" parent="Dummies" unique_id=695712405 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 6)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room8" type="CharacterBody3D" parent="Dummies" unique_id=510091609 instance=ExtResource("3_mncj7")]
+[node name="Room8" parent="Dummies" unique_id=510091609 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 3)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Room9" type="CharacterBody3D" parent="Dummies" unique_id=1039196792 instance=ExtResource("3_mncj7")]
+[node name="Room9" parent="Dummies" unique_id=1039196792 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -5)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array()
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.8, 0.45, 0.3, 1)
 
-[node name="Patrol10" type="CharacterBody3D" parent="Dummies" unique_id=301224934 instance=ExtResource("3_mncj7")]
+[node name="Patrol10" parent="Dummies" unique_id=301224934 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, 0)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array(-10.5, 0, 0, 10.5, 0, 0)
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.35, 0.75, 1)
 
-[node name="Patrol11" type="CharacterBody3D" parent="Dummies" unique_id=1582927128 instance=ExtResource("3_mncj7")]
+[node name="Patrol11" parent="Dummies" unique_id=1582927128 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 5)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array(-9, 0, 5, -3, 0, 3.5)
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.35, 0.75, 1)
 
-[node name="Patrol12" type="CharacterBody3D" parent="Dummies" unique_id=1994104195 instance=ExtResource("3_mncj7")]
+[node name="Patrol12" parent="Dummies" unique_id=1994104195 instance=ExtResource("3_mncj7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -12)
-collision_layer = 2
-collision_mask = 3
-script = ExtResource("4_vuqpj")
 patrol_points = PackedVector3Array(-16, 0, -12, 16, 0, -12)
-weapon = ExtResource("5_g5x3w")
 body_color = Color(0.55, 0.35, 0.75, 1)
 
-[node name="Player" type="CharacterBody3D" parent="." unique_id=759163239 instance=ExtResource("6_78idy")]
+[node name="DarkArea" parent="." instance=ExtResource("7_dark")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 18)
+
+[node name="Player" parent="." unique_id=759163239 instance=ExtResource("6_78idy")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.05, 12.5)
-collision_layer = 2
-collision_mask = 3
-floor_snap_length = 0.3
-script = ExtResource("7_krsat")
 eye_heights = PackedFloat32Array(1.65, 1.1, 0.35)
 capsule_heights = PackedFloat32Array(1.8, 1.25, 0.6)
 stance_spread_mult = PackedFloat32Array(1, 0.75, 0.5)

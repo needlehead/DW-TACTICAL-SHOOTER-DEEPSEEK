@@ -3,6 +3,31 @@
 [ext_resource type="Script" uid="uid://dhdk3my2xnm08" path="res://weapons/weapon_data.gd" id="1_wd"]
 [ext_resource type="Texture2D" uid="uid://dxuu0ysipl7h2" path="res://koikatsu sprites/testing/idle.png" id="2_idle"]
 [ext_resource type="Texture2D" uid="uid://tgu53fire34q" path="res://koikatsu sprites/testing/shoot.png" id="3_shoot"]
+[ext_resource type="Texture2D" uid="uid://b8alg611l2tac" path="res://koikatsu sprites/testing/aim (1).png" id="a1"]
+[ext_resource type="Texture2D" uid="uid://bmu1o57uj28u2" path="res://koikatsu sprites/testing/aim (2).png" id="a2"]
+[ext_resource type="Texture2D" uid="uid://bb5ubw31ib4sl" path="res://koikatsu sprites/testing/aim (3).png" id="a3"]
+[ext_resource type="Texture2D" uid="uid://xvcxr77dyyxd" path="res://koikatsu sprites/testing/aim (4).png" id="a4"]
+[ext_resource type="Texture2D" uid="uid://dxumufenxe5o1" path="res://koikatsu sprites/testing/aim (5).png" id="a5"]
+[ext_resource type="Texture2D" uid="uid://bqi4tr80pxs7l" path="res://koikatsu sprites/testing/empty_reload (1).png" id="e1"]
+[ext_resource type="Texture2D" uid="uid://nhbnn5wee8mq" path="res://koikatsu sprites/testing/empty_reload (2).png" id="e2"]
+[ext_resource type="Texture2D" uid="uid://dtqmq6x7tug2v" path="res://koikatsu sprites/testing/empty_reload (3).png" id="e3"]
+[ext_resource type="Texture2D" uid="uid://bnuw47yernwt" path="res://koikatsu sprites/testing/empty_reload (4).png" id="e4"]
+[ext_resource type="Texture2D" uid="uid://cxqnflpfjk5q7" path="res://koikatsu sprites/testing/empty_reload (5).png" id="e5"]
+[ext_resource type="Texture2D" uid="uid://dupdupaatiacm" path="res://koikatsu sprites/testing/empty_reload (6).png" id="e6"]
+[ext_resource type="Texture2D" uid="uid://ckm4dx6tpg6sy" path="res://koikatsu sprites/testing/empty_reload (7).png" id="e7"]
+[ext_resource type="Texture2D" uid="uid://cqvcbydjxynb1" path="res://koikatsu sprites/testing/empty_reload (8).png" id="e8"]
+[ext_resource type="Texture2D" uid="uid://cxsmww7886qjw" path="res://koikatsu sprites/testing/empty_reload (9).png" id="e9"]
+[ext_resource type="Texture2D" uid="uid://cf0xrcmmle6hl" path="res://koikatsu sprites/testing/empty_reload (10).png" id="e10"]
+[ext_resource type="Texture2D" uid="uid://c3w0o26ff4uck" path="res://koikatsu sprites/testing/empty_reload (11).png" id="e11"]
+[ext_resource type="Texture2D" uid="uid://b8yuw6oa8ov0l" path="res://koikatsu sprites/testing/empty_reload (12).png" id="e12"]
+[ext_resource type="Texture2D" uid="uid://bnapd8t3xrcav" path="res://koikatsu sprites/testing/empty_reload (13).png" id="e13"]
+[ext_resource type="Texture2D" uid="uid://cs0e4jxwhp2vd" path="res://koikatsu sprites/testing/empty_reload (14).png" id="e14"]
+[ext_resource type="Texture2D" uid="uid://bcke6la6mtojs" path="res://koikatsu sprites/testing/empty_reload (15).png" id="e15"]
+[ext_resource type="Texture2D" uid="uid://bu0auqv6nwm5c" path="res://koikatsu sprites/testing/empty_reload (16).png" id="e16"]
+[ext_resource type="Texture2D" uid="uid://c8ch7h5ymwpco" path="res://koikatsu sprites/testing/empty_reload (17).png" id="e17"]
+[ext_resource type="Texture2D" uid="uid://dncs0kdichgot" path="res://koikatsu sprites/testing/empty_reload (18).png" id="e18"]
+[ext_resource type="Texture2D" uid="uid://qxcqkbpupc2x" path="res://koikatsu sprites/testing/empty_reload (19).png" id="e19"]
+[ext_resource type="Texture2D" uid="uid://boj7nkedv088p" path="res://koikatsu sprites/testing/empty_reload (20).png" id="e20"]
 [ext_resource type="Texture2D" uid="uid://ct75k5wi5hkrt" path="res://koikatsu sprites/testing/reload (1).png" id="r1"]
 [ext_resource type="Texture2D" uid="uid://dgtsuiyugklut" path="res://koikatsu sprites/testing/reload (2).png" id="r2"]
 [ext_resource type="Texture2D" uid="uid://t1xpcc0l0pkj" path="res://koikatsu sprites/testing/reload (3).png" id="r3"]
@@ -12,32 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://4qohelq55t5u" path="res://koikatsu sprites/testing/reload (7).png" id="r7"]
 [ext_resource type="Texture2D" uid="uid://7wllqpgk77xt" path="res://koikatsu sprites/testing/reload (8).png" id="r8"]
 [ext_resource type="Texture2D" uid="uid://b5atdt7y6c381" path="res://koikatsu sprites/testing/reload (9).png" id="r9"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (1).png" id="e1"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (2).png" id="e2"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (3).png" id="e3"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (4).png" id="e4"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (5).png" id="e5"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (6).png" id="e6"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (7).png" id="e7"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (8).png" id="e8"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (9).png" id="e9"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (10).png" id="e10"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (11).png" id="e11"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (12).png" id="e12"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (13).png" id="e13"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (14).png" id="e14"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (15).png" id="e15"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (16).png" id="e16"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (17).png" id="e17"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (18).png" id="e18"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (19).png" id="e19"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/empty_reload (20).png" id="e20"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (1).png" id="a1"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (2).png" id="a2"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (3).png" id="a3"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (4).png" id="a4"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/aim (5).png" id="a5"]
-[ext_resource type="AudioStream" path="res://my sounds/mp7/mp7supfire.ogg" id="snd_fire"]
+[ext_resource type="AudioStream" uid="uid://drvtsivpg18qo" path="res://my sounds/mp7/mp7supfire.ogg" id="snd_fire"]
 
 [resource]
 script = ExtResource("1_wd")
@@ -71,14 +71,16 @@ vm_kick_back = 0.03
 vm_kick_rot = 1.5
 idle_sprite = ExtResource("2_idle")
 shoot_sprite = ExtResource("3_shoot")
-sight_window = Rect2(0.5086, 0.3875, 0.05, 0.066)
-reticle_size = 0.042
 aim_sprites = Array[Texture2D]([ExtResource("a1"), ExtResource("a2"), ExtResource("a3"), ExtResource("a4"), ExtResource("a5")])
+sight_window = Rect2(0.5086, 0.3875, 0.05, 0.066)
+reticle_size = 0.035
 reload_sprites = Array[Texture2D]([ExtResource("r1"), ExtResource("r2"), ExtResource("r3"), ExtResource("r4"), ExtResource("r5"), ExtResource("r6"), ExtResource("r7"), ExtResource("r8"), ExtResource("r9")])
 empty_reload_sprites = Array[Texture2D]([ExtResource("e1"), ExtResource("e2"), ExtResource("e3"), ExtResource("e4"), ExtResource("e5"), ExtResource("e6"), ExtResource("e7"), ExtResource("e8"), ExtResource("e9"), ExtResource("e10"), ExtResource("e11"), ExtResource("e12"), ExtResource("e13"), ExtResource("e14"), ExtResource("e15"), ExtResource("e16"), ExtResource("e17"), ExtResource("e18"), ExtResource("e19"), ExtResource("e20")])
-muzzle_uv = Vector2(0.583, 0.506)
-suppressed = true
 fire_sound = ExtResource("snd_fire")
+muzzle_uv = Vector2(0.583, 0.506)
+laser = true
+laser_uv = Vector2(0.575, 0.53)
+suppressed = true
 vm_size = Vector3(0.06, 0.11, 0.5)
 color = Color(0.3, 0.3, 0.32, 1)
 hip_offset = Vector3(0.16, -0.15, -0.3)
