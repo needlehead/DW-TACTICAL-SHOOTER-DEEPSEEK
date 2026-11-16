@@ -9,7 +9,7 @@ const PAGES := ["STATUS", "OBJECTIVE", "RUN", "GEAR"]
 
 @export var frame: Texture2D
 ## Screen corners on the frame (0-1 UV): top-left, top-right, bottom-right, bottom-left.
-@export var screen_quad := PackedVector2Array([Vector2(0.3813, 0.474), Vector2(0.5229, 0.4556), Vector2(0.5318, 0.6208), Vector2(0.3896, 0.6535)])
+@export var screen_quad := PackedVector2Array([Vector2(0.3898, 0.3778), Vector2(0.6195, 0.3826), Vector2(0.6223, 0.6674), Vector2(0.382, 0.6604)])
 @export var raise_drop := 0.8  ## screen heights below the bottom edge when put away
 @export var sway_amount := 1.0  ## 1 = moves exactly like the gun (sway, walk bob, inertia)
 @export var sway_tilt := 0.6  ## radians of tilt per screen height of sideways sway
@@ -79,7 +79,7 @@ func _process(_delta: float) -> void:
 	var e := 1.0 - pow(1.0 - t, 3.0)  # ease out: quick lift, gentle settle
 	var sway: Vector2 = hands.hand_offset(vp.y, false) * sway_amount
 	position = Vector2(-vp.x * overscan * 0.5, 0.0) + layout.hold_offset * vp.y + sway + Vector2(0.0, (1.0 - e) * raise_drop * vp.y)
-	pivot_offset = Vector2(0.0, size.y)  # arm's exit corner stays put under scale and tilt
+	pivot_offset = Vector2(size.x * 0.5, size.y)  # held in both hands: scale and tilt around the bottom centre
 	scale = Vector2.ONE * layout.hold_scale
 	rotation = sway.x / vp.y * sway_tilt
 	var pts := PackedVector2Array()
