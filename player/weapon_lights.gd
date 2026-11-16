@@ -2,7 +2,7 @@ class_name WeaponLights
 extends Control
 ## Gun attachments (see WeaponData "Attachments"): laser sight, weapon flashlight and IR illuminator.
 ## Laser: a crisp dot in the world where the shots go (the same ray as hip fire, Player.aim_basis()) and a 2D beam
-## from the emitter on the sprite to the dot, in any light. IR mode (dot and beam) only shows through night vision.
+## from the emitter on the sprite to the dot, in any light; aimed at the sky the beam runs out toward the aim, no dot. IR mode (dot and beam) only shows through night vision.
 ## Flashlight: a shadowed spotlight from just below the eye, pointing where the gun points.
 ## IR illuminator: a wide flood light the same way; IR is invisible to the eye, so it only shines while the night
 ## vision is on.
@@ -101,27 +101,29 @@ func _process(_delta: float) -> void:
 
 	var ir := w.laser_mode == 2
 	# Off while the gun is lowered for sprinting; an IR laser only shows through night vision.
-	dot_visible = shown and d.laser and w.laser_mode > 0 and (not ir or nv.on) and player.sprint_blend < 0.5
+	var lasing := shown and d.laser and w.laser_mode > 0 and (not ir or nv.on) and player.sprint_blend < 0.5
 	var laser_color := IR_COLOR if ir else d.laser_color
+	dot_visible = false
 	_beam_alpha = 0.0
-	if dot_visible:
+	if lasing:
 		var from := cam.global_position
 		var q := PhysicsRayQueryParameters3D.create(from, from - aim.z * 300.0, Ballistics.WORLD | Ballistics.HITBOX,
 			[player.get_rid()] + player.hitbox_rids())
 		q.collide_with_areas = true
 		var hit := player.get_world_3d().direct_space_state.intersect_ray(q)
+		# Nothing hit (sky, open distance): no dot, but the beam still runs out toward the aim.
 		dot_visible = not hit.is_empty()
+		var p: Vector3 = (hit.position + hit.normal * 0.01) if dot_visible else from - aim.z * 300.0
 		if dot_visible:
-			var p: Vector3 = hit.position + hit.normal * 0.01
 			_dot.global_position = p
 			(_dot.mesh.surface_get_material(0) as StandardMaterial3D).albedo_color = laser_color
-			# Beam only from the hip frames (the emitter's place on the aimed frames isn't known).
-			var hip := sprite.texture == d.idle_sprite or sprite.texture == d.shoot_sprite
-			if hip and not cam.is_position_behind(p):
-				_beam_from = sprite.get_global_transform() * (d.laser_uv * sprite.size)
-				_beam_to = cam.unproject_position(p)
-				_beam_alpha = 1.0 if nv.on else beam_strength
-				_beam_color = laser_color
+		# Beam only from the hip frames (the emitter's place on the aimed frames isn't known).
+		var hip := sprite.texture == d.idle_sprite or sprite.texture == d.shoot_sprite
+		if hip and not cam.is_position_behind(p):
+			_beam_from = sprite.get_global_transform() * (d.laser_uv * sprite.size)
+			_beam_to = cam.unproject_position(p)
+			_beam_alpha = 1.0 if nv.on else beam_strength
+			_beam_color = laser_color
 	_dot.visible = dot_visible
 	visible = _beam_alpha > 0.01
 	if visible:
