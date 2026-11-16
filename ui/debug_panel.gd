@@ -13,6 +13,8 @@ const WEAPON_TUNABLES := [
 	["move_spread", 0.0, 6.0, 0.1],
 	["spread_per_shot", 0.0, 2.0, 0.05],
 	["ads_time", 0.05, 1.0, 0.01],
+	["reload_time", 0.3, 6.0, 0.05],
+	["empty_reload_time", 0.3, 6.0, 0.05],
 	["vm_kick_back", 0.0, 0.15, 0.005],
 	["vm_kick_rot", 0.0, 15.0, 0.25],
 ]
