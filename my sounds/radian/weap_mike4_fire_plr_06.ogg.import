@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dblvd1g8doa2"
+path="res://.godot/imported/weap_mike4_fire_plr_06.ogg-95bceaa8fcf22ef77dec44a63ff38516.oggvorbisstr"
+
+[deps]
+
+source_file="res://my sounds/radian/weap_mike4_fire_plr_06.ogg"
+dest_files=["res://.godot/imported/weap_mike4_fire_plr_06.ogg-95bceaa8fcf22ef77dec44a63ff38516.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

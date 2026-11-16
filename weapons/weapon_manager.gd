@@ -12,6 +12,7 @@ enum State { READY, HOLSTER, EQUIP }
 @export var throw_speed := 14.0
 @export var equip_sound: AudioStream  ## gun coming up: weapon switch, after a grenade, phone put away
 @export var aim_sound: AudioStream  ## raising the gun to aim
+@export var page_sound: AudioStream  ## device page flip
 @export var handling_volume_db := -6.0
 @export var phone_time := 0.6  ## Tab: gun goes down (first half), then the phone comes up (second half); same for every heroine
 
@@ -93,6 +94,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func flip_page(dir: int) -> void:
 	phone_page = posmod(phone_page + dir, Phone.PAGES.size())
+	_play_foley(page_sound)
 
 
 ## Gun lowering share of the phone transition (0..1).

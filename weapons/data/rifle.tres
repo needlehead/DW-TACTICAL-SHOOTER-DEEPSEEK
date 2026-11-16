@@ -9,7 +9,12 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (7).png" id="r_a7"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (8).png" id="r_a8"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/newidle.png" id="r_idle"]
-[ext_resource type="AudioStream" path="res://my sounds/mp7/mp7supfire.ogg" id="snd_fire"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_01.ogg" id="rf1"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_02.ogg" id="rf2"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_03.ogg" id="rf3"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_04.ogg" id="rf4"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_05.ogg" id="rf5"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_06.ogg" id="rf6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (2).png" id="r_c2"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (3).png" id="r_c3"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (4).png" id="r_c4"]
@@ -38,6 +43,16 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0023.png" id="r_rl19"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/sprint/sprint.png" id="r_sprint"]
 
+[sub_resource type="AudioStreamRandomizer" id="fire_rand"]
+random_pitch = 1.03
+streams_count = 6
+stream_0/stream = ExtResource("rf1")
+stream_1/stream = ExtResource("rf2")
+stream_2/stream = ExtResource("rf3")
+stream_3/stream = ExtResource("rf4")
+stream_4/stream = ExtResource("rf5")
+stream_5/stream = ExtResource("rf6")
+
 [resource]
 script = ExtResource("1_wd")
 display_name = "Radian Rifle"
@@ -65,8 +80,7 @@ reticle_color = Color(1, 0.35, 0.1, 1)
 scope_magnification = 4.0
 canted_aim_sprites = Array[Texture2D]([ExtResource("r_c2"), ExtResource("r_c3"), ExtResource("r_c4"), ExtResource("r_c5"), ExtResource("r_c6"), ExtResource("r_c7")])
 canted_sight_window = Rect2(0.4742, 0.3965, 0.0738, 0.0889)
-fire_sound = ExtResource("snd_fire")
-fire_volume_db = 2.0
+fire_sound = SubResource("fire_rand")
 sprite_offset = Vector2(0.050000004, 0.08999999)
 muzzle_uv = Vector2(0.55, 0.434)
 muzzle_behind = true

@@ -31,6 +31,7 @@ extends TextureRect
 @export var fire_shove_rot := 0.012
 @export var flash_light := 1.2  ## how brightly an unsuppressed shot lights the gun sprite
 @export var flash_light_time := 0.07  ## seconds the light takes to fade
+@export var lean_roll := 0.1  ## radians the gun cants into a full lean (hip only: aimed, the sights stay lined up)
 @export var ads_zoom := 0.12
 @export var ads_shift := Vector2(-0.1, -0.03)
 
@@ -128,7 +129,7 @@ func _process(delta: float) -> void:
 	var rest_aim := vp * 0.5 - (base + d.sprite_offset * k)  # sprite-local point that sits on screen centre at rest
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
-	rotation = kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0) + fire_shove_rot * shove
+	rotation = player.lean * lean_roll * (1.0 - player.ads_blend) + kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0) + fire_shove_rot * shove
 	# Where the barrel points: the rest point carried by the sprite's motion; aiming pulls it onto the sights (centre).
 	player.viewmodel_aim = (get_transform() * rest_aim).lerp(vp * 0.5, player.ads_blend)
 
