@@ -5,7 +5,7 @@ shader_type canvas_item;
 // fibre-optic plate and a slow brightness shimmer, softens a little, and limits the view to two overlapping round
 // tubes with dark housing around them.
 
-uniform sampler2D screen_tex : hint_screen_texture, filter_linear, repeat_disable;
+uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap, repeat_disable;  // mips = blurred copies for the halo
 uniform float strength : hint_range(0.0, 1.0) = 1.0;  // 0 = off, 1 = full (fades in as the tubes power up)
 uniform float gain = 2.0;  // phosphor response to light; higher = brighter, washes out sooner
 uniform vec3 phosphor : source_color = vec3(0.78, 1.0, 0.82);  // green-white
@@ -39,16 +39,11 @@ void fragment() {
 	vec3 c = (raw * 2.0 + texture(screen_tex, uv + vec2(px.x, 0.0)).rgb + texture(screen_tex, uv - vec2(px.x, 0.0)).rgb
 		+ texture(screen_tex, uv + vec2(0.0, px.y)).rgb + texture(screen_tex, uv - vec2(0.0, px.y)).rgb) / 6.0;
 	float l = luma(c);
-	// Bloom: bright light in a ring around this pixel spills into it.
-	float glow = 0.0;
-	for (int i = 0; i < 8; i++) {
-		float a = float(i) * 0.785398;
-		for (int r = 1; r <= 2; r++) {
-			vec2 o = vec2(cos(a), sin(a)) * float(r) * 0.018 * vec2(px.x / px.y, 1.0);
-			glow += max(luma(texture(screen_tex, uv + o).rgb) - 0.65, 0.0) / float(r);
-		}
-	}
-	float v = 1.0 - exp(-(l * gain + glow * bloom * 0.25));
+	// Bloom: bright light spills into its surroundings. Read from the screen's blurred mip levels (a smooth halo);
+	// sampling a ring of points instead copied thin bright things (laser beams, dots) into ghost lines.
+	float glow = max(luma(textureLod(screen_tex, uv, 3.0).rgb) - 0.55, 0.0) * 0.6
+		+ max(luma(textureLod(screen_tex, uv, 5.0).rgb) - 0.5, 0.0);
+	float v = 1.0 - exp(-(l * gain + glow * bloom));
 	vec2 sp = uv / px;  // screen pixels
 	v *= 1.0 - honeycomb * smoothstep(0.6, 1.0, hex_edge(sp / honeycomb_size));
 	v *= 1.0 + shimmer * sin(TIME * 1.3 + uv.x * 3.0) * sin(TIME * 0.9 - uv.y * 2.5);
