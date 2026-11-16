@@ -1,7 +1,11 @@
+class_name Phone
 extends TextureRect
-## Diegetic status phone: hold Tab and Kei lowers the gun and raises a phone (WeaponManager.phone_blend).
+## Diegetic status device: Tab and Kei lowers the gun and raises it (WeaponManager.phone_open / phone_blend).
 ## The screen is drawn into a SubViewport and mapped onto the phone's screen quad in the frame, so it
-## sways and gets the bodycam lens with everything else. Read-only: name, outfit, vitals, weapon, mags.
+## sways and gets the bodycam lens with everything else. Read-only pages, flipped with Q/E or the wheel:
+## Status, Objective, Run, Gear. Fields for systems the game doesn't have yet show a dim dash.
+
+const PAGES := ["STATUS", "OBJECTIVE", "RUN", "GEAR"]
 
 @export var frame: Texture2D
 ## Screen corners on the frame (0-1 UV): top-left, top-right, bottom-right, bottom-left.
@@ -16,6 +20,7 @@ extends TextureRect
 @export var outfit_name := "HEAVY METAL"
 @export var outfit_sprite: Texture2D
 @export var screen_size := Vector2i(720, 500)
+@export var map_scale := 8.0  ## Objective map: pixels per metre
 
 const BG := Color(0.04, 0.07, 0.13)
 const DIM := Color(0.55, 0.65, 0.8)
@@ -25,6 +30,7 @@ var _vp := SubViewport.new()
 var _screen := Control.new()
 var _poly := Polygon2D.new()
 var _outfit: AtlasTexture
+var _run_start := 0.0  ## Run page clock; restarts on level reset
 
 @onready var player: Player = owner
 @onready var manager: WeaponManager = owner.get_node("LeanPivot/Head/Camera3D/Viewmodel/Weapons")
@@ -33,6 +39,8 @@ var _outfit: AtlasTexture
 
 
 func _ready() -> void:
+	add_to_group("resettable")
+	reset()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -54,6 +62,10 @@ func _ready() -> void:
 		_outfit = AtlasTexture.new()
 		_outfit.atlas = outfit_sprite
 		_outfit.region = Rect2(outfit_sprite.get_image().get_used_rect())
+
+
+func reset() -> void:
+	_run_start = Time.get_ticks_msec() / 1000.0
 
 
 func _process(_delta: float) -> void:
@@ -85,7 +97,23 @@ func _draw_screen() -> void:
 	_screen.draw_rect(Rect2(0, 0, s.x, 44), Color(0.08, 0.13, 0.24))
 	_screen.draw_string(font, Vector2(16, 31), heroine_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, TEXT)
 	_screen.draw_string(font, Vector2(0, 31), Time.get_time_string_from_system().left(5), HORIZONTAL_ALIGNMENT_RIGHT, s.x - 16, 24, DIM)
+	# Page tabs: the current one lit, Q/E hints at the ends.
+	var x := 236.0
+	_screen.draw_string(font, Vector2(x - 26, 29), "Q", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, DIM)
+	for i in PAGES.size():
+		var on := i == manager.phone_page
+		var wpx := font.get_string_size(PAGES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+		if on:
+			_screen.draw_rect(Rect2(x - 6, 8, wpx + 12, 28), Color(0.2, 0.35, 0.6))
+		_screen.draw_string(font, Vector2(x, 28), PAGES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 16, TEXT if on else DIM)
+		x += wpx + 18.0
+	_screen.draw_string(font, Vector2(x - 4, 29), "E", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, DIM)
+	[_draw_status, _draw_objective, _draw_run, _draw_gear][manager.phone_page].call()
 
+
+func _draw_status() -> void:
+	var s := Vector2(screen_size)
+	var font := ThemeDB.fallback_font
 	# Condition: health face, status word and a sweeping heart monitor (faster and redder as health drops).
 	var h := player.health
 	var f := clampf(h.current / h.max_health, 0.0, 1.0)
@@ -120,6 +148,90 @@ func _draw_screen() -> void:
 		_screen.draw_string(font, Vector2(478, y), r[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
 		_screen.draw_string(font, Vector2(478, y + 30), r[1], HORIZONTAL_ALIGNMENT_LEFT, s.x - 494, 24, TEXT)
 		y += 78.0
+
+
+## Objective: heading-up map of the targets around Kei (she's the arrow, up is where she faces).
+func _draw_objective() -> void:
+	var font := ThemeDB.fallback_font
+	var box := Rect2(16, 56, 330, 428)
+	_screen.draw_rect(box, Color(0, 0, 0, 0.35))
+	var me := box.position + Vector2(box.size.x * 0.5, box.size.y * 0.7)
+	for r in [10.0, 20.0]:
+		_screen.draw_arc(me, r * map_scale, 0.0, TAU, 48, Color(DIM, 0.25), 1.0)
+	var fwd := -player.global_basis.z
+	var right := player.global_basis.x
+	var targets := dummies()
+	var down := 0
+	for d in targets:
+		var rel := d.global_position - player.global_position
+		var p := me + Vector2(rel.dot(right), -rel.dot(fwd)) * map_scale
+		if d.health.dead:
+			down += 1
+		if not box.grow(-6).has_point(p):
+			continue
+		if d.health.dead:
+			_screen.draw_line(p - Vector2(5, 5), p + Vector2(5, 5), DIM, 2.0)
+			_screen.draw_line(p - Vector2(5, -5), p + Vector2(5, -5), DIM, 2.0)
+		else:
+			_screen.draw_circle(p, 5.0, Color(1.0, 0.3, 0.25))
+	_screen.draw_colored_polygon(PackedVector2Array([me + Vector2(0, -10), me + Vector2(7, 8), me + Vector2(-7, 8)]), Color(0.3, 0.95, 0.45))
+
+	var col := 362.0
+	_field(col, 80, "OBJECTIVE", "CLEAR THE KILLHOUSE")
+	_screen.draw_string(font, Vector2(col, 158), "TARGETS DOWN", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
+	_screen.draw_string(font, Vector2(col, 158), "%d / %d" % [down, targets.size()], HORIZONTAL_ALIGNMENT_RIGHT, 342, 18, TEXT)
+	_bar(Rect2(col, 168, 342, 12), float(down) / maxf(targets.size(), 1))
+	_field(col, 230, "CAPTURE", null)
+	_field(col, 308, "CACHES LEFT", null)
+	_field(col, 386, "CHECKPOINT", null)
+
+
+## Run: money, what's carried, how long this run has gone, how hot it is.
+func _draw_run() -> void:
+	var e := int(Time.get_ticks_msec() / 1000.0 - _run_start)
+	_field(16, 80, "ELAPSED", "%02d:%02d" % [e / 60, e % 60], 40)
+	_field(16, 190, "CREDITS", null)
+	_field(16, 268, "THREAT", null)
+	_field(362, 80, "CARRIED", null)
+
+
+## Gear: both guns, grenades, outfit.
+func _draw_gear() -> void:
+	var y := 80.0
+	for w in manager.weapons:
+		var modes := PackedStringArray()
+		for m in w.data.modes():
+			modes.append(WeaponData.mode_name(m))
+		var title := ("> " if w == manager.current else "") + w.data.display_name
+		_field(16, y, title, "%s  |  %d spare mags" % ["/".join(modes), w.spare.size()])
+		y += 78.0
+	_field(16, y, "AMMO TYPE", null)
+	_field(16, y + 78.0, "GRENADES", "FRAG x%d" % manager.grenades)
+	if _outfit:
+		_fit(_outfit, Rect2(478, 56, 226, 360))
+	_field(478, 440, "OUTFIT", outfit_name)
+
+
+## Every Dummy in the level.
+func dummies() -> Array[Dummy]:
+	var out: Array[Dummy] = []
+	for n in get_tree().get_nodes_in_group("resettable"):
+		if n is Dummy:
+			out.append(n)
+	return out
+
+
+## Label over a value; null = the system isn't in the game yet (dim dash).
+func _field(x: float, y: float, label: String, value: Variant, px := 24) -> void:
+	var font := ThemeDB.fallback_font
+	_screen.draw_string(font, Vector2(x, y), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, DIM)
+	var text: String = "-" if value == null else str(value)
+	_screen.draw_string(font, Vector2(x, y + 30 + px - 24), text, HORIZONTAL_ALIGNMENT_LEFT, screen_size.x - x - 16, px, Color(DIM, 0.5) if value == null else TEXT)
+
+
+func _bar(box: Rect2, f: float) -> void:
+	_screen.draw_rect(box, Color(0, 0, 0, 0.4))
+	_screen.draw_rect(Rect2(box.position, Vector2(box.size.x * clampf(f, 0.0, 1.0), box.size.y)), Color(0.3, 0.95, 0.45))
 
 
 ## Heart monitor: the trace is drawn by a sweeping head and fades out behind it over one sweep.

@@ -13,7 +13,7 @@ enum State { READY, HOLSTER, EQUIP }
 @export var equip_sound: AudioStream  ## gun coming up: weapon switch, after a grenade, phone put away
 @export var aim_sound: AudioStream  ## raising the gun to aim
 @export var handling_volume_db := -6.0
-@export var phone_time := 0.6  ## hold Tab: gun goes down (first half), then the phone comes up (second half)
+@export var phone_time := 0.6  ## Tab: gun goes down (first half), then the phone comes up (second half); same for every heroine
 
 var weapons: Array[Weapon] = []
 var current: Weapon
@@ -24,8 +24,10 @@ var player: Player
 var grenades := 0
 var phone_blend := 0.0  ## 0 = gun up, 0.5 = gun down, 1 = phone fully raised
 var phone_forced := false  ## viewmodel editor's Tablet mode keeps the phone raised
-var _phone_cancelled := false
-var _foley: AudioStreamPlayer  # fire/ADS put the phone away until Tab is pressed again
+## Tab toggles the phone; damage, sprinting, firing or aiming closes it. While open, Q/E or the wheel flip pages.
+var phone_open := false
+var phone_page := 0  ## Phone.PAGES index; every open starts on Status (0)
+var _foley: AudioStreamPlayer
 var _next := 0
 
 
@@ -44,6 +46,7 @@ func _ready() -> void:
 	_foley.max_polyphony = 2
 	add_child(_foley)
 	_activate(0)
+	player.get_node("Health").damaged.connect(func(_a: float, _z: StringName, _s: Node) -> void: phone_open = false)
 
 
 func select(index: int) -> void:
@@ -79,6 +82,19 @@ func throw_grenade() -> void:
 	_play_foley(equip_sound)
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	var mb := event as InputEventMouseButton
+	if phone_open and mb and mb.pressed:
+		if mb.button_index == MOUSE_BUTTON_WHEEL_UP:
+			flip_page(-1)
+		elif mb.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			flip_page(1)
+
+
+func flip_page(dir: int) -> void:
+	phone_page = posmod(phone_page + dir, Phone.PAGES.size())
+
+
 ## Gun lowering share of the phone transition (0..1).
 func phone_gun_lower() -> float:
 	return clampf(phone_blend * 2.0, 0.0, 1.0)
@@ -96,12 +112,17 @@ func can_fire() -> bool:
 
 func _process(delta: float) -> void:
 	var active := player.controls_active()
-	var wants_phone := active and Input.is_action_pressed("phone")
-	if not wants_phone:
-		_phone_cancelled = false
-	elif phone_blend > 0.0 and (Input.is_action_just_pressed("fire") or Input.is_action_just_pressed("ads")):
-		_phone_cancelled = true
-	var phone_target := 1.0 if phone_forced or (wants_phone and not _phone_cancelled and state == State.READY and not current.is_reloading()) else 0.0
+	if active and Input.is_action_just_pressed("phone"):
+		phone_open = not phone_open and state == State.READY and not current.is_reloading()
+		phone_page = 0
+	if not active or player.is_sprinting or Input.is_action_just_pressed("fire") or Input.is_action_just_pressed("ads"):
+		phone_open = false
+	if phone_open:  # flipping is free: works while the phone is still coming up
+		if Input.is_action_just_pressed("lean_left"):
+			flip_page(-1)
+		if Input.is_action_just_pressed("lean_right"):
+			flip_page(1)
+	var phone_target := 1.0 if phone_forced or phone_open else 0.0
 	var was_lowered := phone_blend >= 0.5
 	phone_blend = move_toward(phone_blend, phone_target, delta / maxf(phone_time, 0.01))
 	if was_lowered and phone_blend < 0.5:

@@ -276,7 +276,7 @@ func _set_stance(s: Stance) -> bool:
 
 
 func _update_lean(delta: float) -> void:
-	var target := Input.get_axis("lean_left", "lean_right") if controls_active() and not is_sprinting else 0.0
+	var target := Input.get_axis("lean_left", "lean_right") if controls_active() and not is_sprinting and not weapons.phone_open else 0.0  # Q/E flip phone pages instead
 	if target != 0.0:
 		# Shorten the lean when a wall is beside the head so the camera never pokes through.
 		var from := global_position + Vector3.UP * eye_height

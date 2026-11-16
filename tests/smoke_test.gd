@@ -210,6 +210,14 @@ func _runtime_checks() -> void:
 	_check(not player.weapons.can_fire() and player.weapons.phone_gun_lower() == 1.0 and player.weapons.phone_raise() == 0.5,
 		"phone up: gun fully lowered, phone half raised, can't fire")
 	player.weapons.phone_blend = 0.0
+	var wm := player.weapons
+	wm.phone_open = true
+	wm.phone_page = 0
+	wm.flip_page(-1)
+	var wrapped := wm.phone_page == Phone.PAGES.size() - 1
+	wm.flip_page(1)
+	player.health.damaged.emit(1.0, &"torso", null)
+	_check(wrapped and wm.phone_page == 0 and not wm.phone_open, "phone pages wrap; taking damage closes the phone")
 	_check(target.health.dead, "4 SMG torso shots kill a 10 m dummy")
 	_check(Game.last_ttk.contains("4 hits"), "TTK recorded: " + Game.last_ttk)
 	_check(w.mag == 25, "4 rounds spent")

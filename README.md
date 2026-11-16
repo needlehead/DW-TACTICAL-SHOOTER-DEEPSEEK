@@ -141,9 +141,15 @@ pull the gun closer (`low_stance_zoom`, `low_stance_shift` on SpriteViewmodel).
 
 ## Phone (diegetic UI)
 
-There's no status HUD by default: hold **Tab** and Kei lowers the gun and pulls out her phone, showing her health face and
-vitals, outfit, weapon and fire mode, a rough mag estimate (Full / Nearly full / Half / Nearly empty), spare mags and frags.
-No firing, aiming or reloading while it's out; pressing fire or aim puts it away. Settings live on the `Phone` node in
+There's no status HUD by default: press **Tab** and Kei lowers the gun and pulls out her device; Tab again puts it away.
+It always opens on **Status**; **Q/E** or the **mouse wheel** flip pages while it's out (Q/E lean again once it's away):
+- **Status:** health face and vitals, outfit, weapon and fire mode, a rough mag estimate, spare mags and frags.
+- **Objective:** heading-up map of the targets (red = up, grey X = down), targets-down progress.
+- **Run:** elapsed time (restarts on reset).
+- **Gear:** both guns with fire modes and spare mags, frags, outfit.
+
+Fields for systems the game doesn't have yet (capture, caches, checkpoint, credits, threat, carried items, ammo type)
+show a dim dash. No firing, aiming or reloading while it's out; taking damage, sprinting, firing or aiming puts it away. Settings live on the `Phone` node in
 `player.tscn` (`heroine_name`, `outfit_name`, `outfit_sprite`, `screen_quad` for the screen corners on the frame) and
 `phone_time` on the WeaponManager. Decisions: `docs/decisions/2026-11-15-diegetic-phone.md`.
 
