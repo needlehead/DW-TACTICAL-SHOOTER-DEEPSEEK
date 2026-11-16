@@ -21,6 +21,8 @@ const PAGES := ["STATUS", "OBJECTIVE", "RUN", "GEAR"]
 @export var outfit_sprite: Texture2D
 @export var screen_size := Vector2i(720, 500)
 @export var map_scale := 8.0  ## Objective map: pixels per metre
+@export var flip_time := 0.2  ## page change: the new page slides in from the flip side and fades up
+@export var flip_slide := 80.0  ## pixels the new page travels
 
 const BG := Color(0.04, 0.07, 0.13)
 const DIM := Color(0.55, 0.65, 0.8)
@@ -31,6 +33,10 @@ var _screen := Control.new()
 var _poly := Polygon2D.new()
 var _outfit: AtlasTexture
 var _run_start := 0.0  ## Run page clock; restarts on level reset
+var _page := 0  ## page being drawn (follows manager.phone_page)
+var _from_page := 0
+var _flip := 1.0  ## 0..1 through the page change
+var _flip_dir := 1
 
 @onready var player: Player = owner
 @onready var manager: WeaponManager = owner.get_node("LeanPivot/Head/Camera3D/Viewmodel/Weapons")
@@ -68,9 +74,15 @@ func reset() -> void:
 	_run_start = Time.get_ticks_msec() / 1000.0
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var t := manager.phone_raise()
 	visible = t > 0.0 and player.alive and frame != null
+	if manager.phone_page != _page:
+		_flip_dir = 1 if manager.phone_page == (_page + 1) % PAGES.size() else -1
+		_from_page = _page
+		_page = manager.phone_page
+		_flip = 0.0 if visible else 1.0  # reset to Status while put away: no animation
+	_flip = minf(_flip + delta / maxf(flip_time, 0.01), 1.0)
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if visible else SubViewport.UPDATE_DISABLED
 	if not visible:
 		return
@@ -94,21 +106,30 @@ func _draw_screen() -> void:
 	var s := Vector2(screen_size)
 	var font := ThemeDB.fallback_font
 	_screen.draw_rect(Rect2(Vector2.ZERO, s), BG)
+	# Page first, so the header covers it while it slides; ease-out, then fade up from the background.
+	var e := 1.0 - pow(1.0 - _flip, 3.0)
+	_screen.draw_set_transform(Vector2(_flip_dir * (1.0 - e) * flip_slide, 0.0))
+	[_draw_status, _draw_objective, _draw_run, _draw_gear][_page].call()
+	_screen.draw_set_transform(Vector2.ZERO)
+	if e < 1.0:
+		_screen.draw_rect(Rect2(0, 44, s.x, s.y - 44), Color(BG, 1.0 - e))
 	_screen.draw_rect(Rect2(0, 0, s.x, 44), Color(0.08, 0.13, 0.24))
 	_screen.draw_string(font, Vector2(16, 31), heroine_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, TEXT)
 	_screen.draw_string(font, Vector2(0, 31), Time.get_time_string_from_system().left(5), HORIZONTAL_ALIGNMENT_RIGHT, s.x - 16, 24, DIM)
-	# Page tabs: the current one lit, Q/E hints at the ends.
+	# Page tabs: the highlight slides from the old tab to the new one; Q/E hints at the ends.
 	var x := 236.0
-	_screen.draw_string(font, Vector2(x - 26, 29), "Q", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, DIM)
+	var tabs: Array[Rect2] = []
 	for i in PAGES.size():
-		var on := i == manager.phone_page
 		var wpx := font.get_string_size(PAGES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
-		if on:
-			_screen.draw_rect(Rect2(x - 6, 8, wpx + 12, 28), Color(0.2, 0.35, 0.6))
-		_screen.draw_string(font, Vector2(x, 28), PAGES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 16, TEXT if on else DIM)
+		tabs.append(Rect2(x - 6, 8, wpx + 12, 28))
 		x += wpx + 18.0
+	var a := tabs[_from_page]
+	var b := tabs[_page]
+	_screen.draw_rect(Rect2(a.position.lerp(b.position, e), a.size.lerp(b.size, e)), Color(0.2, 0.35, 0.6))
+	_screen.draw_string(font, Vector2(236.0 - 26.0, 29), "Q", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, DIM)
+	for i in PAGES.size():
+		_screen.draw_string(font, tabs[i].position + Vector2(6, 20), PAGES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 16, TEXT if i == _page else DIM)
 	_screen.draw_string(font, Vector2(x - 4, 29), "E", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, DIM)
-	[_draw_status, _draw_objective, _draw_run, _draw_gear][manager.phone_page].call()
 
 
 func _draw_status() -> void:
