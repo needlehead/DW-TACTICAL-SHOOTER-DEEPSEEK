@@ -23,6 +23,9 @@ const PAGES := ["STATUS", "OBJECTIVE", "RUN", "GEAR"]
 @export var map_scale := 8.0  ## Objective map: pixels per metre
 @export var flip_time := 0.2  ## page change: the new page slides in from the flip side and fades up
 @export var flip_slide := 80.0  ## pixels the new page travels
+## Thumb press on a page change: the tablet dips and tips toward the pressing side (Q left, E right), then springs back.
+@export var press_dip := 0.012  ## screen heights
+@export var press_tilt := 0.025  ## radians
 
 const BG := Color(0.04, 0.07, 0.13)
 const DIM := Color(0.55, 0.65, 0.8)
@@ -90,10 +93,11 @@ func _process(delta: float) -> void:
 	size = vp * (1.0 + overscan)
 	var e := 1.0 - pow(1.0 - t, 3.0)  # ease out: quick lift, gentle settle
 	var sway: Vector2 = hands.hand_offset(vp.y, false) * sway_amount
-	position = Vector2(-vp.x * overscan * 0.5, 0.0) + layout.hold_offset * vp.y + sway + Vector2(0.0, (1.0 - e) * raise_drop * vp.y)
+	var press := sin(PI * _flip)  # 0 -> 1 -> 0 over the page change
+	position = Vector2(-vp.x * overscan * 0.5, 0.0) + layout.hold_offset * vp.y + sway + Vector2(0.0, ((1.0 - e) * raise_drop + press * press_dip) * vp.y)
 	pivot_offset = Vector2(size.x * 0.5, size.y)  # held in both hands: scale and tilt around the bottom centre
 	scale = Vector2.ONE * layout.hold_scale
-	rotation = sway.x / vp.y * sway_tilt
+	rotation = sway.x / vp.y * sway_tilt + _flip_dir * press * press_tilt
 	var pts := PackedVector2Array()
 	for uv in screen_quad:
 		pts.append(uv * size)
