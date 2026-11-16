@@ -1,11 +1,6 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://ui/main_menu.gd" id="1_menu"]
-[ext_resource type="Shader" path="res://ui/live_portrait.gdshader" id="2_live"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/menu/kei.png" id="3_kei"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_live"]
-shader = ExtResource("2_live")
 
 [sub_resource type="Gradient" id="Gradient_bg"]
 offsets = PackedFloat32Array(0, 1)
@@ -36,16 +31,15 @@ texture = SubResource("GradientTexture2D_bg")
 expand_mode = 1
 
 [node name="Portrait" type="TextureRect" parent="."]
-material = SubResource("ShaderMaterial_live")
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.15
-anchor_top = 0.05
-anchor_right = 1.15
+anchor_left = 0.462
+anchor_top = 0.068
+anchor_right = 0.902
 anchor_bottom = 1.05
 mouse_filter = 2
-texture = ExtResource("3_kei")
 expand_mode = 1
+stretch_mode = 5
 
 [node name="Menu" type="VBoxContainer" parent="."]
 layout_mode = 1

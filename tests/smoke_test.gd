@@ -94,6 +94,11 @@ func _logic_checks() -> void:
 	_check(not h.dead, "SMG: survives 3 arm hits")
 	h.queue_free()
 
+	var menu: Control = load("res://ui/main_menu.gd").new()
+	var at := func(f: int) -> int: return menu.frame_at((f + 0.5) / menu.fps)
+	_check(at.call(0) == 0 and at.call(119) == 119 and at.call(120) == 118 and at.call(238) == 0, "menu idle ping-pongs")
+	menu.free()
+
 
 ## Plays the real level for a few seconds: patrols move, shots register, TTK and reset work.
 func _runtime_checks() -> void:
