@@ -51,6 +51,7 @@
 [ext_resource type="Script" path="res://ui/bodycam.gd" id="17_bodycam"]
 [ext_resource type="Shader" path="res://ui/bodycam.gdshader" id="18_bodycam_shader"]
 [ext_resource type="Script" path="res://player/body_sprite.gd" id="19_body"]
+[ext_resource type="Resource" path="res://player/body_view.tres" id="b_view"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/idle.png" id="b_idle"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead1.png" id="b_dead"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/deadprone.png" id="b_deadprone"]
@@ -301,6 +302,7 @@ script = ExtResource("14_debug")
 [node name="BodySprite" type="TextureRect" parent="ViewmodelLayer"]
 mouse_filter = 2
 script = ExtResource("19_body")
+view = ExtResource("b_view")
 idle_sprite = ExtResource("b_idle")
 walk_sprites = Array[Texture2D]([ExtResource("b_w0"), ExtResource("b_w1"), ExtResource("b_w2"), ExtResource("b_w3"), ExtResource("b_w4"), ExtResource("b_w5"), ExtResource("b_w6"), ExtResource("b_w7"), ExtResource("b_w8"), ExtResource("b_w9"), ExtResource("b_w10"), ExtResource("b_w11"), ExtResource("b_w12"), ExtResource("b_w13"), ExtResource("b_w14"), ExtResource("b_w15"), ExtResource("b_w16"), ExtResource("b_w17"), ExtResource("b_w18"), ExtResource("b_w19"), ExtResource("b_w20"), ExtResource("b_w21"), ExtResource("b_w22"), ExtResource("b_w23"), ExtResource("b_w24"), ExtResource("b_w25"), ExtResource("b_w26"), ExtResource("b_w27"), ExtResource("b_w28"), ExtResource("b_w29"), ExtResource("b_w30"), ExtResource("b_w31"), ExtResource("b_w32"), ExtResource("b_w33"), ExtResource("b_w34"), ExtResource("b_w35"), ExtResource("b_w36"), ExtResource("b_w37"), ExtResource("b_w38"), ExtResource("b_w39"), ExtResource("b_w40"), ExtResource("b_w41"), ExtResource("b_w42"), ExtResource("b_w43"), ExtResource("b_w44"), ExtResource("b_w45"), ExtResource("b_w46"), ExtResource("b_w47"), ExtResource("b_w48"), ExtResource("b_w49"), ExtResource("b_w50"), ExtResource("b_w51"), ExtResource("b_w52"), ExtResource("b_w53"), ExtResource("b_w54")])
 dead_sprite = ExtResource("b_dead")

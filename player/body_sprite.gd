@@ -10,7 +10,7 @@ extends TextureRect
 @export var crouch_idle_sprite: Texture2D  ## crouched frames; empty falls back to the standing ones
 @export var crouch_walk_sprites: Array[Texture2D] = []
 @export var frame_pitch := -80.0  ## look pitch (degrees) the frames were rendered at; fully in view there
-@export var cycle_length := 3.5  ## metres walked per loop of walk_sprites; raise to slow the legs
+@export var view: BodyView  ## walk speed of the legs (F4 -> Legs)
 @export var body_scale := 0.65  ## frame size; shrinks toward the bottom centre so the cut-off torso stays at the screen edge
 @export var min_walk_speed := 0.3  ## below this (m/s) the idle frame shows
 
@@ -47,6 +47,9 @@ func _process(delta: float) -> void:
 	# Angle above the render pitch -> screen distance the body drops (linear in FOV is close enough here).
 	var pitch := player.look_pitch + player.recoil.y
 	var drop := maxf(0.0, (pitch - frame_pitch) * vp.y / player.camera.fov)
+	var preview := player.preview_walk > 0.0  # F4 -> Legs: walk in place, fully in view
+	if preview:
+		drop = 0.0
 	visible = drop < vp.y and player.stance != Player.Stance.PRONE
 	if not visible:
 		return
@@ -57,11 +60,11 @@ func _process(delta: float) -> void:
 	var crouched := player.stance == Player.Stance.CROUCH
 	var idle := crouch_idle_sprite if crouched and crouch_idle_sprite else idle_sprite
 	var walk := crouch_walk_sprites if crouched and not crouch_walk_sprites.is_empty() else walk_sprites
-	var speed := player.horizontal_speed()
-	if speed < min_walk_speed or walk.is_empty() or not player.is_on_floor():
+	var speed := player.preview_walk if preview else player.horizontal_speed()
+	if speed < min_walk_speed or walk.is_empty() or not (preview or player.is_on_floor()):
 		texture = idle
 		return
 	var forward := -player.global_basis.z
-	var dir := -1.0 if player.velocity.dot(forward) < -0.1 else 1.0
-	_phase = fposmod(_phase + dir * speed * delta / cycle_length, 1.0)
+	var dir := -1.0 if player.velocity.dot(forward) < -0.1 and not preview else 1.0
+	_phase = fposmod(_phase + dir * speed * delta / view.cycle_length, 1.0)
 	texture = walk[mini(int(_phase * walk.size()), walk.size() - 1)]

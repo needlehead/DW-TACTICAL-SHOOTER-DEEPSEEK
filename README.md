@@ -40,7 +40,7 @@ If you edit `killhouse.tscn` by hand instead, select `NavigationRegion3D` and cl
 | Phone (status: vitals, outfit, weapon, mags) | Hold Tab |
 | Canted sight (weapons that have one, e.g. the rifle's offset red dot) | V |
 | Debug HUD (weapon/HP text, exact ammo, portrait) | F2 |
-| Viewmodel editor: drag the gun (hip), the sight box (aimed frame), the muzzle point or the tablet; Save writes the .tres | F4 |
+| Viewmodel editor: drag the gun (hip), the sight box (aimed frame), the muzzle point, the tablet, the death view or the legs' step speed; Save writes the .tres | F4 |
 | Bodycam effect on/off | F3 |
 | Release / capture mouse | Esc |
 
@@ -82,7 +82,7 @@ Bullet impacts leave a decal, a dust burst tinted to the surface colour, and deb
 `BodySprite` (in `player.tscn` → ViewmodelLayer, behind the gun) shows full-screen frames of your own body, rendered looking down:
 `idle_sprite`, `walk_sprites` (looped by distance walked, `cycle_length` m per loop, reversed when backing up) and `dead_sprite`.
 It slides into view as you look down; `frame_pitch` is the look pitch the frames were rendered at, `body_scale` the frame size. Hidden while prone.
-Killed while prone: `dead_prone_sprite`. Each death (standing / prone) has its own view roll, and its frame tilts with it. The death view (camera height, tilt, both death frames' position and size, tilt centres, the dead camera's pitch / yaw / roll, how much of her last look it keeps and how fast it settles) lives in `player/death_view.tres`; edit it live with **F4 → Dead** (Standing / Prone picks which). Footstep clips are in `Footsteps.steps`.
+Killed while prone: `dead_prone_sprite`. Each death (standing / prone) has its own view roll, and its frame tilts with it. The death view (camera height, tilt, both death frames' position and size, tilt centres, the dead camera's pitch / yaw / roll, how much of her last look it keeps and how fast it settles) lives in `player/death_view.tres`; edit it live with **F4 → Dead** (Standing / Prone picks which). How fast the legs step (`cycle_length`, metres per walk loop; raise it if the feet slide) is in `player/body_view.tres`; edit it live with **F4 → Legs**, which walks the legs in place at walk or sprint speed. Footstep clips are in `Footsteps.steps`.
 `crouch_idle_sprite` / `crouch_walk_sprites` replace the standing frames while crouched.
 
 `Portrait` (HUDLayer, bottom-left) shows `full` / `hurt` / `low` / `dead` by health; thresholds `hurt_below` (0.66) and

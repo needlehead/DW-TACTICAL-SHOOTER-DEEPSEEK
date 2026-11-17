@@ -11,24 +11,28 @@ extends Control
 ##   Dead   - shows the death view while alive (Standing / Prone button picks which): drag moves the death frame,
 ##            wheel scales it, right-drag moves its tilt centre, [ ] tilt (roll) the view,
 ##            PgUp / PgDn camera height (death_view.tres).
+##   Legs   - the legs walk in place (Walk / Sprint button picks the speed); cycle_length sets how fast they step
+##            (body_view.tres).
 ## Save writes the edited resource; Revert restores what it had when the editor opened.
 
-enum Mode { HIP, SIGHT, MUZZLE, TABLET, DEAD }
+enum Mode { HIP, SIGHT, MUZZLE, TABLET, DEAD, LEGS }
 
 const STEP := 0.001  ## arrow-key nudge (fraction of screen); Shift x10
 const HANDLE := 14.0  ## corner handle size in pixels
-const MODE_NAMES := ["Hip", "Sight", "Muzzle", "Tablet", "Dead"]
+const MODE_NAMES := ["Hip", "Sight", "Muzzle", "Tablet", "Dead", "Legs"]
 const HELP := [
 	"Drag the gun on screen to place it. Arrows nudge, Shift = x10.",
 	"Drag the green box over the sight glass; corner handle or wheel resizes. Canted switches to the canted sight.",
 	"Click the barrel end on screen: muzzle flash, smoke and laser come from here.",
 	"Drag to move the tablet, wheel = closer / further. Arrows nudge.",
 	"Camera: pitch / yaw / roll of this death, its keep_look (1 = keep where she was looking), height, settle time. Frame: drag moves it, wheel scales, right-drag moves its tilt centre (yellow). [ ] roll, PgUp / PgDn height.",
+	"cycle_length: metres walked per loop of the walk. Feet sliding: raise it (slower legs); feet stepping too fast: lower it. Walk / Sprint previews either speed.",
 ]
 const DIM := Color(0.62, 0.68, 0.78)
 
 var mode := Mode.HIP
 var dead_prone := false  ## Dead mode previews the prone death
+var legs_sprint := false  ## Legs mode previews at sprint speed
 var _drag := ""  # "", "move", "resize" or "pivot"
 var _originals := {}  # Resource -> {property: value}
 var _mode_buttons: Array[Button] = []
@@ -38,6 +42,7 @@ var _context: Label
 var _next_button: Button
 var _canted_button: Button
 var _prone_button: Button
+var _speed_button: Button
 var _fields: GridContainer
 var _spins: Array = []  # [SpinBox, Resource, property, component]
 var _fields_key := ""  # what the number boxes were built for; rebuilt when it changes
@@ -98,6 +103,9 @@ func _ready() -> void:
 	_canted_button = _button(ctx, "Canted", func() -> void: player.weapons.current.toggle_canted())
 	_prone_button = _button(ctx, "Standing", func() -> void:
 		dead_prone = not dead_prone
+		_sync_preview())
+	_speed_button = _button(ctx, "Walk", func() -> void:
+		legs_sprint = not legs_sprint
 		_sync_preview())
 
 	col.add_child(HSeparator.new())
@@ -162,20 +170,32 @@ func toggle() -> void:
 		_remember(data())
 		_remember_layout()
 		_remember_view()
+		_remember_body()
+
+
+func _remember_body() -> void:
+	var b := body_view()
+	if not _originals.has(b):
+		_originals[b] = {"cycle_length": b.cycle_length}
 
 
 func death_view() -> DeathView:
 	return player.death_view
 
 
+func body_view() -> BodyView:
+	return (player.get_node("ViewmodelLayer/BodySprite") as Node).get("view")
+
+
 func _sync_preview() -> void:
 	if player.weapons:  # null during _ready
 		player.preview_death = (2 if dead_prone else 1) if visible and mode == Mode.DEAD else 0
+		player.preview_walk = (player.sprint_speed if legs_sprint else player.walk_speed) if visible and mode == Mode.LEGS else 0.0
 
 
 ## The resource the current mode edits (what Save and Revert act on).
 func _target() -> Resource:
-	return layout() if mode == Mode.TABLET else death_view() if mode == Mode.DEAD else data()
+	return layout() if mode == Mode.TABLET else death_view() if mode == Mode.DEAD else body_view() if mode == Mode.LEGS else data()
 
 
 func layout() -> PhoneLayout:
@@ -223,6 +243,8 @@ func nudge(dir: Vector2) -> void:
 			layout().hold_offset += dir
 		Mode.DEAD:
 			_set_dead("offset", _dead("offset") + dir)
+		Mode.LEGS:
+			body_view().cycle_length = maxf(0.5, body_view().cycle_length - dir.y * 10.0)  # up = slower legs
 
 
 ## The previewed death frame's settings: prone_* or stand_*.
@@ -243,6 +265,7 @@ func save() -> void:
 		_remember(data())
 		_remember_layout()
 		_remember_view()
+		_remember_body()
 
 
 func revert() -> void:
@@ -294,6 +317,8 @@ func _field_specs() -> Array:
 			return [["muzzle_uv", d, "muzzle_uv", 0.001]]
 		Mode.TABLET:
 			return [["hold_offset", layout(), "hold_offset", 0.001], ["hold_scale", layout(), "hold_scale", 0.01]]
+		Mode.LEGS:
+			return [["cycle_length", body_view(), "cycle_length", 0.1]]
 	var v := death_view()
 	var p := "prone_" if dead_prone else "stand_"
 	return [[p + "pitch", v, p + "pitch", 1.0], [p + "yaw", v, p + "yaw", 1.0], [p + "roll", v, p + "roll", 0.5],
@@ -442,6 +467,8 @@ func _process(_delta: float) -> void:
 	_canted_button.text = "Canted: on" if player.weapons.current.using_canted() else "Canted: off"
 	_prone_button.visible = mode == Mode.DEAD
 	_prone_button.text = "Showing: prone" if dead_prone else "Showing: standing"
+	_speed_button.visible = mode == Mode.LEGS
+	_speed_button.text = "Preview: sprint" if legs_sprint else "Preview: walk"
 	var res := _target()
 	_context.text = ("%s  ·  %s" % [data().display_name, res.resource_path.get_file()]) if weapon_mode else res.resource_path.get_file()
 	_help.text = HELP[mode]
@@ -465,6 +492,8 @@ func _draw() -> void:
 		draw_arc(p, 10.0, 0.0, TAU, 24, Color(1, 0.8, 0.2), 2.0)
 		draw_line(p - Vector2(16, 0), p + Vector2(16, 0), Color(1, 0.8, 0.2), 1.0)
 		draw_line(p - Vector2(0, 16), p + Vector2(0, 16), Color(1, 0.8, 0.2), 1.0)
+		return
+	if mode == Mode.LEGS:
 		return
 	if mode == Mode.HIP or mode == Mode.TABLET:
 		draw_line(c - Vector2(12, 0), c + Vector2(12, 0), Color(1, 1, 1, 0.7), 1.0)

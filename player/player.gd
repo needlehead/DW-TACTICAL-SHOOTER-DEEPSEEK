@@ -96,6 +96,7 @@ var viewmodel_aim := Vector2.INF  ## screen point the 2D gun's barrel points at 
 var death_roll := 0.0  ## current view roll in degrees once dead (DeathView stand_roll / prone_roll)
 var death_t := 0.0  ## 0..1 into the death camera (DeathView.camera_time)
 var preview_death := 0  ## F4 -> Dead shows the death view while alive: 1 standing, 2 prone
+var preview_walk := 0.0  ## F4 -> Legs: the body walks in place at this speed (m/s), fully in view
 var eye_height := 1.65
 var spawn_transform: Transform3D
 

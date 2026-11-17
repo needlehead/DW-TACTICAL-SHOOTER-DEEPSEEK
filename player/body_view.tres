@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="BodyView" format=3]
+
+[ext_resource type="Script" path="res://player/body_view.gd" id="1_bv"]
+
+[resource]
+script = ExtResource("1_bv")
