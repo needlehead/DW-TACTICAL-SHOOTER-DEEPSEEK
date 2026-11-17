@@ -139,8 +139,7 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/idle.png" id="b_idle"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead1.png" id="b_dead"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/deadprone.png" id="b_deadprone"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouchidle.png" id="b_cidle"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouch.png" id="b_crouch"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouchnew.png" id="b_cidle"]
 [ext_resource type="Script" path="res://ui/portrait.gd" id="20_portrait"]
 [ext_resource type="Script" path="res://player/phone.gd" id="21_phone"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/tablet/tablet.png" id="ph_frame"]
@@ -393,7 +392,7 @@ run_sprites = Array[Texture2D]([ExtResource("b_r0"), ExtResource("b_r1"), ExtRes
 dead_sprite = ExtResource("b_dead")
 dead_prone_sprite = ExtResource("b_deadprone")
 crouch_idle_sprite = ExtResource("b_cidle")
-crouch_walk_sprites = Array[Texture2D]([ExtResource("b_crouch")])
+crouch_walk_sprites = Array[Texture2D]([ExtResource("b_cidle")])
 
 [node name="MuzzleSmoke" type="Control" parent="ViewmodelLayer"]
 layout_mode = 3
