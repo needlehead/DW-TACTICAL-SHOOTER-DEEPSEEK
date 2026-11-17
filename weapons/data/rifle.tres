@@ -1,6 +1,12 @@
 [gd_resource type="Resource" script_class="WeaponData" format=3]
 
 [ext_resource type="Script" path="res://weapons/weapon_data.gd" id="1_wd"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_01.ogg" id="rf1"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_02.ogg" id="rf2"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_03.ogg" id="rf3"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_04.ogg" id="rf4"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_05.ogg" id="rf5"]
+[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_06.ogg" id="rf6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (2).png" id="r_a2"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (3).png" id="r_a3"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (4).png" id="r_a4"]
@@ -8,39 +14,45 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (6).png" id="r_a6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (7).png" id="r_a7"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/aim (8).png" id="r_a8"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/newidle.png" id="r_idle"]
-[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_01.ogg" id="rf1"]
-[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_02.ogg" id="rf2"]
-[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_03.ogg" id="rf3"]
-[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_04.ogg" id="rf4"]
-[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_05.ogg" id="rf5"]
-[ext_resource type="AudioStream" path="res://my sounds/radian/weap_mike4_fire_plr_06.ogg" id="rf6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (2).png" id="r_c2"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (3).png" id="r_c3"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (4).png" id="r_c4"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (5).png" id="r_c5"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (6).png" id="r_c6"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (7).png" id="r_c7"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0001.png" id="r_rl0"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0003.png" id="r_rl1"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0005.png" id="r_rl2"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0007.png" id="r_rl3"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0008.png" id="r_rl4"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0009.png" id="r_rl5"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0010.png" id="r_rl6"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0011.png" id="r_rl7"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0012.png" id="r_rl8"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0013.png" id="r_rl9"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0014.png" id="r_rl10"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0015.png" id="r_rl11"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0016.png" id="r_rl12"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0017.png" id="r_rl13"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0018.png" id="r_rl14"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0019.png" id="r_rl15"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0020.png" id="r_rl16"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0021.png" id="r_rl17"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0022.png" id="r_rl18"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/reload/frame_0023.png" id="r_rl19"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/idle.png" id="r_idle"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (1).png" id="r_rl0"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (2).png" id="r_rl1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (3).png" id="r_rl2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (4).png" id="r_rl3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (5).png" id="r_rl4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (6).png" id="r_rl5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (7).png" id="r_rl6"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (8).png" id="r_rl7"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (9).png" id="r_rl8"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (10).png" id="r_rl9"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (11).png" id="r_rl10"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (12).png" id="r_rl11"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (13).png" id="r_rl12"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (14).png" id="r_rl13"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (15).png" id="r_rl14"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (16).png" id="r_rl15"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (17).png" id="r_rl16"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (18).png" id="r_rl17"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (19).png" id="r_rl18"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (20).png" id="r_rl19"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (21).png" id="r_rl20"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (22).png" id="r_rl21"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (23).png" id="r_rl22"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (24).png" id="r_rl23"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (25).png" id="r_rl24"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (26).png" id="r_rl25"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (27).png" id="r_rl26"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (28).png" id="r_rl27"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (29).png" id="r_rl28"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (30).png" id="r_rl29"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (31).png" id="r_rl30"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/newradian/reload/reload (32).png" id="r_rl31"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/radian rifle/sprint/sprint.png" id="r_sprint"]
 
 [sub_resource type="AudioStreamRandomizer" id="fire_rand"]
@@ -72,17 +84,17 @@ recoil_pattern = PackedVector2Array(0, 0.8, 0.1, 0.9, 0.15, 0.8, 0.05, 0.7, -0.1
 vm_kick_back = 0.04
 vm_kick_rot = 2.5
 idle_sprite = ExtResource("r_idle")
-sprint_sprite = ExtResource("r_sprint")
-reload_sprites = Array[Texture2D]([ExtResource("r_rl0"), ExtResource("r_rl1"), ExtResource("r_rl2"), ExtResource("r_rl3"), ExtResource("r_rl4"), ExtResource("r_rl5"), ExtResource("r_rl6"), ExtResource("r_rl7"), ExtResource("r_rl8"), ExtResource("r_rl9"), ExtResource("r_rl10"), ExtResource("r_rl11"), ExtResource("r_rl12"), ExtResource("r_rl13"), ExtResource("r_rl14"), ExtResource("r_rl15"), ExtResource("r_rl16"), ExtResource("r_rl17"), ExtResource("r_rl18"), ExtResource("r_rl19")])
 aim_sprites = Array[Texture2D]([ExtResource("r_a2"), ExtResource("r_a3"), ExtResource("r_a4"), ExtResource("r_a5"), ExtResource("r_a6"), ExtResource("r_a7"), ExtResource("r_a8")])
 sight_window = Rect2(0.3871, 0.2958, 0.2047, 0.3639)
 reticle_color = Color(1, 0.35, 0.1, 1)
 scope_magnification = 4.0
 canted_aim_sprites = Array[Texture2D]([ExtResource("r_c2"), ExtResource("r_c3"), ExtResource("r_c4"), ExtResource("r_c5"), ExtResource("r_c6"), ExtResource("r_c7")])
 canted_sight_window = Rect2(0.4742, 0.3965, 0.0738, 0.0889)
+sprint_sprite = ExtResource("r_sprint")
+reload_sprites = Array[Texture2D]([ExtResource("r_rl0"), ExtResource("r_rl1"), ExtResource("r_rl2"), ExtResource("r_rl3"), ExtResource("r_rl4"), ExtResource("r_rl5"), ExtResource("r_rl6"), ExtResource("r_rl7"), ExtResource("r_rl8"), ExtResource("r_rl9"), ExtResource("r_rl10"), ExtResource("r_rl11"), ExtResource("r_rl12"), ExtResource("r_rl13"), ExtResource("r_rl14"), ExtResource("r_rl15"), ExtResource("r_rl16"), ExtResource("r_rl17"), ExtResource("r_rl18"), ExtResource("r_rl19"), ExtResource("r_rl20"), ExtResource("r_rl21"), ExtResource("r_rl22"), ExtResource("r_rl23"), ExtResource("r_rl24"), ExtResource("r_rl25"), ExtResource("r_rl26"), ExtResource("r_rl27"), ExtResource("r_rl28"), ExtResource("r_rl29"), ExtResource("r_rl30"), ExtResource("r_rl31")])
 fire_sound = SubResource("fire_rand")
 sprite_offset = Vector2(0.050000004, 0.08999999)
-muzzle_uv = Vector2(0.55, 0.434)
+muzzle_uv = Vector2(0.54700005, 0.43499997)
 muzzle_behind = true
 laser = true
 laser_color = Color(0.15, 1, 0.25, 1)
