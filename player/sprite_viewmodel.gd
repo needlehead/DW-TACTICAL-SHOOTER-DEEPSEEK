@@ -96,24 +96,6 @@ func reload_sway(w: Weapon) -> Vector2:
 	return Vector2(sin(TAU * p * 2.0) * reload_wobble, reload_dip + sin(TAU * p * 3.0) * reload_wobble * 0.6) * env
 
 
-## The weapon's timed reload motion (WeaponData reload_roll / drop / seat): (x offset, y offset, rotation).
-func reload_motion(w: Weapon) -> Vector3:
-	var d := w.data
-	if not w.is_reloading() or (d.reload_roll == 0.0 and d.reload_drop == 0.0 and d.reload_seat_kick == 0.0):
-		return Vector3.ZERO
-	var p := clampf(1.0 - w.reload_left / w.reload_total, 0.0, 1.0)
-	var ease := 0.12  # fraction of the reload to ease into / out of the hold
-	var hold := smoothstep(d.reload_hold.x - ease, d.reload_hold.x, p) * (1.0 - smoothstep(d.reload_hold.y, d.reload_hold.y + ease, p))
-	var y := d.reload_drop * hold
-	var rot := d.reload_roll * hold
-	var t := (p - d.reload_seat) * w.reload_total  # seconds since the mag seated
-	if t >= 0.0:
-		var jolt := sin(t * 28.0) * exp(-t * 9.0)  # snaps up, overshoots and settles in ~0.4 s
-		y -= d.reload_seat_kick * jolt
-		rot -= d.reload_roll * 0.25 * jolt
-	return Vector3(0.0, y, rot)
-
-
 func _process(delta: float) -> void:
 	var w := player.weapons.current
 	_sprint_t = move_toward(_sprint_t, 1.0 if player.is_sprinting or player.is_crawling else 0.0, delta / sprint_swap_time)
@@ -144,8 +126,6 @@ func _process(delta: float) -> void:
 	off += mode_switch_drop * k * flick
 	var rl := reload_sway(w)
 	off += rl * k
-	var rm := reload_motion(w)
-	off += Vector2(rm.x, rm.y) * k
 	var shove := shot_shove(w)
 	off.x += player.lean * lean_shift * k * (1.0 - player.ads_blend)
 	off += fire_shove * k * shove
@@ -162,7 +142,7 @@ func _process(delta: float) -> void:
 	var rest_aim := vp * 0.5 - (base + d.sprite_offset * k)  # sprite-local point that sits on screen centre at rest
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)
-	rotation = shake(300.0).x * shake_roll + player.lean * lean_roll * (1.0 - player.ads_blend) + kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0) + fire_shove_rot * shove + rm.z
+	rotation = shake(300.0).x * shake_roll + player.lean * lean_roll * (1.0 - player.ads_blend) + kick_rot.z * 0.5 + (0.0 if sprint_pose else player.sprint_blend * 0.08) + mode_switch_rot * flick + reload_tilt * (rl.y / reload_dip if reload_dip > 0.0 else 0.0) + fire_shove_rot * shove
 	# Where the barrel points: the rest point carried by the sprite's motion; aiming pulls it onto the sights (centre).
 	player.viewmodel_aim = (get_transform() * rest_aim).lerp(vp * 0.5, player.ads_blend)
 
