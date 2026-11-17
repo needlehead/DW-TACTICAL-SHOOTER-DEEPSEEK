@@ -11,8 +11,8 @@ extends Control
 ##   Dead   - shows the death view while alive (Standing / Prone button picks which): drag moves the death frame,
 ##            wheel scales it, right-drag moves its tilt centre, [ ] tilt (roll) the view,
 ##            PgUp / PgDn camera height (death_view.tres).
-##   Legs   - the legs walk in place (Walk / Sprint button picks the speed); cycle_length sets how fast they step
-##            (body_view.tres).
+##   Legs   - the legs walk in place (Walk / Sprint button picks the speed); cycle_length / run_cycle_length set how
+##            fast they step; in the sprint preview drag moves the run frames and wheel scales them (body_view.tres).
 ## Save writes the edited resource; Revert restores what it had when the editor opened.
 
 enum Mode { HIP, SIGHT, MUZZLE, TABLET, DEAD, LEGS }
@@ -26,7 +26,7 @@ const HELP := [
 	"Click the barrel end on screen: muzzle flash, smoke and laser come from here.",
 	"Drag to move the tablet, wheel = closer / further. Arrows nudge.",
 	"Camera: pitch / yaw / roll of this death, its keep_look (1 = keep where she was looking), height, settle time. Frame: drag moves it, wheel scales, right-drag moves its tilt centre (yellow). [ ] roll, PgUp / PgDn height.",
-	"cycle_length: metres walked per loop of the walk. Feet sliding: raise it (slower legs); feet stepping too fast: lower it. Walk / Sprint previews either speed.",
+	"cycle_length / run_cycle_length: metres per loop of the walk / run. Feet sliding: raise it (slower legs); stepping too fast: lower it. Sprint preview: drag moves the run frames, wheel scales them, to line up with the walk.",
 ]
 const DIM := Color(0.62, 0.68, 0.78)
 
@@ -176,7 +176,8 @@ func toggle() -> void:
 func _remember_body() -> void:
 	var b := body_view()
 	if not _originals.has(b):
-		_originals[b] = {"cycle_length": b.cycle_length}
+		_originals[b] = {"cycle_length": b.cycle_length, "run_cycle_length": b.run_cycle_length, "run_scale": b.run_scale,
+			"run_offset": b.run_offset}
 
 
 func death_view() -> DeathView:
@@ -244,7 +245,10 @@ func nudge(dir: Vector2) -> void:
 		Mode.DEAD:
 			_set_dead("offset", _dead("offset") + dir)
 		Mode.LEGS:
-			body_view().cycle_length = maxf(0.5, body_view().cycle_length - dir.y * 10.0)  # up = slower legs
+			if legs_sprint:
+				body_view().run_offset += dir
+			else:
+				body_view().cycle_length = maxf(0.5, body_view().cycle_length - dir.y * 10.0)  # up = slower legs
 
 
 ## The previewed death frame's settings: prone_* or stand_*.
@@ -318,7 +322,9 @@ func _field_specs() -> Array:
 		Mode.TABLET:
 			return [["hold_offset", layout(), "hold_offset", 0.001], ["hold_scale", layout(), "hold_scale", 0.01]]
 		Mode.LEGS:
-			return [["cycle_length", body_view(), "cycle_length", 0.1]]
+			var b := body_view()
+			return [["cycle_length", b, "cycle_length", 0.1], ["run_cycle_length", b, "run_cycle_length", 0.1],
+				["run_scale", b, "run_scale", 0.01], ["run_offset", b, "run_offset", 0.001]]
 	var v := death_view()
 	var p := "prone_" if dead_prone else "stand_"
 	return [[p + "pitch", v, p + "pitch", 1.0], [p + "yaw", v, p + "yaw", 1.0], [p + "roll", v, p + "roll", 0.5],
@@ -417,7 +423,7 @@ func _gui_input(event: InputEvent) -> void:
 		if mb.button_index == MOUSE_BUTTON_LEFT:
 			if not mb.pressed:
 				_drag = ""
-			elif mode == Mode.DEAD:
+			elif mode == Mode.DEAD or mode == Mode.LEGS:
 				_drag = "move"
 			elif mode == Mode.MUZZLE:
 				d.muzzle_uv = mb.position / vp
@@ -429,6 +435,8 @@ func _gui_input(event: InputEvent) -> void:
 			_drag = "pivot" if mb.pressed else ""
 		elif mode == Mode.DEAD and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			_set_dead("scale", _dead("scale") * (1.02 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.02))
+		elif mode == Mode.LEGS and legs_sprint and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			body_view().run_scale *= 1.02 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.02
 		elif mode == Mode.TABLET and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			layout().hold_scale *= 1.02 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.02
 		elif mode == Mode.SIGHT and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
@@ -443,6 +451,9 @@ func _gui_input(event: InputEvent) -> void:
 				d.sprite_offset += rel / vp.y
 			Mode.TABLET:
 				layout().hold_offset += rel / vp.y
+			Mode.LEGS:
+				if legs_sprint:
+					body_view().run_offset += rel / vp.y
 			Mode.DEAD:
 				if _drag == "pivot":
 					_set_dead("pivot", _dead("pivot") + rel / vp)

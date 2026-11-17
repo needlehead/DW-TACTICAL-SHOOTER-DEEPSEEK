@@ -5,6 +5,7 @@ extends TextureRect
 
 @export var idle_sprite: Texture2D
 @export var walk_sprites: Array[Texture2D] = []
+@export var run_sprites: Array[Texture2D] = []  ## while sprinting; empty falls back to walk_sprites
 @export var dead_sprite: Texture2D
 @export var dead_prone_sprite: Texture2D  ## used when killed while prone; empty falls back to dead_sprite
 @export var crouch_idle_sprite: Texture2D  ## crouched frames; empty falls back to the standing ones
@@ -64,7 +65,13 @@ func _process(delta: float) -> void:
 	if speed < min_walk_speed or walk.is_empty() or not (preview or player.is_on_floor()):
 		texture = idle
 		return
+	var running := (speed >= player.sprint_speed if preview else player.is_sprinting) and not run_sprites.is_empty()
+	if running:  # the run render is framed closer: its own size and shift (F4 -> Legs, sprint preview)
+		walk = run_sprites
+		scale *= view.run_scale
+		position += view.run_offset * vp.y
 	var forward := -player.global_basis.z
 	var dir := -1.0 if player.velocity.dot(forward) < -0.1 and not preview else 1.0
-	_phase = fposmod(_phase + dir * speed * delta / view.cycle_length, 1.0)
+	# The phase is shared, so switching between walk and run keeps the legs at the same point of the stride.
+	_phase = fposmod(_phase + dir * speed * delta / (view.run_cycle_length if running else view.cycle_length), 1.0)
 	texture = walk[mini(int(_phase * walk.size()), walk.size() - 1)]
