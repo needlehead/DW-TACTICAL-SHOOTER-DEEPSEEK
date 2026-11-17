@@ -15,6 +15,10 @@ const WEAPON_TUNABLES := [
 	["ads_time", 0.05, 1.0, 0.01],
 	["reload_time", 0.3, 6.0, 0.05],
 	["empty_reload_time", 0.3, 6.0, 0.05],
+	["reload_roll", -0.5, 0.5, 0.01],
+	["reload_drop", 0.0, 0.3, 0.005],
+	["reload_seat", 0.0, 1.0, 0.01],
+	["reload_seat_kick", 0.0, 0.1, 0.002],
 	["vm_kick_back", 0.0, 0.15, 0.005],
 	["vm_kick_rot", 0.0, 15.0, 0.25],
 ]

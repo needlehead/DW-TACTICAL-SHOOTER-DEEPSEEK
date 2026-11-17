@@ -82,6 +82,13 @@ const AUTO := 4
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
 ## 0 = stretch the frames evenly over the whole reload time.
 @export var reload_fps := 0.0
+## Gun motion while the hand is off the frames (the mag swap happens out of view): the rifle rolls its magwell
+## toward the hand and drops a little, the new mag seats with a jolt, then it eases back. Fractions of the reload.
+@export var reload_hold := Vector2(0.3, 0.75)  ## start / end of the off-frame part of the reload
+@export var reload_roll := 0.0  ## radians the gun rolls toward the magwell during the hold (0 = none)
+@export var reload_drop := 0.0  ## screen heights the gun drops during the hold
+@export var reload_seat := 0.6  ## when the new mag seats
+@export var reload_seat_kick := 0.0  ## screen heights of the seating jolt (up, then it wobbles out)
 ## One shot, played per round with overlapping voices; routed through the "World" bus (room reverb).
 @export var fire_sound: AudioStream
 @export var fire_volume_db := 0.0
