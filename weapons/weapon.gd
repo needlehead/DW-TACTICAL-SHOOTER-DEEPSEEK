@@ -213,6 +213,23 @@ func toggle_canted() -> void:
 	canted = not canted and not data.canted_aim_sprites.is_empty()
 
 
+## Reload crossfade (WeaponData.reload_crossfade): [next frame, 0..1 how far into it], or [] when off. Matches the
+## frame current_sprite() picks; the last frame fades into the idle.
+func reload_crossfade() -> Array:
+	var frames := data.reload_sprites
+	if empty_reload and not data.empty_reload_sprites.is_empty():
+		frames = data.empty_reload_sprites
+	if not data.reload_crossfade or not is_reloading() or frames.is_empty():
+		return []
+	var n := frames.size()
+	var elapsed := reload_total - reload_left
+	var f := elapsed * data.reload_fps if data.reload_fps > 0.0 else elapsed / reload_total * n
+	var i := int(f)
+	if i >= n - 1 and data.reload_fps > 0.0:
+		return []  # the last frame holds until the reload ends
+	return [frames[i + 1] if i + 1 < n else data.idle_sprite, f - i]
+
+
 func current_sprite(ads_blend: float, sprint_blend := 0.0) -> Texture2D:
 	if data.idle_sprite == null:
 		return null
