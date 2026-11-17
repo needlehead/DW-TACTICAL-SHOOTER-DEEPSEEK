@@ -100,10 +100,6 @@ func _process(delta: float) -> void:
 	var w := player.weapons.current
 	_sprint_t = move_toward(_sprint_t, 1.0 if player.is_sprinting or player.is_crawling else 0.0, delta / sprint_swap_time)
 	texture = w.current_sprite(player.ads_blend, _sprint_t)
-	var xf := w.reload_crossfade()
-	_blur.set_shader_parameter("next_mix", xf[1] if not xf.is_empty() else 0.0)
-	if not xf.is_empty():
-		_blur.set_shader_parameter("next_tex", xf[0])
 	visible = texture != null and player.alive and player.preview_death == 0
 	if not visible:
 		player.viewmodel_aim = Vector2.INF

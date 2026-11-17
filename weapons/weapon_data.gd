@@ -82,8 +82,6 @@ const AUTO := 4
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
 ## 0 = stretch the frames evenly over the whole reload time.
 @export var reload_fps := 0.0
-## Dissolve each reload frame into the next (and the last into idle) instead of cutting: smooths big pose jumps.
-@export var reload_crossfade := false
 ## One shot, played per round with overlapping voices; routed through the "World" bus (room reverb).
 @export var fire_sound: AudioStream
 @export var fire_volume_db := 0.0
