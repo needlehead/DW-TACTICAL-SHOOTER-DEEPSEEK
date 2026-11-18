@@ -3,6 +3,7 @@ extends CanvasLayer
 ## Story dialogue screen: pauses the game, blurs it behind the character portraits and stacks the lines as speech
 ## boxes down the middle (Ingrid right of centre in orange, Kei left in green), the newest at the bottom; older
 ## ones scroll up when the column is full. F / Space / click shows the next line, Esc skips to the end.
+## F4 opens the VN sprite editor (PortraitEditor) to place the portraits.
 ## Laid out on a 1920x1080 stage scaled to the screen height.
 
 signal finished
@@ -26,25 +27,29 @@ var _closing := false
 var _stage := Control.new()
 var _column := Control.new()  # holds the boxes; slides up as they pile up
 var _blur := ColorRect.new()
+var portraits: Array[Portrait] = []
 var _portraits := Control.new()  # one full-screen layer per character portrait
+var _layers: Array[TextureRect] = []
+var _editor: PortraitEditor
 var _font := preload("res://fonts/Barlow-Medium.ttf")
 
 
-## Opens the conversation over the game (one at a time). portraits: full-screen character art, one per character,
-## each already placed on its own transparent 1920x1080 canvas.
-static func open(dialogue: Dialogue, portraits: Array[Texture2D], tree: SceneTree) -> DialogueBox:
+## Opens the conversation over the game (one at a time), with these character portraits.
+static func open(dialogue: Dialogue, with_portraits: Array[Portrait], tree: SceneTree) -> DialogueBox:
 	if tree.get_first_node_in_group(&"dialogue_box"):
 		return null
 	var box := DialogueBox.new()
 	box._lines = dialogue.lines()
-	for tex in portraits:
+	box.portraits = with_portraits
+	for p in with_portraits:
 		var layer := TextureRect.new()
-		layer.texture = tex
+		layer.texture = p.texture
 		layer.size = STAGE
 		layer.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		layer.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		box._portraits.add_child(layer)
+		box._layers.append(layer)
 	tree.root.add_child(box)
 	return box
 
@@ -97,10 +102,39 @@ func _process(delta: float) -> void:
 	var k := vp.y / STAGE.y
 	_stage.scale = Vector2(k, k)
 	_stage.position = Vector2((vp.x - STAGE.x * k) * 0.5, 0.0)
+	for i in _layers.size():
+		var p := portraits[i]
+		_layers[i].pivot_offset = p.pivot()
+		_layers[i].position = p.offset
+		_layers[i].scale = Vector2.ONE * p.scale
+
+
+func stage_scale() -> float:
+	return _stage.scale.x
+
+
+func stage_to_screen(p: Vector2) -> Vector2:
+	return _stage.position + p * _stage.scale.x
+
+
+func toggle_editor() -> void:
+	if _editor:
+		_editor.queue_free()
+		_editor = null
+		return
+	_editor = PortraitEditor.new()
+	_editor.box = self
+	add_child(_editor)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _closing or _since < 0.2:
+		return
+	if event.is_action_pressed("viewmodel_editor"):
+		toggle_editor()
+		get_viewport().set_input_as_handled()
+		return
+	if _editor:  # the conversation waits while placing portraits
 		return
 	var next: bool = event.is_action_pressed("interact") or event.is_action_pressed("ui_accept") \
 		or (event is InputEventMouseButton and event.pressed and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT)

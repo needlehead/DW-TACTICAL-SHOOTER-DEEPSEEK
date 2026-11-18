@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Portrait" format=3]
+
+[ext_resource type="Script" path="res://dialogue/portrait.gd" id="1_p"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/npc system/kei_portrait.png" id="2_tex"]
+
+[resource]
+script = ExtResource("1_p")
+texture = ExtResource("2_tex")

@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://maps/npc.gd" id="1_npc"]
 [ext_resource type="Resource" path="res://dialogue/ingrid_intro.tres" id="2_dlg"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/npc system/kei_portrait.png" id="3_kei"]
-[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/npc system/ingrid_portrait.png" id="5_ingrid"]
+[ext_resource type="Resource" path="res://dialogue/portraits/kei.tres" id="3_kei"]
+[ext_resource type="Resource" path="res://dialogue/portraits/ingrid.tres" id="5_ingrid"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/npc system/ingrid.png" id="4_body"]
 
 [sub_resource type="CapsuleShape3D" id="body_shape"]
@@ -13,7 +13,7 @@ height = 1.7
 [node name="Ingrid" type="StaticBody3D"]
 script = ExtResource("1_npc")
 dialogue = ExtResource("2_dlg")
-portraits = Array[Texture2D]([ExtResource("3_kei"), ExtResource("5_ingrid")])
+portraits = Array[Resource]([ExtResource("3_kei"), ExtResource("5_ingrid")])
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
