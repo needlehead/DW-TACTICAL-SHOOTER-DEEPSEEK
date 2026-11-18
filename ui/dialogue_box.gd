@@ -26,17 +26,25 @@ var _closing := false
 var _stage := Control.new()
 var _column := Control.new()  # holds the boxes; slides up as they pile up
 var _blur := ColorRect.new()
-var _portraits := TextureRect.new()
+var _portraits := Control.new()  # one full-screen layer per character portrait
 var _font := preload("res://fonts/Barlow-Medium.ttf")
 
 
-## Opens the conversation over the game (one at a time). portraits: the full-screen character art.
-static func open(dialogue: Dialogue, portraits: Texture2D, tree: SceneTree) -> DialogueBox:
+## Opens the conversation over the game (one at a time). portraits: full-screen character art, one per character,
+## each already placed on its own transparent 1920x1080 canvas.
+static func open(dialogue: Dialogue, portraits: Array[Texture2D], tree: SceneTree) -> DialogueBox:
 	if tree.get_first_node_in_group(&"dialogue_box"):
 		return null
 	var box := DialogueBox.new()
 	box._lines = dialogue.lines()
-	box._portraits.texture = portraits
+	for tex in portraits:
+		var layer := TextureRect.new()
+		layer.texture = tex
+		layer.size = STAGE
+		layer.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		layer.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		box._portraits.add_child(layer)
 	tree.root.add_child(box)
 	return box
 
@@ -59,8 +67,7 @@ func _ready() -> void:
 	_stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_stage)
 	_portraits.size = STAGE
-	_portraits.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_portraits.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_portraits.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_portraits.modulate.a = 0.0
 	_stage.add_child(_portraits)
 	_stage.add_child(_column)
