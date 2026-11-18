@@ -285,8 +285,15 @@ func _runtime_checks() -> void:
 	player.eye_height = player.eye_heights[player.stance]
 	player.death_roll = 0.0
 	_check(stand_rolled, "standing death has its own view roll")
-	var talk: Array = (load("res://dialogue/ingrid_intro.tres") as Dialogue).lines()
-	_check(talk.size() == 7 and talk[0] == ["Ingrid", "You seem cool."], "dialogue: script parses into speaker / line pairs")
+	var talk: Dictionary = (load("res://dialogue/ingrid_intro.tres") as Dialogue).compile()
+	_check(talk.steps.size() == 7 and talk.steps[0] == ["say", "Ingrid", "You seem cool."], "dialogue: lines parse into speaker / text")
+	var talk2: Dictionary = (load("res://dialogue/ingrid_range_day.tres") as Dialogue).compile()
+	var menus: Array = talk2.steps.filter(func(s: Array) -> bool: return s[0] == "choose")
+	var landed := true
+	for m: Array in menus:
+		for o: Array in m[1]:
+			landed = landed and talk2.labels.has(o[1])
+	_check(menus.size() == 2 and menus[0][1].size() == 3 and landed, "dialogue: choices parse and every option has a branch")
 	# Stamina: recovers after a rest; low stamina means a much bigger aim wobble.
 	var bs := player.breath_sway_deg
 	var fs := player.fatigue_sway_deg

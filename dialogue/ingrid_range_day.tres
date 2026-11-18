@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Ingrid: Back already? Thought you'd be halfway to the bar by now.
+Kei: Range isn't gonna shoot itself.
+Ingrid: So? What's the verdict on the new rifle?
+> It kicks like a mule. -> kick
+> Smooth. Too smooth. -> smooth
+> Ask me after a few drinks. -> drinks
+
+# kick
+Ingrid: Ha! Told you to tuck it in tighter.
+Kei: I tucked. It kicked back harder.
+-> bar
+
+# smooth
+Ingrid: Too smooth? That's a complaint now?
+Kei: Means I can't blame the gun when I miss.
+Ingrid: You don't miss.
+Kei: Exactly. I'm out of excuses.
+-> bar
+
+# drinks
+Ingrid: Oh no. It's that bad?
+Kei: It's that good. I just like making you wait.
+-> bar
+
+# bar
+Ingrid: Speaking of drinks... still on for tonight?
+> Wouldn't miss it. -> yes
+> Only if you're buying. -> buying
+
+# yes
+Ingrid: Good. I'll save you the corner booth.
+Kei: The one with the busted jukebox?
+Ingrid: That's what makes it ours.
+-> end
+
+# buying
+Ingrid: Deal. But you're walking me home after.
+Kei: Wasn't planning on letting you walk alone.
+Ingrid: ...Smooth. Too smooth.
+-> end
+"

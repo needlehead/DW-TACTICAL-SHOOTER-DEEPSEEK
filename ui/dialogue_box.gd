@@ -3,6 +3,8 @@ extends CanvasLayer
 ## Story dialogue screen: pauses the game, blurs it behind the character portraits and stacks the lines as speech
 ## boxes down the middle (Ingrid right of centre in orange, Kei left in green), the newest at the bottom; older
 ## ones scroll up when the column is full. F / Space / click shows the next line, Esc skips to the end.
+## At a choice Kei's options appear as green boxes: click one or press its number; she says it and the
+## conversation follows that branch (see Dialogue for the script format).
 ## F4 opens the VN sprite editor (PortraitEditor) to place the portraits.
 ## Laid out on a 1920x1080 stage scaled to the screen height.
 
@@ -20,8 +22,11 @@ const SPEAKERS := {
 }
 const OTHER := [842.0, Color(0.16, 0.16, 0.17), Color(0.42, 0.42, 0.44)]
 
-var _lines: Array = []
-var _shown := 0
+var _steps: Array = []
+var _labels := {}
+var _pc := 0  # next step to run
+var _rows := 0  # boxes put in the column so far
+var _choices: Array = []  # [[box, label], ...] while a choice is up
 var _since := 0.0  # ignores the key press that opened it
 var _closing := false
 var _stage := Control.new()
@@ -39,7 +44,9 @@ static func open(dialogue: Dialogue, with_portraits: Array[Portrait], tree: Scen
 	if tree.get_first_node_in_group(&"dialogue_box"):
 		return null
 	var box := DialogueBox.new()
-	box._lines = dialogue.lines()
+	var compiled := dialogue.compile()
+	box._steps = compiled.steps
+	box._labels = compiled.labels
 	box.portraits = with_portraits
 	for p in with_portraits:
 		var layer := TextureRect.new()
@@ -136,6 +143,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if _editor:  # the conversation waits while placing portraits
 		return
+	if not _choices.is_empty():  # waiting for a pick: number keys (or a click on a box)
+		if event is InputEventKey and event.pressed and not event.echo:
+			var n := (event as InputEventKey).keycode - KEY_1
+			if n >= 0 and n < _choices.size():
+				_choose(n)
+				get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_cancel"):
+			close()
+		return
 	var next: bool = event.is_action_pressed("interact") or event.is_action_pressed("ui_accept") \
 		or (event is InputEventMouseButton and event.pressed and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT)
 	if next:
@@ -147,30 +163,85 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
-## Shows the next line, or closes after the last.
+## Runs the script up to the next line (shown) or choice (waits for a pick); closes at the end.
 func _next() -> void:
-	if _shown >= _lines.size():
-		close()
-		return
-	var line: Array = _lines[_shown]
-	var row := _shown
-	_shown += 1
-	var style: Array = SPEAKERS.get(line[0], OTHER)
-	var box := _make_box("%s: %s" % line, style[1], style[2])
-	box.position = Vector2(style[0], ROW_TOP + row * ROW_PITCH)
+	while _pc < _steps.size():
+		var step: Array = _steps[_pc]
+		match step[0]:
+			"goto":
+				if step[1] == "end":
+					break
+				_pc = _labels.get(step[1], _steps.size())
+			"say":
+				_pc += 1
+				_add_line(step[1], step[2])
+				return
+			"choose":
+				_show_choices(step[1])
+				return
+	close()
+
+
+func _add_line(speaker: String, text: String) -> void:
+	var style: Array = SPEAKERS.get(speaker, OTHER)
+	_place(_make_box("%s: %s" % [speaker, text], style[1], style[2]), style[0], _rows)
+	_rows += 1
+	_scroll()
+
+
+## Kei's options, one box per row under the last line, numbered.
+func _show_choices(options: Array) -> void:
+	var style: Array = SPEAKERS["Kei"]
+	for i in options.size():
+		var box := _make_box("%d.  %s" % [i + 1, options[i][0]], style[1], style[2])
+		box.mouse_filter = Control.MOUSE_FILTER_STOP
+		box.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		box.mouse_entered.connect(func() -> void: box.self_modulate = Color(1.25, 1.25, 1.25))
+		box.mouse_exited.connect(func() -> void: box.self_modulate = Color.WHITE)
+		box.gui_input.connect(func(e: InputEvent) -> void:
+			if e is InputEventMouseButton and e.pressed and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+				_choose(i)
+				box.accept_event())
+		var outline := ReferenceRect.new()  # marks it as something to pick, not a line said yet
+		outline.border_color = Color(1, 1, 1, 0.5)
+		outline.border_width = 2.0
+		outline.editor_only = false
+		outline.size = BOX_SIZE
+		outline.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		box.add_child(outline)
+		_place(box, style[0], _rows + i)
+		_choices.append([box, options[i][1], options[i][0]])
+	_scroll(options.size())
+
+
+## Kei says the picked option in place of the menu; the conversation jumps to its label.
+func _choose(i: int) -> void:
+	var picked: Array = _choices[i]
+	for c: Array in _choices:
+		c[0].queue_free()
+	_choices.clear()
+	_add_line("Kei", picked[2])
+	var label: String = picked[1]
+	_pc = _steps.size() if label == "end" else _labels.get(label, _steps.size())
+
+
+## Puts a box in the column at a row and pops it in (fade up, slide in from its side).
+func _place(box: Control, x: float, row: int) -> void:
+	box.position = Vector2(x, ROW_TOP + row * ROW_PITCH)
 	_column.add_child(box)
-	# Pop in: fade up and slide in from its side.
 	box.modulate.a = 0.0
-	var from_x := 24.0 if style[0] > 842.0 else -24.0
+	var from_x := 24.0 if x > 842.0 else -24.0
 	box.position.x += from_x
 	var t := box.create_tween().set_parallel().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	t.tween_property(box, "modulate:a", 1.0, 0.18)
 	t.tween_property(box, "position:x", box.position.x - from_x, 0.22)
-	# Column full: scroll the oldest up out of view.
-	var overflow := maxi(_shown - MAX_ROWS, 0)
-	if overflow > 0:
-		create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT) \
-			.tween_property(_column, "position:y", -overflow * ROW_PITCH, 0.25)
+
+
+## Column full: scroll the oldest up out of view (extra = rows still taken below the lines, e.g. a choice menu).
+func _scroll(extra := 0) -> void:
+	var overflow := maxi(_rows + extra - MAX_ROWS, 0)
+	create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT) \
+		.tween_property(_column, "position:y", -overflow * ROW_PITCH, 0.25)
 
 
 func _make_box(text: String, top: Color, bottom: Color) -> Control:
