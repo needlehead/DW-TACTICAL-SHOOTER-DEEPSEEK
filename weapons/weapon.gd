@@ -17,6 +17,7 @@ var since_shot := 99.0
 var reload_left := 0.0
 var reload_total := 1.0
 var empty_reload := false
+var speed_reload := false  ## this reload throws the old magazine away (see WeaponData.speed_reload_sprites)
 var since_mode_switch := 99.0
 var canted := false  ## canted sight selected (only if the weapon has one)
 var cant_t := 0.0  ## 0 main sight .. 1 canted; eases toward `canted` so switching while aimed rolls through
@@ -65,8 +66,21 @@ func start_reload() -> void:
 		Game.toast("No fuller magazine")
 		return
 	empty_reload = not chambered
+	speed_reload = false
 	reload_left = data.empty_reload_time if empty_reload else data.reload_time
 	reload_total = reload_left
+
+
+## Turns the reload just started into a speed reload (the second tap of a double-tapped reload), keeping how far
+## through it is. Only with a round chambered: the empty reload already ditches its (empty) magazine.
+func speed_up() -> bool:
+	if not is_reloading() or speed_reload or empty_reload or data.speed_reload_sprites.is_empty():
+		return false
+	var done := 1.0 - reload_left / reload_total
+	speed_reload = true
+	reload_total = data.speed_reload_time
+	reload_left = reload_total * (1.0 - done)
+	return true
 
 
 func cancel_reload() -> void:
@@ -106,14 +120,19 @@ func tick(delta: float, held: bool, pressed: bool, allowed: bool) -> void:
 		_cooldown = maxf(_cooldown, 0.0)
 
 
-## Swaps to the fullest spare. The old magazine goes back in the pouch with whatever it had left.
+## Swaps to the fullest spare. The old magazine goes back in the pouch with whatever it had left, unless it was
+## a speed reload: then it was thrown away, rounds and all.
 func finish_reload() -> void:
 	reload_left = 0.0
 	var best := spare.find(spare.max())
 	var new_mag := spare[best]
 	spare.remove_at(best)
-	if mag > 0:
+	if speed_reload:
+		if mag > 0:
+			Game.toast("Mag dumped: %d rounds lost" % mag)
+	elif mag > 0:
 		spare.append(mag)
+	speed_reload = false
 	mag = new_mag
 	if not chambered:
 		cycle_round()
@@ -219,6 +238,8 @@ func current_sprite(ads_blend: float, sprint_blend := 0.0) -> Texture2D:
 	var reload_frames := data.reload_sprites
 	if empty_reload and not data.empty_reload_sprites.is_empty():
 		reload_frames = data.empty_reload_sprites
+	elif speed_reload:
+		reload_frames = data.speed_reload_sprites
 	if is_reloading() and not reload_frames.is_empty():
 		var n := reload_frames.size()
 		var elapsed := reload_total - reload_left

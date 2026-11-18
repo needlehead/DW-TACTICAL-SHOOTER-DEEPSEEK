@@ -312,6 +312,22 @@ func _runtime_checks() -> void:
 		for o: Array in m[1]:
 			landed = landed and talk2.labels.has(o[1])
 	_check(menus.size() == 2 and menus[0][1].size() == 3 and landed, "dialogue: choices parse and every option has a branch")
+	# Speed reload (double-tapped reload): quicker, and the old magazine is thrown away instead of pocketed.
+	var rw: Weapon = null
+	for wpn: Weapon in player.weapons.weapons:
+		if wpn.data.resource_path.ends_with("rifle.tres"):
+			rw = wpn
+	var mags_before := rw.spare.size()
+	rw.reload_left = 0.0
+	rw.mag = 7
+	rw.chambered = true
+	rw.start_reload()
+	var sped := rw.speed_up()
+	rw.reload_left = 0.01
+	rw.tick(0.02, false, false, false)
+	_check(sped and rw.reload_total == rw.data.speed_reload_time and rw.spare.size() == mags_before - 1 and rw.mag == rw.data.mag_size,
+		"speed reload: quicker and the old magazine is gone, not pocketed")
+	rw.refill()
 	# Stamina: recovers after a rest; low stamina means a much bigger aim wobble.
 	var bs := player.breath_sway_deg
 	var fs := player.fatigue_sway_deg

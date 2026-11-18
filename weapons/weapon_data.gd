@@ -79,6 +79,10 @@ const AUTO := 4
 @export var sprint_sprite: Texture2D
 @export var reload_sprites: Array[Texture2D] = []  ## played over the reload (see reload_fps)
 @export var empty_reload_sprites: Array[Texture2D] = []  ## reloads from empty; falls back to reload_sprites
+## Speed reload (double-tap reload while a round is chambered): the old magazine is thrown away with whatever it
+## held instead of going back in the pouch, in exchange for a quicker reload. Empty = no speed reload.
+@export var speed_reload_sprites: Array[Texture2D] = []
+@export var speed_reload_time := 1.3
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
 ## 0 = stretch the frames evenly over the whole reload time.
 @export var reload_fps := 0.0

@@ -16,6 +16,8 @@ enum State { READY, HOLSTER, EQUIP }
 @export var handling_volume_db := -6.0
 @export var phone_time := 0.6  ## Tab: gun goes down (first half), then the phone comes up (second half); same for every heroine
 
+@export var double_tap_ms := 350  ## second reload press within this = speed reload
+var _last_reload_press := -100000
 var weapons: Array[Weapon] = []
 var current: Weapon
 var state := State.EQUIP
@@ -155,7 +157,11 @@ func _process(delta: float) -> void:
 			current.ir_on = not current.ir_on
 			Game.toast("IR ILLUMINATOR " + ("ON" if current.ir_on else "OFF") + " (night vision only)")
 		if Input.is_action_just_pressed("reload") and state == State.READY:
-			current.start_reload()
+			# Double tap: the second press turns the reload into a speed reload (the old mag gets thrown).
+			var double_tap := Time.get_ticks_msec() - _last_reload_press < double_tap_ms
+			_last_reload_press = Time.get_ticks_msec()
+			if not (double_tap and current.speed_up()):
+				current.start_reload()
 		if Input.is_action_just_pressed("grenade"):
 			throw_grenade()
 

@@ -56,6 +56,7 @@ Weapons can be drawn as full-screen 2D frames instead of the greybox 3D gun. Ren
 | `shoot_sprite` | Shown for `shoot_frame_time` after each shot, with a directional motion blur. |
 | `reload_sprites` | Any number of frames, played over the reload (tactical, and empty if no empty set). |
 | `empty_reload_sprites` | Optional frames for reloads from empty (slide/bolt locked). |
+| `speed_reload_sprites` / `speed_reload_time` | Speed reload: double-tap **R** (with a round chambered) to throw the old magazine away, rounds and all, for a quicker reload. |
 | `reload_fps` | Playback rate for the reload frames; the last frame holds until the reload ends. 0 = stretch them evenly over the reload time. |
 | `ads_sprite` | Optional. Without it, the hip frame zooms toward the centre while aiming. |
 | `canted_aim_sprites` / `canted_sight_window` / `canted_dot_size` | Optional offset sight toggled with V: its own aim-in frames, glass window (editable in F4 with Canted) and red dot. |
