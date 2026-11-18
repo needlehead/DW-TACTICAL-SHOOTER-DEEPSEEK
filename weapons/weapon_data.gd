@@ -86,7 +86,7 @@ const AUTO := 4
 ## The thrown magazine lands in the world (DroppedMag): its side-view sprite, real length, and when in the speed
 ## reload (fraction) it leaves the hand. No sprite = it only goes in the animation.
 @export var dropped_mag_sprite: Texture2D
-@export var dropped_mag_length := 0.19
+@export var dropped_mag_length := 0.3  ## bigger than a real one (0.19) so it reads on the floor
 @export_range(0.0, 1.0) var speed_reload_drop_at := 0.19
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
 ## 0 = stretch the frames evenly over the whole reload time.

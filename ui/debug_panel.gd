@@ -17,6 +17,7 @@ const WEAPON_TUNABLES := [
 	["empty_reload_time", 0.3, 6.0, 0.05],
 	["speed_reload_time", 0.3, 6.0, 0.05, "tac reload (RR) time"],
 	["speed_reload_drop_at", 0.0, 1.0, 0.01, "tac reload mag drop at"],
+	["dropped_mag_length", 0.05, 1.0, 0.01, "dropped mag size"],
 	["vm_kick_back", 0.0, 0.15, 0.005],
 	["vm_kick_rot", 0.0, 15.0, 0.25],
 ]

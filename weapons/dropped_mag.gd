@@ -23,8 +23,9 @@ static func spawn(parent: Node, tex: Texture2D, length: float, at: Vector3, vel:
 	s.region_enabled = true
 	s.region_rect = region
 	s.pixel_size = length / region.size.y
-	s.position.z = size.z * 0.5  # on the broad face
+	# Mid-thickness, not on a face: whichever side it lands on, the picture stays clear of the floor (no z-fighting).
 	s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	s.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC  # no sparkle when small / far
 	s.shaded = true
 	s.double_sided = true
 	m.add_child(s)
