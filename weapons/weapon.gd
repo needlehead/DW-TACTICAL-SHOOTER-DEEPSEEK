@@ -18,6 +18,7 @@ var reload_left := 0.0
 var reload_total := 1.0
 var empty_reload := false
 var speed_reload := false  ## this reload throws the old magazine away (see WeaponData.speed_reload_sprites)
+var _mag_thrown := false
 var since_mode_switch := 99.0
 var canted := false  ## canted sight selected (only if the weapon has one)
 var cant_t := 0.0  ## 0 main sight .. 1 canted; eases toward `canted` so switching while aimed rolls through
@@ -78,6 +79,7 @@ func speed_up() -> bool:
 		return false
 	var done := 1.0 - reload_left / reload_total
 	speed_reload = true
+	_mag_thrown = false
 	reload_total = data.speed_reload_time
 	reload_left = reload_total * (1.0 - done)
 	return true
@@ -96,6 +98,8 @@ func tick(delta: float, held: bool, pressed: bool, allowed: bool) -> void:
 	_cooldown -= delta
 	if is_reloading():
 		reload_left -= delta
+		if speed_reload and not _mag_thrown and 1.0 - reload_left / reload_total >= data.speed_reload_drop_at:
+			_throw_mag()
 		if reload_left <= 0.0:
 			finish_reload()
 		return
@@ -118,6 +122,17 @@ func tick(delta: float, held: bool, pressed: bool, allowed: bool) -> void:
 		_cooldown += 60.0 / data.rpm
 	if _burst_left == 0:
 		_cooldown = maxf(_cooldown, 0.0)
+
+
+## The speed reload's old magazine leaves her left hand: flung down and out to the left, into the world.
+func _throw_mag() -> void:
+	_mag_thrown = true
+	if data.dropped_mag_sprite == null or player == null:
+		return
+	var cam := player.camera.global_basis
+	var at := player.camera.global_position + cam * Vector3(-0.25, -0.35, -0.45)
+	var vel := cam * Vector3(-1.6, -0.6, -0.4) + player.velocity
+	DroppedMag.spawn(player.get_parent(), data.dropped_mag_sprite, data.dropped_mag_length, at, vel)
 
 
 ## Swaps to the fullest spare. The old magazine goes back in the pouch with whatever it had left, unless it was

@@ -327,6 +327,9 @@ func _runtime_checks() -> void:
 	rw.tick(0.02, false, false, false)
 	_check(sped and rw.reload_total == rw.data.speed_reload_time and rw.spare.size() == mags_before - 1 and rw.mag == rw.data.mag_size,
 		"speed reload: quicker and the old magazine is gone, not pocketed")
+	_check(get_tree().get_nodes_in_group(&"dropped_mag").size() == 1, "speed reload: the thrown magazine lands in the world")
+	for dm in get_tree().get_nodes_in_group(&"dropped_mag"):
+		dm.free()
 	rw.refill()
 	# Stamina: recovers after a rest; low stamina means a much bigger aim wobble.
 	var bs := player.breath_sway_deg

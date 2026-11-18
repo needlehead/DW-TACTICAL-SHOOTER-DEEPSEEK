@@ -2,7 +2,7 @@ extends PanelContainer
 ## F1 debug panel: live stats plus sliders that edit the active WeaponData (and a few player
 ## values) while the game runs. "Save .tres" writes the weapon's current values to disk.
 
-## [property, min, max, step] on the active WeaponData.
+## [property, min, max, step, optional label] on the active WeaponData.
 const WEAPON_TUNABLES := [
 	["damage", 5.0, 150.0, 1.0],
 	["rpm", 60.0, 1200.0, 10.0],
@@ -15,7 +15,8 @@ const WEAPON_TUNABLES := [
 	["ads_time", 0.05, 1.0, 0.01],
 	["reload_time", 0.3, 6.0, 0.05],
 	["empty_reload_time", 0.3, 6.0, 0.05],
-	["speed_reload_time", 0.3, 6.0, 0.05],
+	["speed_reload_time", 0.3, 6.0, 0.05, "tac reload (RR) time"],
+	["speed_reload_drop_at", 0.0, 1.0, 0.01, "tac reload mag drop at"],
 	["vm_kick_back", 0.0, 0.15, 0.005],
 	["vm_kick_rot", 0.0, 15.0, 0.25],
 ]
@@ -54,7 +55,7 @@ func _ready() -> void:
 func _add_row(box: VBoxContainer, t: Array, on_player: bool) -> void:
 	var row := HBoxContainer.new()
 	var name_label := Label.new()
-	name_label.text = t[0]
+	name_label.text = t[4] if t.size() > 4 else t[0]
 	name_label.custom_minimum_size.x = 150
 	var slider := HSlider.new()
 	slider.min_value = t[1]
