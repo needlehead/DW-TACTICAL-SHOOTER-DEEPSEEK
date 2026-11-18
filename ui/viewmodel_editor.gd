@@ -31,7 +31,8 @@ const HELP := [
 const DIM := Color(0.62, 0.68, 0.78)
 
 var mode := Mode.HIP
-var dead_prone := false  ## Dead mode previews the prone death
+var dead_kind := 0  ## Dead mode previews Player.DEATHS[dead_kind]
+const DEATH_NAMES := ["standing", "prone", "standing 2", "launched (grenade)"]
 var legs_sprint := false  ## Legs mode previews at sprint speed
 var _drag := ""  # "", "move", "resize" or "pivot"
 var _originals := {}  # Resource -> {property: value}
@@ -102,7 +103,8 @@ func _ready() -> void:
 	_next_button = _button(ctx, "Next weapon", _next_weapon)
 	_canted_button = _button(ctx, "Canted", func() -> void: player.weapons.current.toggle_canted())
 	_prone_button = _button(ctx, "Standing", func() -> void:
-		dead_prone = not dead_prone
+		dead_kind = (dead_kind + 1) % DEATH_NAMES.size()
+		player.death_t = 0.0  # play it from the start (the launch is an animation)
 		_sync_preview())
 	_speed_button = _button(ctx, "Walk", func() -> void:
 		legs_sprint = not legs_sprint
@@ -190,7 +192,7 @@ func body_view() -> BodyView:
 
 func _sync_preview() -> void:
 	if player.weapons:  # null during _ready
-		player.preview_death = (2 if dead_prone else 1) if visible and mode == Mode.DEAD else 0
+		player.preview_death = dead_kind + 1 if visible and mode == Mode.DEAD else 0
 		player.preview_walk = (player.sprint_speed if legs_sprint else player.walk_speed) if visible and mode == Mode.LEGS else 0.0
 
 
@@ -251,13 +253,13 @@ func nudge(dir: Vector2) -> void:
 				body_view().cycle_length = maxf(0.5, body_view().cycle_length - dir.y * 10.0)  # up = slower legs
 
 
-## The previewed death frame's settings: prone_* or stand_*.
+## The previewed death's settings (DeathView stand_*, prone_*, stand2_* or launch_*).
 func _dead(prop: String) -> Variant:
-	return death_view().get(("prone_" if dead_prone else "stand_") + prop)
+	return death_view().get(Player.DEATHS[dead_kind] + prop)
 
 
 func _set_dead(prop: String, value: Variant) -> void:
-	death_view().set(("prone_" if dead_prone else "stand_") + prop, value)
+	death_view().set(Player.DEATHS[dead_kind] + prop, value)
 
 
 func save() -> void:
@@ -288,10 +290,9 @@ func _remember_view() -> void:
 	var v := death_view()
 	if not _originals.has(v):
 		_originals[v] = {}
-		for p in ["eye_height", "camera_time", "stand_pitch", "stand_yaw", "stand_keep_look", "stand_roll", "stand_offset",
-				"stand_scale", "stand_pivot", "prone_pitch", "prone_yaw", "prone_keep_look", "prone_roll", "prone_offset",
-				"prone_scale", "prone_pivot"]:
-			_originals[v][p] = v.get(p)
+		for prop: Dictionary in v.get_property_list():
+			if prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE:
+				_originals[v][prop.name] = v.get(prop.name)
 
 
 func _remember(d: WeaponData) -> void:
@@ -326,10 +327,14 @@ func _field_specs() -> Array:
 			return [["cycle_length", b, "cycle_length", 0.1], ["run_cycle_length", b, "run_cycle_length", 0.1],
 				["run_scale", b, "run_scale", 0.01], ["run_offset", b, "run_offset", 0.001]]
 	var v := death_view()
-	var p := "prone_" if dead_prone else "stand_"
-	return [[p + "pitch", v, p + "pitch", 1.0], [p + "yaw", v, p + "yaw", 1.0], [p + "roll", v, p + "roll", 0.5],
+	var p: String = Player.DEATHS[dead_kind]
+	var specs := [[p + "pitch", v, p + "pitch", 1.0], [p + "yaw", v, p + "yaw", 1.0], [p + "roll", v, p + "roll", 0.5],
 		[p + "keep_look", v, p + "keep_look", 0.05], ["eye_height", v, "eye_height", 0.01], ["camera_time", v, "camera_time", 0.05],
 		[p + "offset", v, p + "offset", 0.001], [p + "scale", v, p + "scale", 0.01], [p + "pivot", v, p + "pivot", 0.005]]
+	if p == "launch_":
+		specs += [["launch_time", v, "launch_time", 0.05], ["launch_height", v, "launch_height", 0.05],
+			["launch_spin", v, "launch_spin", 15.0]]
+	return specs
 
 
 func _rebuild_fields() -> void:
@@ -477,13 +482,13 @@ func _process(_delta: float) -> void:
 	_canted_button.visible = mode == Mode.SIGHT
 	_canted_button.text = "Canted: on" if player.weapons.current.using_canted() else "Canted: off"
 	_prone_button.visible = mode == Mode.DEAD
-	_prone_button.text = "Showing: prone" if dead_prone else "Showing: standing"
+	_prone_button.text = "Showing: " + DEATH_NAMES[dead_kind]
 	_speed_button.visible = mode == Mode.LEGS
 	_speed_button.text = "Preview: sprint" if legs_sprint else "Preview: walk"
 	var res := _target()
 	_context.text = ("%s  ·  %s" % [data().display_name, res.resource_path.get_file()]) if weapon_mode else res.resource_path.get_file()
 	_help.text = HELP[mode]
-	var key := "%d %s %s %s" % [mode, dead_prone, _window_prop(), res.resource_path]
+	var key := "%d %s %s %s" % [mode, dead_kind, _window_prop(), res.resource_path]
 	if key != _fields_key:
 		_fields_key = key
 		_rebuild_fields()

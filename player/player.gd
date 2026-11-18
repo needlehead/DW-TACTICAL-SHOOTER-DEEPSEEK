@@ -95,7 +95,12 @@ var look_pitch := 0.0
 var viewmodel_aim := Vector2.INF  ## screen point the 2D gun's barrel points at (set by SpriteViewmodel); INF = none
 var death_roll := 0.0  ## current view roll in degrees once dead (DeathView stand_roll / prone_roll)
 var death_t := 0.0  ## 0..1 into the death camera (DeathView.camera_time)
-var preview_death := 0  ## F4 -> Dead shows the death view while alive: 1 standing, 2 prone
+var preview_death := 0  ## F4 -> Dead shows the death view while alive: 1 + index into DEATHS
+## Death kinds: the prefix of their DeathView settings. Blast kills launch; otherwise prone, or a random standing one.
+const DEATHS := ["stand_", "prone_", "stand2_", "launch_"]
+var _death_kind := "stand_"
+var _last_zone := &""
+var _death_eye := 0.0  # eye height when the death started (the launch arc starts there)
 var preview_walk := 0.0  ## F4 -> Legs: the body walks in place at this speed (m/s), fully in view
 var eye_height := 1.65
 var spawn_transform: Transform3D
@@ -121,7 +126,15 @@ func _ready() -> void:
 	look_yaw = rotation_degrees.y
 	eye_height = eye_heights[stance]
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	health.died.connect(func(_source: Node) -> void: alive = false)
+	health.damaged.connect(func(_amount: float, zone: StringName, _source: Node) -> void: _last_zone = zone)
+	health.died.connect(func(_source: Node) -> void:
+		alive = false
+		if _last_zone == &"blast":
+			_death_kind = "launch_"
+		elif stance == Stance.PRONE:
+			_death_kind = "prone_"
+		else:
+			_death_kind = ["stand_", "stand2_"].pick_random())
 	# The viewmodel renders in its own transparent viewport so it never clips into walls.
 	var env := Environment.new()
 	env.background_mode = Environment.BG_CLEAR_COLOR
@@ -219,9 +232,13 @@ func shows_death() -> bool:
 	return not alive or preview_death > 0
 
 
-## The prone death (frame and tilt) applies: killed while prone, or the editor's prone preview.
+## Which death shows (DeathView prefix): the one she died with, or the editor's preview.
+func death_kind() -> String:
+	return DEATHS[preview_death - 1] if preview_death > 0 else _death_kind
+
+
 func death_prone() -> bool:
-	return preview_death == 2 if preview_death > 0 else stance == Stance.PRONE
+	return death_kind() == "prone_"
 
 
 func freeaim_basis() -> Basis:
@@ -241,19 +258,30 @@ func _process(delta: float) -> void:
 	_update_wobble(delta)
 	rotation.y = deg_to_rad(look_yaw + recoil.x + aim_wobble.x)
 	# Death camera: eases from the live look to the death view's pitch / yaw / roll (dead or the F4 preview).
-	death_t = move_toward(death_t, 1.0, delta / maxf(death_view.camera_time, 0.01)) if shows_death() else 0.0
+	var dv := death_kind()
+	var launch := dv == "launch_"
+	if shows_death() and death_t == 0.0:
+		_death_eye = eye_height
+	var dur: float = death_view.launch_time if launch else death_view.camera_time
+	death_t = move_toward(death_t, 1.0, delta / maxf(dur, 0.01)) if shows_death() else 0.0
 	var e := smoothstep(0.0, 1.0, death_t)
-	var dv := "prone_" if death_prone() else "stand_"
 	var live_pitch := clampf(look_pitch + recoil.y + aim_wobble.y, -max_pitch, max_pitch)
 	var dead_pitch := lerpf(death_view.get(dv + "pitch"), live_pitch, death_view.get(dv + "keep_look"))
-	head.rotation.x = deg_to_rad(lerpf(live_pitch, dead_pitch, e))
+	if launch:  # thrown: the flip starts fast and slows into the landing, ending a full turn over at dead_pitch
+		var spin_e := 1.0 - pow(1.0 - death_t, 2.0)
+		head.rotation.x = deg_to_rad(lerpf(live_pitch, dead_pitch + death_view.launch_spin, spin_e))
+	else:
+		head.rotation.x = deg_to_rad(lerpf(live_pitch, dead_pitch, e))
 	head.rotation.y = deg_to_rad(float(death_view.get(dv + "yaw")) * e)
 	death_roll = float(death_view.get(dv + "roll")) * e
 	head.rotation.z = deg_to_rad(death_roll)
 	camera.rotation = camera_noise(Time.get_ticks_msec() / 1000.0)
 
 	var eye_target := death_view.eye_height if shows_death() else eye_heights[stance]
-	eye_height = move_toward(eye_height, eye_target, stance_change_speed * delta)
+	if launch and shows_death() and death_t < 1.0:  # an arc up and down onto the floor
+		eye_height = lerpf(_death_eye, eye_target, death_t) + death_view.launch_height * 4.0 * death_t * (1.0 - death_t)
+	else:
+		eye_height = move_toward(eye_height, eye_target, stance_change_speed * delta)
 	lean_pivot.position.y = eye_height * 0.5
 	head.position.y = eye_height * 0.5
 	camera.fov = base_fov / lerpf(1.0, ads_zoom, ads_blend)

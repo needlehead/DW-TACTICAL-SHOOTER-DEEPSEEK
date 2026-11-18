@@ -21,3 +21,22 @@ extends Resource
 @export var prone_offset := Vector2.ZERO
 @export var prone_scale := 1.37  ## at full tilt; overscale keeps the arms' cut-off ends off screen
 @export var prone_pivot := Vector2(0.875, 0.667)  ## tilt and scale centre, 0-1 of the screen (near the right hand)
+## Second standing death (picked at random with the first).
+@export var stand2_pitch := -60.0
+@export var stand2_yaw := 0.0
+@export_range(0.0, 1.0) var stand2_keep_look := 0.0
+@export var stand2_roll := 0.0
+@export var stand2_offset := Vector2.ZERO
+@export var stand2_scale := 1.0
+@export var stand2_pivot := Vector2(0.5, 0.5)
+## Killed by a blast: thrown up, the view flips over and lands (BodySprite launch frames: thrown, tumbling, landed).
+@export var launch_time := 1.1  ## seconds in the air
+@export var launch_height := 1.2  ## metres the camera rises at the top of the arc
+@export var launch_spin := 360.0  ## degrees the view flips over in the air (+ = backwards)
+@export var launch_pitch := -60.0  ## where the view settles once landed
+@export var launch_yaw := 0.0
+@export_range(0.0, 1.0) var launch_keep_look := 0.0
+@export var launch_roll := 0.0
+@export var launch_offset := Vector2.ZERO
+@export var launch_scale := 1.0
+@export var launch_pivot := Vector2(0.5, 0.5)

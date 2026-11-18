@@ -8,6 +8,10 @@ extends TextureRect
 @export var run_sprites: Array[Texture2D] = []  ## while sprinting; empty falls back to walk_sprites
 @export var dead_sprite: Texture2D
 @export var dead_prone_sprite: Texture2D  ## used when killed while prone; empty falls back to dead_sprite
+@export var dead_sprite_2: Texture2D  ## second standing death (picked at random); empty falls back to dead_sprite
+## Blast death: thrown, tumbling (in the air), landed. launch_tumble_at is when the tumbling frame takes over.
+@export var launch_sprites: Array[Texture2D] = []
+@export_range(0.0, 1.0) var launch_tumble_at := 0.3
 @export var crouch_idle_sprite: Texture2D  ## crouched frames; empty falls back to the standing ones
 @export var crouch_walk_sprites: Array[Texture2D] = []
 @export var frame_pitch := -80.0  ## look pitch (degrees) the frames were rendered at; fully in view there
@@ -32,9 +36,8 @@ func _process(delta: float) -> void:
 	pivot_offset = Vector2(vp.x * 0.5, vp.y)
 	if player.shows_death():
 		var v := player.death_view
-		var prone := player.death_prone() and dead_prone_sprite != null
-		texture = dead_prone_sprite if prone else dead_sprite
-		var p := "prone_" if prone else "stand_"
+		var p := player.death_kind()
+		texture = _death_frame(p)
 		# The body lies on the floor, so the frame tilts on screen with the world, around its pivot; the overscale
 		# (eased in with the tilt) keeps the frame's cut-off edges off screen.
 		var roll: float = v.get(p + "roll")
@@ -75,3 +78,18 @@ func _process(delta: float) -> void:
 	# The phase is shared, so switching between walk and run keeps the legs at the same point of the stride.
 	_phase = fposmod(_phase + dir * speed * delta / (view.run_cycle_length if running else view.cycle_length), 1.0)
 	texture = walk[mini(int(_phase * walk.size()), walk.size() - 1)]
+
+
+func _death_frame(kind: String) -> Texture2D:
+	match kind:
+		"prone_":
+			return dead_prone_sprite if dead_prone_sprite else dead_sprite
+		"stand2_":
+			return dead_sprite_2 if dead_sprite_2 else dead_sprite
+		"launch_":
+			if launch_sprites.size() < 3:
+				return dead_sprite
+			if player.death_t >= 1.0:
+				return launch_sprites[2]
+			return launch_sprites[1] if player.death_t >= launch_tumble_at else launch_sprites[0]
+	return dead_sprite

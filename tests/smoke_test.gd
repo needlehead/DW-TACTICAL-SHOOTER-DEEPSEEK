@@ -160,14 +160,25 @@ func _runtime_checks() -> void:
 	var tablet_moved := ed.layout().hold_offset.is_equal_approx(hold + Vector2(0.0, 0.02)) and player.weapons.phone_forced
 	ed.revert()
 	_check(tablet_moved and ed.layout().hold_offset == hold, "viewmodel editor: tablet mode raises the phone, nudges and reverts")
-	ed.dead_prone = true
+	ed.dead_kind = 1
 	ed.set_mode(ViewmodelEditor.Mode.DEAD)
 	var po := player.death_view.prone_offset
 	ed.nudge(Vector2(0.0, 0.03))
 	var dead_ok := player.preview_death == 2 and player.shows_death() and player.death_prone() \
 		and player.death_view.prone_offset.is_equal_approx(po + Vector2(0.0, 0.03))
 	ed.revert()
-	ed.dead_prone = false
+	# Grenade death preview: thrown frame first, landed frame once the launch is over.
+	ed.dead_kind = 3
+	ed._sync_preview()
+	var body := player.get_node("ViewmodelLayer/BodySprite")
+	player.death_t = 0.0
+	body._process(0.0)
+	var thrown: Texture2D = body.texture
+	player.death_t = 1.0
+	body._process(0.0)
+	_check(player.death_kind() == "launch_" and thrown == body.launch_sprites[0] and body.texture == body.launch_sprites[2],
+		"grenade death: thrown frame, then the landed frame")
+	ed.dead_kind = 0
 	_check(dead_ok and player.death_view.prone_offset == po, "viewmodel editor: dead mode previews the prone death, nudges and reverts")
 	ed.set_mode(ViewmodelEditor.Mode.HIP)
 	_check(player.preview_death == 0, "viewmodel editor: leaving dead mode ends the preview")
@@ -261,7 +272,7 @@ func _runtime_checks() -> void:
 	var was_open := ed2.visible
 	if not was_open:
 		ed2.toggle()
-	ed2.dead_prone = false
+	ed2.dead_kind = 0
 	ed2.set_mode(ViewmodelEditor.Mode.DEAD)  # standing death preview
 	var sr := player.death_view.stand_roll
 	player.death_view.stand_roll = 9.0

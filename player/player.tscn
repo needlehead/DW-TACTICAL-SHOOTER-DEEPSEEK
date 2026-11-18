@@ -138,6 +138,10 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/idle.png" id="b_idle"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead1.png" id="b_dead"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/deadprone.png" id="b_deadprone"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/dead2.png" id="b_dead2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/deadlaunched.png" id="b_launch1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/deadlaunched (2).png" id="b_launch2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/deadlaunched (3).png" id="b_launch3"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/crouchnew.png" id="b_cidle"]
 [ext_resource type="Script" path="res://ui/portrait.gd" id="20_portrait"]
 [ext_resource type="Script" path="res://player/phone.gd" id="21_phone"]
@@ -390,6 +394,8 @@ walk_sprites = Array[Texture2D]([ExtResource("b_w0"), ExtResource("b_w1"), ExtRe
 run_sprites = Array[Texture2D]([ExtResource("b_r0"), ExtResource("b_r1"), ExtResource("b_r2"), ExtResource("b_r3"), ExtResource("b_r4"), ExtResource("b_r5"), ExtResource("b_r6"), ExtResource("b_r7"), ExtResource("b_r8"), ExtResource("b_r9"), ExtResource("b_r10"), ExtResource("b_r11"), ExtResource("b_r12"), ExtResource("b_r13"), ExtResource("b_r14"), ExtResource("b_r15"), ExtResource("b_r16"), ExtResource("b_r17"), ExtResource("b_r18"), ExtResource("b_r19"), ExtResource("b_r20"), ExtResource("b_r21"), ExtResource("b_r22"), ExtResource("b_r23"), ExtResource("b_r24"), ExtResource("b_r25"), ExtResource("b_r26"), ExtResource("b_r27"), ExtResource("b_r28"), ExtResource("b_r29"), ExtResource("b_r30"), ExtResource("b_r31"), ExtResource("b_r32"), ExtResource("b_r33"), ExtResource("b_r34"), ExtResource("b_r35"), ExtResource("b_r36"), ExtResource("b_r37"), ExtResource("b_r38"), ExtResource("b_r39"), ExtResource("b_r40"), ExtResource("b_r41"), ExtResource("b_r42"), ExtResource("b_r43"), ExtResource("b_r44"), ExtResource("b_r45"), ExtResource("b_r46"), ExtResource("b_r47"), ExtResource("b_r48"), ExtResource("b_r49"), ExtResource("b_r50"), ExtResource("b_r51"), ExtResource("b_r52"), ExtResource("b_r53"), ExtResource("b_r54"), ExtResource("b_r55"), ExtResource("b_r56"), ExtResource("b_r57"), ExtResource("b_r58"), ExtResource("b_r59"), ExtResource("b_r60"), ExtResource("b_r61"), ExtResource("b_r62"), ExtResource("b_r63"), ExtResource("b_r64"), ExtResource("b_r65"), ExtResource("b_r66"), ExtResource("b_r67"), ExtResource("b_r68"), ExtResource("b_r69"), ExtResource("b_r70"), ExtResource("b_r71"), ExtResource("b_r72"), ExtResource("b_r73"), ExtResource("b_r74"), ExtResource("b_r75"), ExtResource("b_r76"), ExtResource("b_r77"), ExtResource("b_r78"), ExtResource("b_r79"), ExtResource("b_r80"), ExtResource("b_r81"), ExtResource("b_r82"), ExtResource("b_r83")])
 dead_sprite = ExtResource("b_dead")
 dead_prone_sprite = ExtResource("b_deadprone")
+dead_sprite_2 = ExtResource("b_dead2")
+launch_sprites = Array[Texture2D]([ExtResource("b_launch1"), ExtResource("b_launch2"), ExtResource("b_launch3")])
 crouch_idle_sprite = ExtResource("b_cidle")
 crouch_walk_sprites = Array[Texture2D]([ExtResource("b_cidle")])
 
