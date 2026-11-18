@@ -82,11 +82,6 @@ const AUTO := 4
 ## Frames per second for reload_sprites; the last frame holds if the reload outlasts them.
 ## 0 = stretch the frames evenly over the whole reload time.
 @export var reload_fps := 0.0
-## Per reload frame: how far the gun moved from the previous frame (fractions of the frame width / height). Where
-## it jumps, the new frame starts at the old gun position and slides into place over reload_slide_time instead of
-## teleporting. Empty or zeros = plain cuts.
-@export var reload_slide := PackedVector2Array()
-@export var reload_slide_time := 0.12
 ## One shot, played per round with overlapping voices; routed through the "World" bus (room reverb).
 @export var fire_sound: AudioStream
 @export var fire_volume_db := 0.0
