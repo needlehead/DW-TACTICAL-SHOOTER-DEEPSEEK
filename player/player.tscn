@@ -139,6 +139,12 @@
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead1.png" id="b_dead"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/deadprone.png" id="b_deadprone"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/dead2.png" id="b_dead2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dialoguedeadtest/eastereggdeath (1).png" id="b_egg1"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dialoguedeadtest/eastereggdeath (2).png" id="b_egg2"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dialoguedeadtest/eastereggdeath (3).png" id="b_egg3"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dialoguedeadtest/eastereggdeath (4).png" id="b_egg4"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dialoguedeadtest/eastereggdeath (5).png" id="b_egg5"]
+[ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dialoguedeadtest/eastereggdeath (5 background).png" id="b_egg_heap"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/deadlaunched.png" id="b_launch1"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/deadlaunched (2).png" id="b_launch2"]
 [ext_resource type="Texture2D" path="res://koikatsu sprites/testing/body/dead/deadlaunched (3).png" id="b_launch3"]
@@ -395,6 +401,8 @@ run_sprites = Array[Texture2D]([ExtResource("b_r0"), ExtResource("b_r1"), ExtRes
 dead_sprite = ExtResource("b_dead")
 dead_prone_sprite = ExtResource("b_deadprone")
 dead_sprite_2 = ExtResource("b_dead2")
+egg_sprites = Array[Texture2D]([ExtResource("b_egg1"), ExtResource("b_egg2"), ExtResource("b_egg3"), ExtResource("b_egg4"), ExtResource("b_egg5")])
+egg_heap = ExtResource("b_egg_heap")
 launch_sprites = Array[Texture2D]([ExtResource("b_launch1"), ExtResource("b_launch2"), ExtResource("b_launch3")])
 crouch_idle_sprite = ExtResource("b_cidle")
 crouch_walk_sprites = Array[Texture2D]([ExtResource("b_cidle")])

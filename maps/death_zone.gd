@@ -2,7 +2,7 @@ class_name DeathZone
 extends Area3D
 ## Test pad: stepping on it kills the player at once, to check the death views (F5 respawns).
 ## damage_zone picks the death: &"torso" gives the normal one (random standing, or prone if you crawl on),
-## &"blast" the grenade launch.
+## &"blast" the grenade launch, &"egg" the easter egg (Ingrid drags the body off the way the pad faces, -Z).
 
 @export var damage_zone := &"torso"
 

@@ -97,9 +97,11 @@ var death_roll := 0.0  ## current view roll in degrees once dead (DeathView stan
 var death_t := 0.0  ## 0..1 into the death camera (DeathView.camera_time)
 var preview_death := 0  ## F4 -> Dead shows the death view while alive: 1 + index into DEATHS
 ## Death kinds: the prefix of their DeathView settings. Blast kills launch; otherwise prone, or a random standing one.
-const DEATHS := ["stand_", "prone_", "stand2_", "launch_"]
+const DEATHS := ["stand_", "prone_", "stand2_", "launch_", "egg_"]
 var _death_kind := "stand_"
 var _last_zone := &""
+var _last_source: Node
+var egg: EggDeath  ## the easter-egg death sequence
 var _death_eye := 0.0  # eye height when the death started (the launch arc starts there)
 var preview_walk := 0.0  ## F4 -> Legs: the body walks in place at this speed (m/s), fully in view
 var eye_height := 1.65
@@ -126,11 +128,17 @@ func _ready() -> void:
 	look_yaw = rotation_degrees.y
 	eye_height = eye_heights[stance]
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	health.damaged.connect(func(_amount: float, zone: StringName, _source: Node) -> void: _last_zone = zone)
+	health.damaged.connect(func(_amount: float, zone: StringName, source: Node) -> void:
+		_last_zone = zone
+		_last_source = source)
+	egg = EggDeath.new(self)
+	add_child(egg)
 	health.died.connect(func(_source: Node) -> void:
 		alive = false
 		if _last_zone == &"blast":
 			_death_kind = "launch_"
+		elif _last_zone == &"egg":
+			_death_kind = "egg_"
 		elif stance == Stance.PRONE:
 			_death_kind = "prone_"
 		else:
@@ -237,6 +245,11 @@ func death_kind() -> String:
 	return DEATHS[preview_death - 1] if preview_death > 0 else _death_kind
 
 
+## What dealt the last hit (EggDeath drags the body the way an EASTER EGG pad faces).
+func last_damage_source() -> Node:
+	return _last_source if is_instance_valid(_last_source) else null
+
+
 func death_prone() -> bool:
 	return death_kind() == "prone_"
 
@@ -282,8 +295,12 @@ func _process(delta: float) -> void:
 		eye_height = lerpf(_death_eye, eye_target, death_t) + death_view.launch_height * 4.0 * death_t * (1.0 - death_t)
 	else:
 		eye_height = move_toward(eye_height, eye_target, stance_change_speed * delta)
+	if dv == "egg_" and shows_death():
+		egg.update(delta)
+	elif egg.playing():
+		egg.stop()
 	lean_pivot.position.y = eye_height * 0.5
-	head.position.y = eye_height * 0.5
+	head.position.y = eye_height * 0.5 + egg.lift
 	camera.fov = base_fov / lerpf(1.0, ads_zoom, ads_blend)
 	weapon_camera.global_transform = camera.global_transform
 	weapon_camera.fov = 60.0 / lerpf(1.0, ads_zoom, ads_blend * 0.3)

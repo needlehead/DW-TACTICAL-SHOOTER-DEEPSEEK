@@ -79,7 +79,7 @@ func _process(delta: float) -> void:
 		text += "\n%d%s  |  spares %s" % [w.mag, " +1" if w.chambered else "", str(w.spare)]
 	text += "\nFrags %d   HP %d" % [player.weapons.grenades, ceili(player.health.current)]
 	_info.text = text
-	_center.text = "" if player.alive else "DEAD - press F5"
+	_center.text = "" if player.alive or player.egg.busy() else "DEAD - press F5"
 	queue_redraw()
 
 

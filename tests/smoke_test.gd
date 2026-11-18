@@ -178,7 +178,23 @@ func _runtime_checks() -> void:
 	body._process(0.0)
 	_check(player.death_kind() == "launch_" and thrown == body.launch_sprites[0] and body.texture == body.launch_sprites[2],
 		"grenade death: thrown frame, then the landed frame")
+	# Easter egg preview: walk up, grab, drag (tugs), thrown, landed on the heap - and the camera only, no moving.
+	ed.dead_kind = 4
+	ed._sync_preview()
+	var pos := player.global_position
+	var seen := []
+	for k in 100:  # steps only the sequence: a full player._process would also settle earlier recoil
+		player.egg.update(0.1)
+		body._process(0.0)
+		var f: int = body.egg_sprites.find(body.texture)
+		if seen.is_empty() or seen[-1] != f:
+			seen.append(f)
+	_check(seen.slice(0, 3) == [0, 1, 2] and seen.slice(-2) == [3, 4] and body._back.visible
+		and player.global_position.is_equal_approx(pos), "easter egg death: frames in order, heap behind, preview doesn't move her: %s" % [seen])
+	player.egg.stop()
 	ed.dead_kind = 0
+	ed._sync_preview()
+	player.eye_height = player.eye_heights[player.stance]
 	_check(dead_ok and player.death_view.prone_offset == po, "viewmodel editor: dead mode previews the prone death, nudges and reverts")
 	ed.set_mode(ViewmodelEditor.Mode.HIP)
 	_check(player.preview_death == 0, "viewmodel editor: leaving dead mode ends the preview")

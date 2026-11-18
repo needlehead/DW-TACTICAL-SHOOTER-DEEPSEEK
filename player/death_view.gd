@@ -40,3 +40,11 @@ extends Resource
 @export var launch_offset := Vector2.ZERO
 @export var launch_scale := 1.0
 @export var launch_pivot := Vector2(0.5, 0.5)
+## Easter-egg death (Ingrid drags the body to the heap; EggDeath plays it). The view while it plays.
+@export var egg_pitch := -45.0
+@export var egg_yaw := 0.0
+@export_range(0.0, 1.0) var egg_keep_look := 0.0
+@export var egg_roll := 0.0
+@export var egg_offset := Vector2.ZERO
+@export var egg_scale := 1.0
+@export var egg_pivot := Vector2(0.5, 0.5)

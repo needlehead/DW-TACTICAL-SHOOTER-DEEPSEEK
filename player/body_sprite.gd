@@ -12,6 +12,9 @@ extends TextureRect
 ## Blast death: thrown, tumbling (in the air), landed. launch_tumble_at is when the tumbling frame takes over.
 @export var launch_sprites: Array[Texture2D] = []
 @export_range(0.0, 1.0) var launch_tumble_at := 0.3
+## Easter-egg death (EggDeath picks the frame): walk up, grab, drag, thrown, landed; egg_heap shows behind landed.
+@export var egg_sprites: Array[Texture2D] = []
+@export var egg_heap: Texture2D
 @export var crouch_idle_sprite: Texture2D  ## crouched frames; empty falls back to the standing ones
 @export var crouch_walk_sprites: Array[Texture2D] = []
 @export var frame_pitch := -80.0  ## look pitch (degrees) the frames were rendered at; fully in view there
@@ -20,6 +23,7 @@ extends TextureRect
 @export var min_walk_speed := 0.3  ## below this (m/s) the idle frame shows
 
 var _phase := 0.0
+var _back := TextureRect.new()  # drawn behind the body: the heap of other Keis under the landed egg frame
 
 @onready var player: Player = owner
 
@@ -28,6 +32,13 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_back.show_behind_parent = true
+	_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_back.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_back.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_back.texture = egg_heap
+	_back.visible = false
+	add_child(_back)
 
 
 func _process(delta: float) -> void:
@@ -38,6 +49,8 @@ func _process(delta: float) -> void:
 		var v := player.death_view
 		var p := player.death_kind()
 		texture = _death_frame(p)
+		_back.visible = p == "egg_" and player.egg.landed()
+		_back.size = vp
 		# The body lies on the floor, so the frame tilts on screen with the world, around its pivot; the overscale
 		# (eased in with the tilt) keeps the frame's cut-off edges off screen.
 		var roll: float = v.get(p + "roll")
@@ -92,4 +105,6 @@ func _death_frame(kind: String) -> Texture2D:
 			if player.death_t >= 1.0:
 				return launch_sprites[2]
 			return launch_sprites[1] if player.death_t >= launch_tumble_at else launch_sprites[0]
+		"egg_":
+			return egg_sprites[player.egg.frame()] if egg_sprites.size() >= 5 and player.egg.playing() else dead_sprite
 	return dead_sprite

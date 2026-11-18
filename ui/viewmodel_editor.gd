@@ -32,7 +32,7 @@ const DIM := Color(0.62, 0.68, 0.78)
 
 var mode := Mode.HIP
 var dead_kind := 0  ## Dead mode previews Player.DEATHS[dead_kind]
-const DEATH_NAMES := ["standing", "prone", "standing 2", "launched (grenade)"]
+const DEATH_NAMES := ["standing", "prone", "standing 2", "launched (grenade)", "easter egg (Ingrid)"]
 var legs_sprint := false  ## Legs mode previews at sprint speed
 var _drag := ""  # "", "move", "resize" or "pivot"
 var _originals := {}  # Resource -> {property: value}
