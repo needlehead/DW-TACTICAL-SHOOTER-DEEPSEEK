@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="6_78idy"]
 [ext_resource type="PackedScene" path="res://maps/dark_area.tscn" id="7_dark"]
 [ext_resource type="PackedScene" path="res://maps/nvg_pickup.tscn" id="8_nvg"]
+[ext_resource type="PackedScene" path="res://maps/death_zone.tscn" id="9_death"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_w33og"]
 
@@ -739,6 +740,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 0, 18)
 
 [node name="NVGPickup" parent="." instance=ExtResource("8_nvg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 10.5)
+
+[node name="DeathZone" parent="." instance=ExtResource("9_death")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, 11.5)
+
+[node name="BlastZone" parent="." instance=ExtResource("9_death")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, 14.5)
+damage_zone = &"blast"
+
+[node name="Label" parent="BlastZone" index="2"]
+text = "BLAST"
 
 [node name="Player" parent="." unique_id=759163239 instance=ExtResource("6_78idy")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.05, 12.5)
