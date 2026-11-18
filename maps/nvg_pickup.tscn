@@ -29,6 +29,7 @@ surface_material_override/0 = SubResource("Mat_stand")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
 pixel_size = 0.0003
 billboard = 2
+alpha_cut = 1
 texture = ExtResource("2_item")
 region_enabled = true
 region_rect = Rect2(898, 577, 872, 408)
