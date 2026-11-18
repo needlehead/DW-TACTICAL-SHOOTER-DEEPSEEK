@@ -43,6 +43,8 @@ extends TextureRect
 var _blur := ShaderMaterial.new()
 var _shake := FastNoiseLite.new()
 var _sprint_t := 0.0  # own slower, eased sprint blend for the pose swap
+var _reload_frame := -1
+var _slide := Vector2.ZERO  # reload slide still to go, fractions of the frame (WeaponData.reload_slide)
 var _holo := HoloSight.new()
 var _scope := ScopeView.new()
 
@@ -100,6 +102,14 @@ func _process(delta: float) -> void:
 	var w := player.weapons.current
 	_sprint_t = move_toward(_sprint_t, 1.0 if player.is_sprinting or player.is_crawling else 0.0, delta / sprint_swap_time)
 	texture = w.current_sprite(player.ads_blend, _sprint_t)
+	# Reload frames where the gun jumps start at the old gun position and ease into place (no blending).
+	# Ease out first, then add a new jump, so the new frame is first drawn exactly where the old gun was. It keeps
+	# easing after the reload ends (the last frame matches the idle).
+	_slide *= exp(-delta * 3.0 / maxf(w.data.reload_slide_time, 0.001))
+	var rf := w.reload_frame()
+	if rf != _reload_frame and rf > 0 and rf < w.data.reload_slide.size() and w.reload_frames() == w.data.reload_sprites:
+		_slide -= w.data.reload_slide[rf]
+	_reload_frame = rf
 	visible = texture != null and player.alive and player.preview_death == 0
 	if not visible:
 		player.viewmodel_aim = Vector2.INF
@@ -138,7 +148,7 @@ func _process(delta: float) -> void:
 		# Slide the frame so the sight glass ends up on the screen centre (the aim point once fully aimed).
 		var sight := base + window.get_center() * size + d.sprite_offset * k
 		off += (vp * 0.5 - sight) * w.sight_progress(player.ads_blend)
-	position = base + off
+	position = base + off + _slide * size
 	var rest_aim := vp * 0.5 - (base + d.sprite_offset * k)  # sprite-local point that sits on screen centre at rest
 	pivot_offset = Vector2(size.x * 0.5, size.y)
 	scale = Vector2.ONE * (1.0 + ads_zoom * ads) * (1.0 + low_stance_zoom * low)

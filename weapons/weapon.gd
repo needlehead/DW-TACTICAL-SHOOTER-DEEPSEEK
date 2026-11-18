@@ -213,17 +213,28 @@ func toggle_canted() -> void:
 	canted = not canted and not data.canted_aim_sprites.is_empty()
 
 
+func reload_frames() -> Array[Texture2D]:
+	if empty_reload and not data.empty_reload_sprites.is_empty():
+		return data.empty_reload_sprites
+	return data.reload_sprites
+
+
+## Index into reload_frames() being shown, or -1 when not reloading.
+func reload_frame() -> int:
+	var n := reload_frames().size()
+	if not is_reloading() or n == 0:
+		return -1
+	var elapsed := reload_total - reload_left
+	var frame := int(elapsed * data.reload_fps) if data.reload_fps > 0.0 else int(elapsed / reload_total * n)
+	return mini(frame, n - 1)
+
+
 func current_sprite(ads_blend: float, sprint_blend := 0.0) -> Texture2D:
 	if data.idle_sprite == null:
 		return null
-	var reload_frames := data.reload_sprites
-	if empty_reload and not data.empty_reload_sprites.is_empty():
-		reload_frames = data.empty_reload_sprites
-	if is_reloading() and not reload_frames.is_empty():
-		var n := reload_frames.size()
-		var elapsed := reload_total - reload_left
-		var frame := int(elapsed * data.reload_fps) if data.reload_fps > 0.0 else int(elapsed / reload_total * n)
-		return reload_frames[mini(frame, n - 1)]
+	var rf := reload_frame()
+	if rf >= 0:
+		return reload_frames()[rf]
 	var frames := aim_frames()
 	var aimed_frames := ads_blend >= 0.5 and not frames.is_empty()  # hip shoot frame would jump off the sight
 	if sprint_blend >= 0.5 and data.sprint_sprite:  # swap at the bottom of the sprint dip

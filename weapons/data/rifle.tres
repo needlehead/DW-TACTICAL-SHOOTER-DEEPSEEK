@@ -84,6 +84,7 @@ recoil_pattern = PackedVector2Array(0, 0.8, 0.1, 0.9, 0.15, 0.8, 0.05, 0.7, -0.1
 vm_kick_back = 0.04
 vm_kick_rot = 2.5
 idle_sprite = ExtResource("r_idle")
+reload_slide = PackedVector2Array(0, 0, 0.0148, 0.0293, 0.0261, 0.0263, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.0426, -0.0545)
 aim_sprites = Array[Texture2D]([ExtResource("r_a2"), ExtResource("r_a3"), ExtResource("r_a4"), ExtResource("r_a5"), ExtResource("r_a6"), ExtResource("r_a7"), ExtResource("r_a8")])
 sight_window = Rect2(0.3871, 0.2958, 0.2047, 0.3639)
 reticle_color = Color(1, 0.35, 0.1, 1)
