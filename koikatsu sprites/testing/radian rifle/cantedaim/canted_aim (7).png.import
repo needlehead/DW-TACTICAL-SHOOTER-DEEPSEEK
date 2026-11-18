@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://fyabthggor1n"
-path="res://.godot/imported/canted_aim (7).png-227c7756f509fc80c21a8c85d0c8f198.ctex"
+path.bptc="res://.godot/imported/canted_aim (7).png-227c7756f509fc80c21a8c85d0c8f198.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://koikatsu sprites/testing/radian rifle/cantedaim/canted_aim (7).png"
-dest_files=["res://.godot/imported/canted_aim (7).png-227c7756f509fc80c21a8c85d0c8f198.ctex"]
+dest_files=["res://.godot/imported/canted_aim (7).png-227c7756f509fc80c21a8c85d0c8f198.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

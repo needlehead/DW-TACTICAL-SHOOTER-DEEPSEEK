@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://be7q2w5trvck4"
-path="res://.godot/imported/eastereggdeath (3).png-560b341e39dc984b4f34801dc5053e3d.ctex"
+path.bptc="res://.godot/imported/eastereggdeath (3).png-560b341e39dc984b4f34801dc5053e3d.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://koikatsu sprites/testing/body/dialoguedeadtest/eastereggdeath (3).png"
-dest_files=["res://.godot/imported/eastereggdeath (3).png-560b341e39dc984b4f34801dc5053e3d.ctex"]
+dest_files=["res://.godot/imported/eastereggdeath (3).png-560b341e39dc984b4f34801dc5053e3d.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

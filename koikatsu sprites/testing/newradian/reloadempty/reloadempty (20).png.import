@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cygt7l5yxg8vm"
-path="res://.godot/imported/reloadempty (20).png-d85e1619627846af1783c8b844455beb.ctex"
+path.bptc="res://.godot/imported/reloadempty (20).png-d85e1619627846af1783c8b844455beb.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://koikatsu sprites/testing/newradian/reloadempty/reloadempty (20).png"
-dest_files=["res://.godot/imported/reloadempty (20).png-d85e1619627846af1783c8b844455beb.ctex"]
+dest_files=["res://.godot/imported/reloadempty (20).png-d85e1619627846af1783c8b844455beb.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

@@ -302,6 +302,10 @@ func _process(delta: float) -> void:
 	lean_pivot.position.y = eye_height * 0.5
 	head.position.y = eye_height * 0.5 + egg.lift
 	camera.fov = base_fov / lerpf(1.0, ads_zoom, ads_blend)
+	# The 3D weapon layer only draws placeholder guns (no sprites); sprite guns leave it empty, so skip rendering it.
+	var vp3d := weapon_camera.get_viewport() as SubViewport
+	vp3d.render_target_update_mode = SubViewport.UPDATE_DISABLED if weapons.current.data.idle_sprite else SubViewport.UPDATE_ALWAYS
+	(vp3d.get_parent() as CanvasItem).visible = weapons.current.data.idle_sprite == null
 	weapon_camera.global_transform = camera.global_transform
 	weapon_camera.fov = 60.0 / lerpf(1.0, ads_zoom, ads_blend * 0.3)
 

@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://chnit58ka4jtn"
-path="res://.godot/imported/nightvision (5).png-1de513e475e75e38e48e8e1a837a449d.ctex"
+path.bptc="res://.godot/imported/nightvision (5).png-1de513e475e75e38e48e8e1a837a449d.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://koikatsu sprites/testing/NVG/nightvision (5).png"
-dest_files=["res://.godot/imported/nightvision (5).png-1de513e475e75e38e48e8e1a837a449d.ctex"]
+dest_files=["res://.godot/imported/nightvision (5).png-1de513e475e75e38e48e8e1a837a449d.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0

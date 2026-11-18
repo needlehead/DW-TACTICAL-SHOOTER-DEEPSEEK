@@ -25,7 +25,10 @@ func _ready() -> void:
 		if t:
 			var a := AtlasTexture.new()
 			a.atlas = t
-			a.region = Rect2(t.get_image().get_used_rect())
+			var img := t.get_image()
+			if img.is_compressed():  # VRAM-compressed import: decompress to read pixels
+				img.decompress()
+			a.region = Rect2(img.get_used_rect())
 			_cropped[t] = a
 
 

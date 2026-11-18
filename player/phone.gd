@@ -87,6 +87,8 @@ func _ready() -> void:
 	c = theme(heroine_color)
 	if outfit_sprite:
 		var img := outfit_sprite.get_image()
+		if img.is_compressed():  # VRAM-compressed import: decompress to read pixels
+			img.decompress()
 		var split := int(img.get_width() * outfit_split)
 		_outfit_front = _crop(img, Rect2i(0, 0, split, img.get_height()))
 		_outfit_back = _crop(img, Rect2i(split, 0, img.get_width() - split, img.get_height()))
