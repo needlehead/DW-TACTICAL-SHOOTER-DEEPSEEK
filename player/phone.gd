@@ -156,9 +156,14 @@ func _process(delta: float) -> void:
 	pivot_offset = Vector2(size.x * 0.5, size.y)  # held in both hands: scale and tilt around the bottom centre
 	scale = Vector2.ONE * layout.hold_scale
 	rotation = sway.x / vp.y * sway_tilt + _flip_dir * press * press_tilt
+	# The frame keeps its aspect and is cropped to cover the rect (STRETCH_KEEP_ASPECT_COVERED), so its UVs map onto
+	# that fitted area, not the rect itself; otherwise the screen slides off the bezel on non-16:9 windows.
+	var tex := frame.get_size()
+	var drawn := tex * maxf(size.x / tex.x, size.y / tex.y)
+	var fit_origin := (size - drawn) * 0.5
 	var pts := PackedVector2Array()
 	for uv in screen_quad:
-		pts.append(uv * size)
+		pts.append(fit_origin + uv * drawn)
 	_poly.polygon = pts
 	_match_resolution(pts)
 	(_poly.material as ShaderMaterial).set_shader_parameter("undo_tint", (owner.get_node("ViewmodelLayer/SpriteShadow") as SpriteShadow).undo_tint())
@@ -168,8 +173,8 @@ func _process(delta: float) -> void:
 	lens.set_shader_parameter("tablet_tex", frame)
 	lens.set_shader_parameter("tablet_x", inv.x)
 	lens.set_shader_parameter("tablet_y", inv.y)
-	lens.set_shader_parameter("tablet_o", inv.origin)
-	lens.set_shader_parameter("tablet_size", size)
+	lens.set_shader_parameter("tablet_o", inv.origin - fit_origin)
+	lens.set_shader_parameter("tablet_size", drawn)
 	lens.set_shader_parameter("view_size", vp)
 
 
