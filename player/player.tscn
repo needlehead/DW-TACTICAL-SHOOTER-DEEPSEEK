@@ -8,12 +8,11 @@
 [ext_resource type="Script" path="res://player/weapon_lights.gd" id="27_lights"]
 [ext_resource type="Script" path="res://player/player_voice.gd" id="25_voice"]
 [ext_resource type="AudioStream" path="res://my sounds/generic/breath_loop.ogg" id="v_breath"]
-[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (1).wav" id="v_dmg1"]
-[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (2).wav" id="v_dmg2"]
-[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (3).wav" id="v_dmg3"]
-[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (4).wav" id="v_dmg4"]
-[ext_resource type="AudioStream" path="res://my sounds/Kei/damaged (5).wav" id="v_dmg5"]
-[ext_resource type="AudioStream" path="res://my sounds/Kei/death (1).wav" id="v_death1"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/hurt (1).wav" id="v_dmg1"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/hurt (3).wav" id="v_dmg2"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/hurt (4).wav" id="v_dmg3"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/hurt (5).wav" id="v_dmg4"]
+[ext_resource type="AudioStream" path="res://my sounds/Kei/death.wav" id="v_death1"]
 [ext_resource type="AudioStream" path="res://my sounds/Kei/death (2).wav" id="v_death2"]
 [ext_resource type="AudioStream" path="res://my sounds/Kei/death (3).wav" id="v_death3"]
 [ext_resource type="Script" path="res://player/sprite_shadow.gd" id="23_shadow"]
@@ -246,7 +245,7 @@ script = ExtResource("22_reverb")
 
 [node name="PlayerVoice" type="Node" parent="."]
 script = ExtResource("25_voice")
-damage_sounds = Array[AudioStream]([ExtResource("v_dmg1"), ExtResource("v_dmg2"), ExtResource("v_dmg3"), ExtResource("v_dmg4"), ExtResource("v_dmg5")])
+damage_sounds = Array[AudioStream]([ExtResource("v_dmg1"), ExtResource("v_dmg2"), ExtResource("v_dmg3"), ExtResource("v_dmg4")])
 death_sounds = Array[AudioStream]([ExtResource("v_death1"), ExtResource("v_death2"), ExtResource("v_death3")])
 breath_loop = ExtResource("v_breath")
 
