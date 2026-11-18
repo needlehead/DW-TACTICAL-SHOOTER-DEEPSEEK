@@ -194,6 +194,8 @@ func _runtime_checks() -> void:
 	player.egg.stop()
 	ed.dead_kind = 0
 	ed._sync_preview()
+	body._process(0.0)
+	_check(not body._back.visible, "easter egg death: the heap goes away once that death is over")
 	player.eye_height = player.eye_heights[player.stance]
 	_check(dead_ok and player.death_view.prone_offset == po, "viewmodel editor: dead mode previews the prone death, nudges and reverts")
 	ed.set_mode(ViewmodelEditor.Mode.HIP)

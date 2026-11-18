@@ -45,6 +45,7 @@ func _process(delta: float) -> void:
 	var vp := get_viewport_rect().size
 	size = vp
 	pivot_offset = Vector2(vp.x * 0.5, vp.y)
+	_back.visible = false  # the heap only shows under the easter egg's landed frame (set below), never alive
 	if player.shows_death():
 		var v := player.death_view
 		var p := player.death_kind()
