@@ -1,3 +1,8 @@
 .godot/
 my sounds/ambience/source/
 my sounds/generic/source/
+
+# Raw Koikatsu renders: the game uses the cut-down copies (ui/menu_anim, body/walk, body/run); keep the .gdignore
+/koikatsu sprites/testing/menu/menuanim/*.png
+/koikatsu sprites/testing/body/legsnew/*.png
+/koikatsu sprites/testing/body/sprint/*.png
