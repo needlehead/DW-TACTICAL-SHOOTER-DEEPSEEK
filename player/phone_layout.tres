@@ -4,3 +4,4 @@
 
 [resource]
 script = ExtResource("1_pl")
+hold_offset = Vector2(0, 0.06999999)

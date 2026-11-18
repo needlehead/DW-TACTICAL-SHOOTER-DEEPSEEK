@@ -4,3 +4,19 @@
 
 [resource]
 script = ExtResource("1_dv")
+stand_keep_look = 0.9499999999999992
+stand_roll = 15.0
+stand_offset = Vector2(-0.013333324, 0.2555554)
+stand_scale = 1.0404
+stand_pivot = Vector2(0.48374987, 0.49222225)
+prone_keep_look = -0.34999999999999964
+prone_roll = 21.0
+prone_pivot = Vector2(0.61, 0.822)
+stand2_pitch = -9.0
+stand2_roll = 2.5
+stand2_scale = 1.0700000000000005
+launch_pitch = 2.0
+launch_roll = 1.0
+launch_offset = Vector2(0, 0.046)
+launch_scale = 1.0099999999999998
+egg_pitch = -17.0
