@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://maps/dark_area.tscn" id="7_dark"]
 [ext_resource type="PackedScene" path="res://maps/nvg_pickup.tscn" id="8_nvg"]
 [ext_resource type="PackedScene" path="res://maps/death_zone.tscn" id="9_death"]
+[ext_resource type="PackedScene" path="res://maps/npc_ingrid.tscn" id="10_ingrid"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_w33og"]
 
@@ -750,6 +751,9 @@ damage_zone = &"blast"
 
 [node name="Label" parent="BlastZone" index="2"]
 text = "BLAST"
+
+[node name="Ingrid" parent="." instance=ExtResource("10_ingrid")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 11)
 
 [node name="Player" parent="." unique_id=759163239 instance=ExtResource("6_78idy")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.05, 12.5)

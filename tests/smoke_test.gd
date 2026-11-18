@@ -285,6 +285,8 @@ func _runtime_checks() -> void:
 	player.eye_height = player.eye_heights[player.stance]
 	player.death_roll = 0.0
 	_check(stand_rolled, "standing death has its own view roll")
+	var talk: Array = (load("res://dialogue/ingrid_intro.tres") as Dialogue).lines()
+	_check(talk.size() == 7 and talk[0] == ["Ingrid", "You seem cool."], "dialogue: script parses into speaker / line pairs")
 	# Stamina: recovers after a rest; low stamina means a much bigger aim wobble.
 	var bs := player.breath_sway_deg
 	var fs := player.fatigue_sway_deg

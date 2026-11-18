@@ -238,3 +238,7 @@ Settings: the "Stamina" group on the Player.
 
 Crawling (moving while prone) with a gun that has a sprint pose (the Radian) carries it in that pose with a slower,
 deeper bob, and eases back to the prone idle when you stop. You can't fire or aim while crawling.
+
+## Story dialogue
+
+Talk to Ingrid (next to the spawn, **F**) to test it. A conversation is a `Dialogue` resource (`dialogue/*.tres`) written as plain text, one `Speaker: line` per line. `Npc` (`maps/npc.gd`) opens it in the `DialogueBox`: the game pauses and blurs behind the portraits and the lines stack as speech boxes (Ingrid right / orange, Kei left / green; other speakers centred grey). **F** / Space / click for the next line, **Esc** skips. New speakers get a side and colours in `DialogueBox.SPEAKERS`.

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Dialogue" format=3]
+
+[ext_resource type="Script" path="res://dialogue/dialogue.gd" id="1_dlg"]
+
+[resource]
+script = ExtResource("1_dlg")
+script_text = "Ingrid: You seem cool.
+Kei: I am cool.
+Ingrid: What are ya doing after the testing?
+Kei: Hittin' a bar.
+Ingrid: Want some company?
+Kei: I wouldn't say no.
+Ingrid: Then let's have some fun."
